@@ -60,7 +60,7 @@ public class TypeAliasTest {
         //given
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
-        assertThat(anAlias.toString()).isEqualTo(value.toString());
+        assertThat(anAlias.toString()).isEqualTo(value);
     }
 
     private static class AnAlias extends TypeAlias<String> {
