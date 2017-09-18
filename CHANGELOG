@@ -1,0 +1,10 @@
+CHANGELOG
+=========
+
+0.1.0
+-----
+
+* Add `TypeAlias<T>`
+* Add `Functor<T>`
+* Add `Identity<T>`
+* Add `Mon<T>`
