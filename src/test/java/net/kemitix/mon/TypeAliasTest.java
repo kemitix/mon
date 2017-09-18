@@ -74,7 +74,7 @@ public class TypeAliasTest {
             super(value);
         }
 
-        static AnAlias of(final String value) {
+        protected static AnAlias of(final String value) {
             return new AnAlias(value);
         }
     }
