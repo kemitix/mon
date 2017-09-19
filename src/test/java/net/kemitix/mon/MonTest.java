@@ -15,7 +15,7 @@ public class MonTest {
         //when
         final Mon<String> wrap = Mon.of("test");
         //then
-        wrap.map(value -> assertThat(value).isEqualTo("test"));
+        assertMonContains(wrap, "test");
     }
 
     @Test
@@ -25,7 +25,7 @@ public class MonTest {
         //when
         final Mon<String> updated = wrap.map(a -> a + " more");
         //then
-        updated.map(value -> assertThat(value).isEqualTo("test more"));
+        assertMonContains(updated, "test more");
     }
 
     @Test
@@ -35,7 +35,7 @@ public class MonTest {
         //when
         final Mon<Integer> result = wrap.map(String::length);
         //then
-        result.map(value -> assertThat(value).isEqualTo(4));
+        assertMonContains(result, 4);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class MonTest {
         final Optional<Mon<String>> longAndInvalid = factory.apply("value is too long");
         //then
         assertThat(shortAndValid).isNotEmpty();
-        shortAndValid.ifPresent(valid -> valid.map(value -> assertThat(value).contains("value okay")));
+        shortAndValid.ifPresent(valid -> assertMonContains(valid, "value okay"));
         assertThat(longAndInvalid).isEmpty();
     }
 
@@ -76,7 +76,7 @@ public class MonTest {
         final Mon<Mon<String>> nonFlatMapped = wrap.map(Mon::of);
         final Mon<String> result = wrap.flatMap(Mon::of);
         //then
-        result.map(value -> assertThat(value).isEqualTo("test"));
+        assertMonContains(result, "test");
         nonFlatMapped.map(inner -> assertThat(result).isEqualTo(inner));
     }
 
@@ -143,5 +143,9 @@ public class MonTest {
         assertThat(one).isEqualTo(otherOne);
         assertThat(one).isNotEqualTo(notAMon);
         assertThat(one).isNotEqualTo(null);
+    }
+
+    private <T> void assertMonContains(final Mon<T> wrap, final T expected) {
+        wrap.map(value -> assertThat(value).isEqualTo(expected));
     }
 }

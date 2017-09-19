@@ -33,7 +33,7 @@ class Customer {
 
     private final Address address;
 
-    Address getAddress() {
+    protected Address getAddress() {
         return address;
     }
 
