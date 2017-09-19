@@ -82,16 +82,8 @@ public class Mon<T> implements Functor<T> {
         return new Mon<>(v);
     }
 
-    /**
-     * Applies the function to the value within the Mon, returning a Mon containing the result.
-     *
-     * @param f   the function to apply
-     * @param <R> the type of the result of the function
-     *
-     * @return a Mon containing the result of the function {@code f} to the value
-     */
     @Override
-    public <R> Mon<R> map(final Function<T, R> f) {
+    public final <R> Mon<R> map(final Function<T, R> f) {
         return Mon.of(f.apply(value));
     }
 
@@ -104,7 +96,7 @@ public class Mon<T> implements Functor<T> {
      *
      * @return a Mon containing the result of the function
      */
-    public <R> Mon<R> flatMap(final Function<T, Mon<R>> f) {
+    public final <R> Mon<R> flatMap(final Function<T, Mon<R>> f) {
         return f.apply(value);
     }
 
