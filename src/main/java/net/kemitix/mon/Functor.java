@@ -24,9 +24,16 @@ package net.kemitix.mon;
 import java.util.function.Function;
 
 /**
- * The Functor interface.
+ * The Functor is used for types that can be mapped over.
  *
- * @param <T> the type of the functor content
+ * <p>Implementations of Functor should satisfy the following laws:</p>
+ *
+ * <ul>
+ *     <li>map id  ==  id</li>
+ *     <li>map (f . g)  ==  map f . map g</li>
+ * </ul>
+ *
+ * @param <T> the type of the Functor
  *
  * @author Tomasz Nurkiewicz (?@?.?)
  */
