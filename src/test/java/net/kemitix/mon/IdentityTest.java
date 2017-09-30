@@ -11,6 +11,15 @@ import org.junit.Test;
 public class IdentityTest implements WithAssertions {
 
     @Test
+    public void functorLawMapIdEqualsId() {
+        //given
+        final String id = "id";
+        //when
+
+        //then
+    }
+
+    @Test
     public void canMapIdentityFromStringToInteger() {
         //given
         final Identity<String> idString = new Identity<>("abc");
@@ -18,6 +27,10 @@ public class IdentityTest implements WithAssertions {
         final Identity<Integer> idInt = idString.map(String::length);
         //then
         assertIdentityContains(idInt, 3);
+    }
+
+    private <T> void assertIdentityContains(final Identity<T> identity, final T expected) {
+        identity.map(id -> assertThat(id).isEqualTo(expected));
     }
 
     @Test
@@ -32,10 +45,6 @@ public class IdentityTest implements WithAssertions {
                                                                  .map(String::getBytes);
         //then
         assertIdentityContains(idBytes, "par".getBytes());
-    }
-
-    private <T> void assertIdentityContains(final Identity<T> identity, final T expected) {
-        identity.map(id -> assertThat(id).isEqualTo(expected));
     }
 
 }
