@@ -21,6 +21,8 @@ TypeAlias for Java
 
 ## Usage
 
+### TypeAlias
+
 ```java
 class Goal extends TypeAlias<String> {
     private Goal(final String goal) {
