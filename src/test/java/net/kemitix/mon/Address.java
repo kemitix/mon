@@ -33,7 +33,7 @@ class Address {
 
     private final String street;
 
-    String getStreet() {
+    protected String getStreet() {
         return street;
     }
 }

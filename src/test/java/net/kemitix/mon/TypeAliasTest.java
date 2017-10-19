@@ -2,6 +2,8 @@ package net.kemitix.mon;
 
 import org.junit.Test;
 
+import java.util.function.Function;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TypeAliasTest {
@@ -59,8 +61,21 @@ public class TypeAliasTest {
     public void shouldHaveSameToStringAsAliasedType() throws Exception {
         //given
         final String value = "value";
+        //when
         final AnAlias anAlias = AnAlias.of(value);
-        assertThat(anAlias.toString()).isEqualTo(value.toString());
+        //then
+        assertThat(anAlias.toString()).isEqualTo(value);
+    }
+
+    @Test
+    public void shouldMapTypeAlias() {
+        //given
+        final AnAlias anAlias = AnAlias.of("text");
+        final Function<String, String> function = v -> v;
+        //when
+        final String value = anAlias.map(function);
+        //then
+        assertThat(value).isEqualTo("text");
     }
 
     private static class AnAlias extends TypeAlias<String> {
@@ -74,7 +89,7 @@ public class TypeAliasTest {
             super(value);
         }
 
-        static AnAlias of(final String value) {
+        protected static AnAlias of(final String value) {
             return new AnAlias(value);
         }
     }
