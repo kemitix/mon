@@ -21,6 +21,8 @@
 
 package net.kemitix.mon;
 
+import java.util.function.Function;
+
 /**
  * Type Alias for other types.
  *
@@ -43,6 +45,18 @@ public abstract class TypeAlias<T> {
      */
     protected TypeAlias(final T value) {
         this.value = value;
+    }
+
+    /**
+     * Map the TypeAlias into another value.
+     *
+     * @param f   the function to create the new value
+     * @param <R> the type of the new value
+     *
+     * @return a TypeAlias
+     */
+    public final <R> R map(final Function<T, R> f) {
+        return f.apply(value);
     }
 
     @Override
@@ -68,8 +82,7 @@ public abstract class TypeAlias<T> {
      *
      * @return the value
      */
-    public final T getValue() {
+    public T getValue() {
         return value;
     }
-
 }

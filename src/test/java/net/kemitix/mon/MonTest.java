@@ -18,6 +18,13 @@ public class MonTest {
         assertMonContains(wrap, "test");
     }
 
+    private <T> void assertMonContains(
+            final Mon<T> wrap,
+            final T expected
+                                      ) {
+        wrap.map(value -> assertThat(value).isEqualTo(expected));
+    }
+
     @Test
     public void canMap() {
         //given
@@ -143,9 +150,5 @@ public class MonTest {
         assertThat(one).isEqualTo(otherOne);
         assertThat(one).isNotEqualTo(notAMon);
         assertThat(one).isNotEqualTo(null);
-    }
-
-    private <T> void assertMonContains(final Mon<T> wrap, final T expected) {
-        wrap.map(value -> assertThat(value).isEqualTo(expected));
     }
 }
