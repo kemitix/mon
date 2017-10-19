@@ -47,7 +47,6 @@ public abstract class TypeAlias<T> {
         this.value = value;
     }
 
-
     /**
      * Map the TypeAlias into another value.
      *
@@ -56,7 +55,7 @@ public abstract class TypeAlias<T> {
      *
      * @return a TypeAlias
      */
-    public <R> R map(final Function<T, R> f) {
+    public final <R> R map(final Function<T, R> f) {
         return f.apply(value);
     }
 
