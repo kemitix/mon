@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+0.3.0
+-----
+
+* 
+
+0.2.0
+-----
+
+* `TypeAlias.getValue()` is not `final`
+* Added `TypeAlias.map()`
+* `Mon.map()` and `Mon.flatMap()` are `final`
+* Codacy Quality clean up
+
 0.1.0
 -----
 

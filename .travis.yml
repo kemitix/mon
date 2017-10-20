@@ -14,5 +14,3 @@ deploy:
   script: sh .travis-support/deploy.sh
   on:
     branch: master
-env:
-  global:

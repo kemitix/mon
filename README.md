@@ -15,11 +15,13 @@ TypeAlias for Java
 <dependency>
     <groupId>net.kemitix</groupId>
     <artifactId>mon</artifactId>
-    <version>${mon.version}</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
 ## Usage
+
+### TypeAlias
 
 ```java
 class Goal extends TypeAlias<String> {
