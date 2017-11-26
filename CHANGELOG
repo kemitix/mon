@@ -4,7 +4,7 @@ CHANGELOG
 0.3.0
 -----
 
-* 
+* `TypeAlias.getValue()` removed in favour of using `map()`
 
 0.2.0
 -----
