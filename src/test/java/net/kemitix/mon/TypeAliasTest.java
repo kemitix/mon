@@ -16,7 +16,7 @@ public class TypeAliasTest {
         final TypeAlias<String> typeAlias = new TypeAlias<String>(value) {
         };
         //then
-        assertThat(typeAlias.getValue()).isEqualTo(value);
+        assertThat(typeAlias.<Boolean>map(value::equals)).isTrue();
     }
 
     @Test
@@ -26,7 +26,7 @@ public class TypeAliasTest {
         //when
         final AnAlias anAlias = AnAlias.of(value);
         //then
-        assertThat(anAlias.getValue()).isEqualTo(value);
+        assertThat(anAlias.<Boolean>map(value::equals)).isTrue();
     }
 
     @Test
