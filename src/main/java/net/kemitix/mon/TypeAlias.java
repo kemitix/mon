@@ -81,7 +81,9 @@ public abstract class TypeAlias<T> {
      * Get the value of the type alias.
      *
      * @return the value
+     * @deprecated try using {@link #map(Function)}
      */
+    @Deprecated
     public T getValue() {
         return value;
     }
