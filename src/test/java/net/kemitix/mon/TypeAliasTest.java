@@ -2,6 +2,7 @@ package net.kemitix.mon;
 
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,10 +14,26 @@ public class TypeAliasTest {
         //given
         final String value = "value";
         //when
-        final TypeAlias<String> typeAlias = new TypeAlias<String>(value) {
-        };
+        final TypeAlias<String> typeAlias = givenTypeAlias(value);
         //then
         assertThat(typeAlias.<Boolean>map(value::equals)).isTrue();
+    }
+
+    @Test
+    public void shouldCreateATypeAliasWithNestedGenericTypes() {
+        //given
+        final Iterable<String> iterable = Collections.emptyList();
+        //when
+        final TypeAlias<Iterable<String>> typeAlias =
+                new TypeAlias<Iterable<String>>(iterable, Iterable.class) {
+        };
+        //then
+        assertThat(typeAlias.<Boolean>map(iterable::equals)).isTrue();
+    }
+
+    private TypeAlias<String> givenTypeAlias(final String value) {
+        return new TypeAlias<String>(value, String.class) {
+        };
     }
 
     @Test
@@ -27,6 +44,15 @@ public class TypeAliasTest {
         final AnAlias anAlias = AnAlias.of(value);
         //then
         assertThat(anAlias.<Boolean>map(value::equals)).isTrue();
+    }
+
+    @Test
+    public void shouldNotBeEqualWhenValueTypesAreDifferent() {
+        //given
+        final TypeAlias<String> stringTypeAlias = givenTypeAlias("1");
+        final TypeAlias<Integer> integerTypeAlias = new TypeAlias<Integer>(1, Integer.class){};
+        //then
+        assertThat(stringTypeAlias).isNotEqualTo(integerTypeAlias);
     }
 
     @Test
@@ -86,7 +112,7 @@ public class TypeAliasTest {
          * @param value the value
          */
         protected AnAlias(final String value) {
-            super(value);
+            super(value, String.class);
         }
 
         protected static AnAlias of(final String value) {

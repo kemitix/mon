@@ -38,13 +38,20 @@ public abstract class TypeAlias<T> {
      */
     private final T value;
 
+    private final Class<? super T> type;
+
     /**
      * Constructor.
      *
      * @param value the value
+     * @param type  the type of the value
      */
-    protected TypeAlias(final T value) {
+    protected TypeAlias(
+            final T value,
+            final Class<? super T> type
+                       ) {
         this.value = value;
+        this.type = type;
     }
 
     /**
@@ -56,31 +63,37 @@ public abstract class TypeAlias<T> {
      * @return a TypeAlias
      */
     public final <R> R map(final Function<T, R> f) {
-        return f.apply(value);
+        return f.apply(getValue());
     }
 
     @Override
     public final int hashCode() {
-        return value.hashCode();
+        return getValue().hashCode();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public final boolean equals(final Object o) {
         if (o instanceof TypeAlias) {
-            return value.equals(((TypeAlias) o).value);
+            if (((TypeAlias) o).type.equals(type)) {
+                return ((TypeAlias<T>) o).map(getValue()::equals);
+            } else {
+                return false;
+            }
         }
-        return value.equals(o);
+        return map(o::equals);
     }
 
     @Override
     public final String toString() {
-        return value.toString();
+        return getValue().toString();
     }
 
     /**
      * Get the value of the type alias.
      *
      * @return the value
+     *
      * @deprecated try using {@link #map(Function)}
      */
     @Deprecated
