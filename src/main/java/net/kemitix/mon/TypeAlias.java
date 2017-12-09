@@ -75,11 +75,11 @@ public abstract class TypeAlias<T> {
     @SuppressWarnings("unchecked")
     public final boolean equals(final Object o) {
         if (o instanceof TypeAlias) {
-            if (((TypeAlias) o).type.equals(type)) {
-                return ((TypeAlias<T>) o).map(getValue()::equals);
-            } else {
-                return false;
-            }
+            final TypeAlias other = (TypeAlias) o;
+            final Object otherValue = other.getValue();
+            final Class<?> otherValueClass = otherValue.getClass();
+            return otherValueClass.equals(getValue().getClass())
+                   && otherValue.equals(getValue());
         }
         return map(o::equals);
     }
