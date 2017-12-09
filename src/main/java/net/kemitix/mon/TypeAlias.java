@@ -68,7 +68,6 @@ public abstract class TypeAlias<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public final boolean equals(final Object o) {
         if (o instanceof TypeAlias) {
             final TypeAlias other = (TypeAlias) o;
