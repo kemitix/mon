@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TypeAliasTest {
 
     @Test
-    public void shouldCreateATypeAliasAndGetTheValue() throws Exception {
+    public void shouldCreateATypeAliasAndGetTheValue() {
         //given
         final String value = "value";
         //when
@@ -19,25 +19,25 @@ public class TypeAliasTest {
         assertThat(typeAlias.<Boolean>map(value::equals)).isTrue();
     }
 
+    private TypeAlias<String> givenTypeAlias(final String value) {
+        return new TypeAlias<String>(value) {
+        };
+    }
+
     @Test
     public void shouldCreateATypeAliasWithNestedGenericTypes() {
         //given
         final Iterable<String> iterable = Collections.emptyList();
         //when
         final TypeAlias<Iterable<String>> typeAlias =
-                new TypeAlias<Iterable<String>>(iterable, Iterable.class) {
+                new TypeAlias<Iterable<String>>(iterable) {
         };
         //then
         assertThat(typeAlias.<Boolean>map(iterable::equals)).isTrue();
     }
 
-    private TypeAlias<String> givenTypeAlias(final String value) {
-        return new TypeAlias<String>(value, String.class) {
-        };
-    }
-
     @Test
-    public void shouldCreateAnAliasedTypeAndGetTheValue() throws Exception {
+    public void shouldCreateAnAliasedTypeAndGetTheValue() {
         //given
         final String value = "value";
         //when
@@ -50,13 +50,14 @@ public class TypeAliasTest {
     public void shouldNotBeEqualWhenValueTypesAreDifferent() {
         //given
         final TypeAlias<String> stringTypeAlias = givenTypeAlias("1");
-        final TypeAlias<Integer> integerTypeAlias = new TypeAlias<Integer>(1, Integer.class){};
+        final TypeAlias<Integer> integerTypeAlias = new TypeAlias<Integer>(1) {
+        };
         //then
         assertThat(stringTypeAlias).isNotEqualTo(integerTypeAlias);
     }
 
     @Test
-    public void shouldBeEqualWhenValuesAreTheSame() throws Exception {
+    public void shouldBeEqualWhenValuesAreTheSame() {
         //given
         final String value = "value";
         final AnAlias anAlias1 = AnAlias.of(value);
@@ -66,7 +67,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldBeEqualToUnAliasedValue() throws Exception {
+    public void shouldBeEqualToUnAliasedValue() {
         //given
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
@@ -75,7 +76,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldHaveHashCodeOfValue() throws Exception {
+    public void shouldHaveHashCodeOfValue() {
         //given
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
@@ -84,7 +85,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldHaveSameToStringAsAliasedType() throws Exception {
+    public void shouldHaveSameToStringAsAliasedType() {
         //given
         final String value = "value";
         //when
@@ -112,7 +113,7 @@ public class TypeAliasTest {
          * @param value the value
          */
         protected AnAlias(final String value) {
-            super(value, String.class);
+            super(value);
         }
 
         protected static AnAlias of(final String value) {

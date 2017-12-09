@@ -38,20 +38,13 @@ public abstract class TypeAlias<T> {
      */
     private final T value;
 
-    private final Class<? super T> type;
-
     /**
      * Constructor.
      *
      * @param value the value
-     * @param type  the type of the value
      */
-    protected TypeAlias(
-            final T value,
-            final Class<? super T> type
-                       ) {
+    protected TypeAlias(final T value) {
         this.value = value;
-        this.type = type;
     }
 
     /**
