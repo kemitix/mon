@@ -69,6 +69,15 @@ public class TypeAliasTest {
     }
 
     @Test
+    public void shouldNotBeEqualWhenValuesAreNotTheSame() {
+        //given
+        final AnAlias valueA = AnAlias.of("value a");
+        final AnAlias valueB = AnAlias.of("value b");
+        //then
+        assertThat(valueA).isNotEqualTo(valueB);
+    }
+
+    @Test
     public void shouldBeEqualToRawValue() {
         //given
         final String value = "value";
