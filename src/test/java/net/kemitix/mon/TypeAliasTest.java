@@ -1,9 +1,11 @@
 package net.kemitix.mon;
 
+import org.assertj.core.util.Strings;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Function;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +18,7 @@ public class TypeAliasTest {
         //when
         final TypeAlias<String> typeAlias = givenTypeAlias(value);
         //then
-        assertThat(typeAlias.<Boolean>map(value::equals)).isTrue();
+        assertThat(typeAlias.getValue()).isSameAs(value);
     }
 
     private TypeAlias<String> givenTypeAlias(final String value) {
@@ -33,17 +35,17 @@ public class TypeAliasTest {
                 new TypeAlias<Iterable<String>>(iterable) {
         };
         //then
-        assertThat(typeAlias.<Boolean>map(iterable::equals)).isTrue();
+        assertThat(typeAlias.getValue()).isSameAs(iterable);
     }
 
     @Test
-    public void shouldCreateAnAliasedTypeAndGetTheValue() {
+    public void shouldCreateATypeAliasSubclassAndGetTheValue() {
         //given
         final String value = "value";
         //when
         final AnAlias anAlias = AnAlias.of(value);
         //then
-        assertThat(anAlias.<Boolean>map(value::equals)).isTrue();
+        assertThat(anAlias.getValue()).isSameAs(value);
     }
 
     @Test
@@ -67,7 +69,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldBeEqualToUnAliasedValue() {
+    public void shouldBeEqualToRawValue() {
         //given
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
@@ -87,22 +89,22 @@ public class TypeAliasTest {
     @Test
     public void shouldHaveSameToStringAsAliasedType() {
         //given
-        final String value = "value";
+        final List<Integer> value = Arrays.asList(1, 2, 3);
         //when
-        final AnAlias anAlias = AnAlias.of(value);
+        final TypeAlias<List<Integer>> anAlias = new TypeAlias<List<Integer>>(value) {
+        };
         //then
-        assertThat(anAlias.toString()).isEqualTo(value);
+        assertThat(anAlias.toString()).isEqualTo(value.toString());
     }
 
     @Test
     public void shouldMapTypeAlias() {
         //given
         final AnAlias anAlias = AnAlias.of("text");
-        final Function<String, String> function = v -> v;
         //when
-        final String value = anAlias.map(function);
+        final String value = anAlias.map(Strings::quote);
         //then
-        assertThat(value).isEqualTo("text");
+        assertThat(value).isEqualTo("'text'");
     }
 
     private static class AnAlias extends TypeAlias<String> {
