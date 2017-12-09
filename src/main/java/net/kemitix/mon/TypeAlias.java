@@ -87,7 +87,7 @@ public abstract class TypeAlias<T> {
      *
      * @return the value
      */
-    private T getValue() {
+    public T getValue() {
         return value;
     }
 }
