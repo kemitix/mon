@@ -26,6 +26,9 @@ import java.util.function.Function;
 /**
  * Type Alias for other types.
  *
+ * <p>{@link #toString()}, {@link #equals(Object)} and {@link #hashCode()} are all transparent, returning the value
+ * for the type being aliased.</p>
+ *
  * @param <T> the type of the alias
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
