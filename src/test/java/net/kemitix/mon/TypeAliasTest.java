@@ -1,22 +1,29 @@
 package net.kemitix.mon;
 
+import org.assertj.core.util.Strings;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Function;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TypeAliasTest {
 
     @Test
-    public void shouldCreateATypeAliasAndGetTheValue() throws Exception {
+    public void shouldCreateATypeAliasAndGetTheValue() {
         //given
         final String value = "value";
         //when
         final TypeAlias<String> typeAlias = givenTypeAlias(value);
         //then
-        assertThat(typeAlias.<Boolean>map(value::equals)).isTrue();
+        assertThat(typeAlias.getValue()).isSameAs(value);
+    }
+
+    private TypeAlias<String> givenTypeAlias(final String value) {
+        return new TypeAlias<String>(value) {
+        };
     }
 
     @Test
@@ -25,38 +32,34 @@ public class TypeAliasTest {
         final Iterable<String> iterable = Collections.emptyList();
         //when
         final TypeAlias<Iterable<String>> typeAlias =
-                new TypeAlias<Iterable<String>>(iterable, Iterable.class) {
+                new TypeAlias<Iterable<String>>(iterable) {
         };
         //then
-        assertThat(typeAlias.<Boolean>map(iterable::equals)).isTrue();
-    }
-
-    private TypeAlias<String> givenTypeAlias(final String value) {
-        return new TypeAlias<String>(value, String.class) {
-        };
+        assertThat(typeAlias.getValue()).isSameAs(iterable);
     }
 
     @Test
-    public void shouldCreateAnAliasedTypeAndGetTheValue() throws Exception {
+    public void shouldCreateATypeAliasSubclassAndGetTheValue() {
         //given
         final String value = "value";
         //when
         final AnAlias anAlias = AnAlias.of(value);
         //then
-        assertThat(anAlias.<Boolean>map(value::equals)).isTrue();
+        assertThat(anAlias.getValue()).isSameAs(value);
     }
 
     @Test
     public void shouldNotBeEqualWhenValueTypesAreDifferent() {
         //given
         final TypeAlias<String> stringTypeAlias = givenTypeAlias("1");
-        final TypeAlias<Integer> integerTypeAlias = new TypeAlias<Integer>(1, Integer.class){};
+        final TypeAlias<Integer> integerTypeAlias = new TypeAlias<Integer>(1) {
+        };
         //then
         assertThat(stringTypeAlias).isNotEqualTo(integerTypeAlias);
     }
 
     @Test
-    public void shouldBeEqualWhenValuesAreTheSame() throws Exception {
+    public void shouldBeEqualWhenValuesAreTheSame() {
         //given
         final String value = "value";
         final AnAlias anAlias1 = AnAlias.of(value);
@@ -66,7 +69,16 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldBeEqualToUnAliasedValue() throws Exception {
+    public void shouldNotBeEqualWhenValuesAreNotTheSame() {
+        //given
+        final AnAlias valueA = AnAlias.of("value a");
+        final AnAlias valueB = AnAlias.of("value b");
+        //then
+        assertThat(valueA).isNotEqualTo(valueB);
+    }
+
+    @Test
+    public void shouldBeEqualToRawValue() {
         //given
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
@@ -75,7 +87,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldHaveHashCodeOfValue() throws Exception {
+    public void shouldHaveHashCodeOfValue() {
         //given
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
@@ -84,24 +96,24 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldHaveSameToStringAsAliasedType() throws Exception {
+    public void shouldHaveSameToStringAsAliasedType() {
         //given
-        final String value = "value";
+        final List<Integer> value = Arrays.asList(1, 2, 3);
         //when
-        final AnAlias anAlias = AnAlias.of(value);
+        final TypeAlias<List<Integer>> anAlias = new TypeAlias<List<Integer>>(value) {
+        };
         //then
-        assertThat(anAlias.toString()).isEqualTo(value);
+        assertThat(anAlias.toString()).isEqualTo(value.toString());
     }
 
     @Test
     public void shouldMapTypeAlias() {
         //given
         final AnAlias anAlias = AnAlias.of("text");
-        final Function<String, String> function = v -> v;
         //when
-        final String value = anAlias.map(function);
+        final String value = anAlias.map(Strings::quote);
         //then
-        assertThat(value).isEqualTo("text");
+        assertThat(value).isEqualTo("'text'");
     }
 
     private static class AnAlias extends TypeAlias<String> {
@@ -112,7 +124,7 @@ public class TypeAliasTest {
          * @param value the value
          */
         protected AnAlias(final String value) {
-            super(value, String.class);
+            super(value);
         }
 
         protected static AnAlias of(final String value) {

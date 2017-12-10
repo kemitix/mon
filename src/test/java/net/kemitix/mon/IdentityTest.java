@@ -11,15 +11,6 @@ import org.junit.Test;
 public class IdentityTest implements WithAssertions {
 
     @Test
-    public void functorLawMapIdEqualsId() {
-        //given
-        final String id = "id";
-        //when
-
-        //then
-    }
-
-    @Test
     public void canMapIdentityFromStringToInteger() {
         //given
         final Identity<String> idString = new Identity<>("abc");

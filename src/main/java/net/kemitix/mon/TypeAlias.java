@@ -26,6 +26,9 @@ import java.util.function.Function;
 /**
  * Type Alias for other types.
  *
+ * <p>{@link #toString()}, {@link #equals(Object)} and {@link #hashCode()} are all transparent, returning the value
+ * for the type being aliased.</p>
+ *
  * @param <T> the type of the alias
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
@@ -38,20 +41,13 @@ public abstract class TypeAlias<T> {
      */
     private final T value;
 
-    private final Class<? super T> type;
-
     /**
      * Constructor.
      *
      * @param value the value
-     * @param type  the type of the value
      */
-    protected TypeAlias(
-            final T value,
-            final Class<? super T> type
-                       ) {
+    protected TypeAlias(final T value) {
         this.value = value;
-        this.type = type;
     }
 
     /**
@@ -72,14 +68,13 @@ public abstract class TypeAlias<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public final boolean equals(final Object o) {
         if (o instanceof TypeAlias) {
-            if (((TypeAlias) o).type.equals(type)) {
-                return ((TypeAlias<T>) o).map(getValue()::equals);
-            } else {
-                return false;
-            }
+            final TypeAlias other = (TypeAlias) o;
+            final Object otherValue = other.getValue();
+            final Class<?> otherValueClass = otherValue.getClass();
+            return otherValueClass.equals(getValue().getClass())
+                   && otherValue.equals(getValue());
         }
         return map(o::equals);
     }
@@ -94,7 +89,7 @@ public abstract class TypeAlias<T> {
      *
      * @return the value
      */
-    private T getValue() {
+    public T getValue() {
         return value;
     }
 }
