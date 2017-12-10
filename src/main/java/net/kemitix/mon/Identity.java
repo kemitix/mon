@@ -33,7 +33,7 @@ import java.util.function.Function;
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @RequiredArgsConstructor
-class Identity<T> implements Functor<T> {
+class Identity<T> implements Functor<T, Identity<?>> {
 
     private final T value;
 

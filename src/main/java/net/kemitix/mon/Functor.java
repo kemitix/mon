@@ -34,18 +34,19 @@ import java.util.function.Function;
  * </ul>
  *
  * @param <T> the type of the Functor
+ * @param <F> the type of the mapped Functor
  *
  * @author Tomasz Nurkiewicz (?@?.?)
  */
-public interface Functor<T> {
+public interface Functor<T, F extends Functor<?, ?>> {
 
     /**
      * Applies the function to the value within the Functor, returning the result within a Functor.
      *
      * @param f   the function to apply
-     * @param <R> the type of the result of the function
+     * @param <R> the type of the content of the mapped functor
      *
      * @return a Functor containing the result of the function {@code f} applied to the value
      */
-    <R> Functor<R> map(Function<T, R> f);
+    <R> F map(Function<T, R> f);
 }

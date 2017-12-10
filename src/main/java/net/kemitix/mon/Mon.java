@@ -37,7 +37,7 @@ import java.util.function.Supplier;
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class Mon<T> implements Functor<T> {
+public class Mon<T> implements Functor<T, Mon<?>> {
 
     /**
      * The value.
