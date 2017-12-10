@@ -41,3 +41,37 @@ void foo(final Goal goal) {
     System.out.println("The goal is " + goal.getValue());
 }
 ```
+
+### Maybe (Just & Nothing)
+
+```java
+assertThat(Maybe.maybe(null)).isEqualTo(Maybe.nothing());
+assertThat(Maybe.maybe(1)).isEqualTo(Maybe.just(1));
+assertThat(Maybe.nothing()
+                .orElseGet(() -> 1)).isEqualTo(1);
+assertThat(Maybe.just(1)
+                .orElseGet(() -> 2)).isEqualTo(1);
+assertThat(Maybe.nothing()
+                .orElse(1)).isEqualTo(1);
+assertThat(Maybe.just(1)
+                .orElse(2)).isEqualTo(1);
+assertThat(Maybe.just(1)
+                .filter(v -> v > 2)).isEqualTo(Maybe.nothing());
+assertThat(Maybe.just(3)
+                .filter(v -> v > 2)).isEqualTo(Maybe.just(3));
+assertThat(Maybe.just(1)
+                .toOptional()).isEqualTo(Optional.of(1));
+assertThat(Maybe.nothing()
+                .toOptional()).isEqualTo(Optional.empty());
+assertThat(Maybe.fromOptional(Optional.of(1))).isEqualTo(Maybe.just(1));
+assertThat(Maybe.fromOptional(Optional.empty())).isEqualTo(Maybe.nothing());
+final AtomicInteger reference = new AtomicInteger(0);
+assertThat(Maybe.just(1).peek(reference::set)).isEqualTo(Maybe.just(1));
+assertThat(reference).hasValue(1);
+assertThat(Maybe.nothing().peek(v -> reference.incrementAndGet())).isEqualTo(Maybe.nothing());
+assertThat(reference).hasValue(1);
+assertThatCode(() -> Maybe.just(1).orElseThrow(IllegalStateException::new))
+        .doesNotThrowAnyException();
+assertThatThrownBy(() -> Maybe.nothing().orElseThrow(IllegalStateException::new))
+        .isInstanceOf(IllegalStateException.class);
+```
