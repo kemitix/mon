@@ -33,6 +33,15 @@ public class MaybeTest {
     }
 
     @Test
+    public void equality() {
+        assertThat(just(1)).isEqualTo(just(1));
+        assertThat(just(1)).isNotEqualTo(just(2));
+        assertThat(just(1)).isNotEqualTo(nothing());
+        assertThat(nothing()).isEqualTo(nothing());
+        assertThat(just(1).equals("1")).isFalse();
+    }
+
+    @Test
     public void maybeAllowsNull() {
         assertThat(just(1)).isEqualTo(maybe(1));
         assertThat(nothing()).isEqualTo(maybe(null));
