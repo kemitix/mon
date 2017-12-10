@@ -5,6 +5,7 @@ CHANGELOG
 -----
 
 * Restore public access for `TypeAlias.getValue()`
+* Add `Maybe`, `Just`, `Nothing`
 
 0.3.0
 -----
