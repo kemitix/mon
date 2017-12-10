@@ -15,7 +15,7 @@ TypeAlias for Java
 <dependency>
     <groupId>net.kemitix</groupId>
     <artifactId>mon</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
 </dependency>
 ```
 
