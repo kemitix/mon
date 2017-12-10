@@ -71,14 +71,14 @@ public class MaybeTest {
     @Test
     public void toOptional() {
         assertThat(just(1).toOptional()).isEqualTo(Optional.of(1));
-        assertThat(Maybe.nothing()
+        assertThat(nothing()
                         .toOptional()).isEqualTo(Optional.empty());
     }
 
     @Test
     public void fromOptional() {
         assertThat(Maybe.fromOptional(Optional.of(1))).isEqualTo(just(1));
-        assertThat(Maybe.fromOptional(Optional.empty())).isEqualTo(Maybe.nothing());
+        assertThat(Maybe.fromOptional(Optional.empty())).isEqualTo(nothing());
     }
 
 
