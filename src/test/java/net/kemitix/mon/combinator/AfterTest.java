@@ -15,7 +15,10 @@ public class AfterTest {
         //given
         final List<String> events = new ArrayList<>();
         final Function<Integer, Integer> squareDecorated =
-                After.decorate(i -> function(i, events), (v, r) -> after(v, r, events));
+                After.decorate(
+                        argument -> function(argument, events),
+                        (argument, result) -> after(argument, result, events)
+                              );
         //when
         final Integer result = squareDecorated.apply(2);
         //then
@@ -28,7 +31,7 @@ public class AfterTest {
             final Integer result,
             final List<String> events
                              ) {
-        events.add("after " + argument + " -> " + result);
+        events.add(String.format("after %d -> %d", argument, result));
     }
 
     private static Integer function(

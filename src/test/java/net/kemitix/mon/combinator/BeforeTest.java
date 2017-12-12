@@ -15,26 +15,29 @@ public class BeforeTest {
         //given
         final List<String> events = new ArrayList<>();
         final Function<Integer, Integer> squareDecorated =
-                Before.decorate(v -> before(v, events), i -> function(i, events));
+                Before.decorate(
+                        argument -> before(argument, events),
+                        argument -> function(argument, events)
+                               );
         //when
         final Integer result = squareDecorated.apply(2);
         //then
         assertThat(result).isEqualTo(4);
-        assertThat(events).containsExactly("before", "function");
+        assertThat(events).containsExactly("before 2", "function");
     }
 
     private static void before(
-            final Integer v,
+            final Integer argument,
             final List<String> events
                               ) {
-        events.add("before");
+        events.add("before " + argument);
     }
 
     private static Integer function(
-            final Integer i,
+            final Integer argument,
             final List<String> events
                                    ) {
         events.add("function");
-        return i * i;
+        return argument * argument;
     }
 }

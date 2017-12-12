@@ -16,7 +16,7 @@ public class AroundTest {
         final List<String> events = new ArrayList<>();
         final Function<Integer, Integer> squareDecorated =
                 Around.decorate(
-                        i -> function(i, events),
+                        argument -> function(argument, events),
                         (executable, argument) -> around(executable, argument, events)
                                );
         //when
