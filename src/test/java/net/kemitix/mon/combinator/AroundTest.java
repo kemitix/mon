@@ -8,27 +8,32 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AfterTest {
+public class AroundTest {
 
     @Test
-    public void canCreateAfterCombinator() {
+    public void canCreateAnAroundCombinator() {
         //given
         final List<String> events = new ArrayList<>();
         final Function<Integer, Integer> squareDecorated =
-                After.decorate(i -> function(i, events), (v, r) -> after(v, r, events));
+                Around.decorate(
+                        i -> function(i, events),
+                        (executable, argument) -> around(executable, argument, events)
+                               );
         //when
         final Integer result = squareDecorated.apply(2);
         //then
         assertThat(result).isEqualTo(4);
-        assertThat(events).containsExactly("function", "after 2 -> 4");
+        assertThat(events).containsExactly("around before 2", "function", "around after 4");
     }
 
-    private static void after(
+    private void around(
+            final Around.Executable<Integer> executable,
             final Integer argument,
-            final Integer result,
             final List<String> events
-                             ) {
-        events.add("after " + argument + " -> " + result);
+                       ) {
+        events.add("around before " + argument);
+        final Integer result = executable.execute();
+        events.add("around after " + result);
     }
 
     private static Integer function(
