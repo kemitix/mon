@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Before pattern comninator.
+ * Before pattern combinator.
  *
  * <p>Original from http://boundsofjava.com/newsletter/003-introducing-combinators-part1</p>
  *
@@ -43,7 +43,7 @@ public interface Before<T, R> extends
                         Function<T, R>>> {
 
     /**
-     * Decorates a function with a Consumer that will be supplier with the argument before applying it to the function.
+     * Decorates a function with a Consumer that will be supplied with the argument before applying it to the function.
      *
      * @param before   the consumer that will receive the argument before the function
      * @param function the function to apply the argument to and return the result value of

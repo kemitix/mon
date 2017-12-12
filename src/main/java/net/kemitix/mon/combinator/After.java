@@ -25,7 +25,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
- * After pattern comninator.
+ * After pattern combinator.
  *
  * <p>Original from http://boundsofjava.com/newsletter/003-introducing-combinators-part1</p>
  *
