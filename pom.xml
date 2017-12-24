@@ -7,7 +7,8 @@
     <parent>
         <groupId>net.kemitix</groupId>
         <artifactId>kemitix-parent</artifactId>
-        <version>3.2.4</version>
+        <version>5.0.3</version>
+        <relativePath/>
     </parent>
     <artifactId>mon</artifactId>
     <version>0.5.0-SNAPSHOT</version>
@@ -15,9 +16,19 @@
     <properties>
         <junit.version>4.12</junit.version>
         <assertj-core.version>3.8.0</assertj-core.version>
+        <lombok.version>1.16.18</lombok.version>
+        <tiles-maven-plugin.version>2.10</tiles-maven-plugin.version>
+        <kemitix-tiles.version>0.1.1</kemitix-tiles.version>
+        <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -31,5 +42,21 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.repaint.maven</groupId>
+                <artifactId>tiles-maven-plugin</artifactId>
+                <version>${tiles-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <tiles>
+                        <tile>net.kemitix.tiles:all-tiles:${kemitix-tiles.version}</tile>
+                    </tiles>
+                </configuration>
+            </plugin><!-- tiles-maven-plugin -->
+        </plugins>
+    </build>
 
 </project>
