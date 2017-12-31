@@ -114,6 +114,20 @@ public class MonTest {
     }
 
     @Test
+    public void factory() {
+        //given
+        final Function<Integer, Optional<?>> evenMonFactory =
+                Mon.factory((Integer v) -> v % 2 == 0, Optional::of, Optional::empty);
+        //when
+        final Optional<?> oddResult = evenMonFactory.apply(1);
+        final Optional<?> evenResult = evenMonFactory.apply(2);
+        //then
+        assertThat(oddResult).isEmpty();// because 1 % 2 != 0
+        assertThat(evenResult).isNotEmpty(); // because 2 % 2 == 0
+        evenResult.ifPresent(value -> assertThat(value).isEqualTo(Mon.of(2)));
+    }
+
+    @Test
     public void shouldGetInvalidResultWhenFactoryApplyWithNull() {
         //given
         final Function<Object, Optional<?>> factory = Mon.factory(v -> true, Optional::of, Optional::empty);
