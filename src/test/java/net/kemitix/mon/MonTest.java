@@ -93,6 +93,7 @@ public class MonTest {
     }
 
     @Test
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void factoryRequiresValidator() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(null, Optional::of, Optional::empty))
@@ -100,6 +101,7 @@ public class MonTest {
     }
 
     @Test
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void factoryRequiresOnValid() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(v -> true, null, Optional::empty))
@@ -107,6 +109,7 @@ public class MonTest {
     }
 
     @Test
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void factoryRequiresOnInvalid() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(v -> true, Optional::of, null))
