@@ -92,7 +92,7 @@ public class TypeAliasTest {
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
         //then
-        assertThat(anAlias.hashCode()).isEqualTo(value.hashCode());
+        assertThat(anAlias).hasSameHashCodeAs(value);
     }
 
     @Test
