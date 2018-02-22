@@ -13,6 +13,7 @@ pipeline {
                 ])
                 sh './mvnw clean install'
                 junit '**/target/surefire-reports/*.xml'
+                archiveArtifacts '**/target/*.jar'
             }
         }
     }
