@@ -3,10 +3,18 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'printenv'
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
-                    sh "mvn clean install"
-                }
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '**']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'CleanBeforeCheckout']],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: 'github-kemitix', url: 'git@github.com:kemitix/mon.git']]
+                ])
+                tool name: 'maven 3.5.2', type: 'maven'
+                tool name: 'JDK 1.8', type: 'jdk'
+                sh 'mvn clean install'
+                junit '**/target/surefire-reports/*.xml'
             }
         }
     }
