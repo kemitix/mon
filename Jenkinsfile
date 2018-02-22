@@ -1,8 +1,10 @@
 node{
     stage ('Build') {
         git url: 'https://github.com/kemitix/mon'
-        withMaven() {
-        sh "./mvnw clean install"
+        withMaven(
+            maven: 'Maven'
+        ) {
+            sh "mvn clean install"
         }
     }
 }
