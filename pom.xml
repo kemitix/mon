@@ -20,6 +20,7 @@
         <tiles-maven-plugin.version>2.10</tiles-maven-plugin.version>
         <kemitix-tiles.version>0.1.1</kemitix-tiles.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
+        <kemitix-checkstyle.version>4.0.1</kemitix-checkstyle.version>
     </properties>
 
     <dependencies>
@@ -53,6 +54,7 @@
                 <configuration>
                     <tiles>
                         <tile>net.kemitix.tiles:all-tiles:${kemitix-tiles.version}</tile>
+                        <tile>net.kemitix.checkstyle:tile:${kemitix-checkstyle.version}</tile>
                     </tiles>
                 </configuration>
             </plugin><!-- tiles-maven-plugin -->
