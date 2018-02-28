@@ -7,19 +7,23 @@
     <parent>
         <groupId>net.kemitix</groupId>
         <artifactId>kemitix-parent</artifactId>
-        <version>5.0.3</version>
+        <version>5.1.0</version>
         <relativePath/>
     </parent>
     <artifactId>mon</artifactId>
     <version>0.5.0-SNAPSHOT</version>
 
     <properties>
+        <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
         <assertj-core.version>3.8.0</assertj-core.version>
         <lombok.version>1.16.18</lombok.version>
         <tiles-maven-plugin.version>2.10</tiles-maven-plugin.version>
-        <kemitix-tiles.version>0.1.1</kemitix-tiles.version>
+        <kemitix-tiles.version>0.5.2</kemitix-tiles.version>
+        <!-- kemitix-tiles provides surefire 2.20.1 which is broken - downgrade surefire to 2.20 -->
+        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
+        <kemitix-checkstyle.version>4.0.1</kemitix-checkstyle.version>
     </properties>
 
     <dependencies>
@@ -52,7 +56,8 @@
                 <extensions>true</extensions>
                 <configuration>
                     <tiles>
-                        <tile>net.kemitix.tiles:all-tiles:${kemitix-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:all:${kemitix-tiles.version}</tile>
+                        <tile>net.kemitix.checkstyle:tile:${kemitix-checkstyle.version}</tile>
                     </tiles>
                 </configuration>
             </plugin><!-- tiles-maven-plugin -->
