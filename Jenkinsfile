@@ -10,17 +10,15 @@ pipeline {
             }
         }
         stage('Build') {
-            steps {
-                parallel {
-                    stage('Java 8') {
-                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
-                            sh 'mvn clean install'
-                        }
+            parallel {
+                stage('Java 8') {
+                    withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                        sh 'mvn clean install'
                     }
-                    stage('Java 9') {
-                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
-                            sh 'mvn clean install'
-                        }
+                }
+                stage('Java 9') {
+                    withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
+                        sh 'mvn clean install'
                     }
                 }
             }
