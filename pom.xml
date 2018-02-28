@@ -19,9 +19,7 @@
         <assertj.version>3.9.1</assertj.version>
         <lombok.version>1.16.20</lombok.version>
         <tiles-maven-plugin.version>2.10</tiles-maven-plugin.version>
-        <kemitix-tiles.version>0.5.2</kemitix-tiles.version>
-        <!-- kemitix-tiles provides surefire 2.20.1 which is broken - downgrade surefire to 2.20 -->
-        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
+        <kemitix-tiles.version>0.6.1</kemitix-tiles.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
         <kemitix-checkstyle.version>4.0.1</kemitix-checkstyle.version>
     </properties>
