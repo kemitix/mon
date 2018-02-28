@@ -20,6 +20,8 @@
         <lombok.version>1.16.20</lombok.version>
         <tiles-maven-plugin.version>2.10</tiles-maven-plugin.version>
         <kemitix-tiles.version>0.6.1</kemitix-tiles.version>
+        <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>2.20.1</maven-failsafe-plugin.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
         <kemitix-checkstyle.version>4.0.1</kemitix-checkstyle.version>
     </properties>
