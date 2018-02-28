@@ -18,7 +18,7 @@
         <assertj-core.version>3.8.0</assertj-core.version>
         <lombok.version>1.16.18</lombok.version>
         <tiles-maven-plugin.version>2.10</tiles-maven-plugin.version>
-        <kemitix-tiles.version>0.1.1</kemitix-tiles.version>
+        <kemitix-tiles.version>0.5.2</kemitix-tiles.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
         <kemitix-checkstyle.version>4.0.1</kemitix-checkstyle.version>
     </properties>
@@ -53,7 +53,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <tiles>
-                        <tile>net.kemitix.tiles:all-tiles:${kemitix-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:all:${kemitix-tiles.version}</tile>
                         <tile>net.kemitix.checkstyle:tile:${kemitix-checkstyle.version}</tile>
                     </tiles>
                 </configuration>
