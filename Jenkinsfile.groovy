@@ -18,13 +18,14 @@ pipeline {
                         }
                     }
                 }
-                stage('Java 9') {
-                    steps {
-                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
+                // requires maven-failsafe-plugin:2.21 when it is released
+//                stage('Java 9') {
+//                    steps {
+//                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
+//                            sh 'mvn clean install'
+//                        }
+//                    }
+//                }
             }
         }
         stage('Reporting') {
