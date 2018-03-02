@@ -9,7 +9,6 @@ CHANGELOG
 * Add `BeanBuilder` experiment
 * Upgrade `lombok` to 1.16.20
 * Upgrade assertj to 3.9.1
-* jenkins: test on both java 8 and 9
 
 0.4.0
 -----
