@@ -9,6 +9,16 @@ pipeline {
                 git url: gitRepoUrl, branch: '**', credentialsId: 'github-kemitix'
             }
         }
+        stage('no SNAPSHOT in master') {
+            // checks that the pom version is not a snapshot when the current branch is master
+            when { expression (env.GIT_BRANCH == 'master') }
+            steps {
+                def pom = readMavenPom file: 'pom.xml'
+                if ((pom.version).contains("SNAPSHOT")) {
+                    error("Build failed because SNAPSHOT version: ${pom.groupId}:${pom.artifactId}:${pom.version}")
+                }
+            }
+        }
         stage('Build') {
             parallel {
                 stage('Java 8') {
