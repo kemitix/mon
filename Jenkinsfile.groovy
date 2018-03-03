@@ -12,11 +12,14 @@ pipeline {
         }
         stage('no SNAPSHOT in master') {
             // checks that the pom version is not a snapshot when the current branch is master
-            when { expression { (env.GIT_BRANCH == 'master') } }
+            // TODO: also check for SNAPSHOT when is a pull request with master as the target branch
+            when {
+                expression {
+                    (env.GIT_BRANCH == 'master') &&
+                            (pom.version).contains("SNAPSHOT") }
+            }
             steps {
-                if ((pom.version).contains("SNAPSHOT")) {
-                    error("Build failed because SNAPSHOT version: ${pom.groupId}:${pom.artifactId}:${pom.version}")
-                }
+                error("Build failed because SNAPSHOT version: ${pom.groupId}:${pom.artifactId}:${pom.version}")
             }
         }
         stage('Build') {
