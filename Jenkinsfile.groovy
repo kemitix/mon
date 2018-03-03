@@ -16,10 +16,7 @@ pipeline {
             when {
                 expression {
                     (env.GIT_BRANCH == 'master') &&
-                            (pom.version).contains("SNAPSHOT") }
-            }
-            steps {
-                error("Build failed because SNAPSHOT version: ${pom.groupId}:${pom.artifactId}:${pom.version}")
+                            (readMavenPom(file: 'pom.xml').version).contains("SNAPSHOT") }
             }
         }
         stage('Build') {
