@@ -42,6 +42,11 @@ pipeline {
                 archiveArtifacts '**/target/*.jar'
             }
         }
+        stage('Coverage') {
+            steps {
+                jacoco(execPattern: '**/target/jacoco.exec')
+            }
+        }
         stage('Deploy') {
             when { expression { (env.GIT_BRANCH == 'master') } }
             steps {
