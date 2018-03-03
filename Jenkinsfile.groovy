@@ -18,8 +18,7 @@ pipeline {
                             (readMavenPom(file: 'pom.xml').version).contains("SNAPSHOT") }
             }
             steps {
-                def pom = readMavenPom(file: 'pom.xml')
-                error("Build failed because SNAPSHOT version: ${pom.groupId}:${pom.artifactId}:${pom.version}")
+                error("Build failed because SNAPSHOT version")
             }
         }
         stage('Build') {
