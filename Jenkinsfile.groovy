@@ -1,6 +1,5 @@
 final String gitRepoUrl = 'git@github.com:kemitix/mon.git'
 final String mvn = "mvn --batch-mode --update-snapshots"
-final Model pom = readMavenPom file: 'pom.xml'
 
 pipeline {
     agent any
@@ -13,6 +12,7 @@ pipeline {
         stage('no SNAPSHOT in master') {
             // checks that the pom version is not a snapshot when the current branch is master
             // TODO: also check for SNAPSHOT when is a pull request with master as the target branch
+            final Model pom = readMavenPom file: 'pom.xml'
             when {
                 expression {
                     (env.GIT_BRANCH == 'master') &&
