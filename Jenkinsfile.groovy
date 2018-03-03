@@ -12,13 +12,13 @@ pipeline {
         stage('no SNAPSHOT in master') {
             // checks that the pom version is not a snapshot when the current branch is master
             // TODO: also check for SNAPSHOT when is a pull request with master as the target branch
-            final Model pom = readMavenPom file: 'pom.xml'
             when {
                 expression {
                     (env.GIT_BRANCH == 'master') &&
-                            (pom.version).contains("SNAPSHOT") }
+                            (readMavenPom(file: 'pom.xml').version).contains("SNAPSHOT") }
             }
             steps {
+                def pom = readMavenPom(file: 'pom.xml')
                 error("Build failed because SNAPSHOT version: ${pom.groupId}:${pom.artifactId}:${pom.version}")
             }
         }
