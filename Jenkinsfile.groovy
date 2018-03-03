@@ -17,6 +17,9 @@ pipeline {
                     (env.GIT_BRANCH == 'master') &&
                             (readMavenPom(file: 'pom.xml').version).contains("SNAPSHOT") }
             }
+            steps {
+                error("Build failed because SNAPSHOT version")
+            }
         }
         stage('Build') {
             parallel {
