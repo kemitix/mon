@@ -1,5 +1,6 @@
 final String gitRepoUrl = 'git@github.com:kemitix/mon.git'
 final String mvn = "mvn --batch-mode --update-snapshots"
+def pom = readMavenPom file: 'pom.xml'
 
 pipeline {
     agent any
@@ -11,9 +12,8 @@ pipeline {
         }
         stage('no SNAPSHOT in master') {
             // checks that the pom version is not a snapshot when the current branch is master
-            when { expression (env.GIT_BRANCH == 'master') }
+            when { expression { (env.GIT_BRANCH == 'master') } }
             steps {
-                def pom = readMavenPom file: 'pom.xml'
                 if ((pom.version).contains("SNAPSHOT")) {
                     error("Build failed because SNAPSHOT version: ${pom.groupId}:${pom.artifactId}:${pom.version}")
                 }
