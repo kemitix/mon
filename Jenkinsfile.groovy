@@ -1,6 +1,5 @@
 final String gitRepoUrl = 'git@github.com:kemitix/mon.git'
 final String mvn = "mvn --batch-mode --update-snapshots"
-def pom = readMavenPom file: 'pom.xml'
 
 pipeline {
     agent any
