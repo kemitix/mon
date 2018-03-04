@@ -30,7 +30,6 @@ pipeline {
                         }
                     }
                 }
-                // requires maven-failsafe-plugin:2.21 when it is released
                 stage('Java 9') {
                     steps {
                         withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
@@ -40,10 +39,19 @@ pipeline {
                 }
             }
         }
-        stage('Reporting') {
+        stage('Test Results') {
             steps {
                 junit '**/target/surefire-reports/*.xml'
+            }
+        }
+        stage('Archiving') {
+            steps {
                 archiveArtifacts '**/target/*.jar'
+            }
+        }
+        stage('Coverage') {
+            steps {
+                jacoco(execPattern: '**/target/jacoco.exec')
             }
         }
         stage('Deploy') {
