@@ -1,4 +1,5 @@
-final String gitRepoUrl = 'git@github.com:kemitix/mon.git'
+final String repoName = "mon"
+final String repoUrl = "git@github.com:kemitix/${repoName}.git"
 final String mvn = "mvn --batch-mode --update-snapshots"
 
 pipeline {
@@ -6,7 +7,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                git url: gitRepoUrl, branch: '**', credentialsId: 'github-kemitix'
+                git url: repoUrl, branch: '**', credentialsId: 'github-kemitix'
             }
         }
         stage('no SNAPSHOT in master') {
@@ -57,7 +58,7 @@ pipeline {
         stage('Deploy') {
             when { expression { (env.GIT_BRANCH == 'master') } }
             steps {
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
                     sh "${mvn} deploy --activate-profiles release -DskipTests=true"
                 }
             }
