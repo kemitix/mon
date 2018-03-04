@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.6.0
+-----
+
+* jenkins: add Coverage stage
+* jenkins: split Reporting stage into Test Results and Archiving
+* jenkins: remove java 9 testing from `develop` branch
+
 0.5.1
 -----
 
