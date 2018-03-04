@@ -1,4 +1,5 @@
-final String gitRepoUrl = 'git@github.com:kemitix/mon.git'
+final String repoName = "mon"
+final String repoUrl = "git@github.com:kemitix/${repoName}.git"
 final String mvn = "mvn --batch-mode --update-snapshots"
 
 pipeline {
@@ -6,7 +7,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                git url: gitRepoUrl, branch: '**', credentialsId: 'github-kemitix'
+                git url: repoUrl, branch: '**', credentialsId: 'github-kemitix'
             }
         }
         stage('no SNAPSHOT in master') {
@@ -26,30 +27,38 @@ pipeline {
                 stage('Java 8') {
                     steps {
                         withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                            sh "${mvn} clean install"
+                        }
+                    }
+                }
+                stage('Java 9') {
+                    steps {
+                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
                             sh 'mvn clean install'
                         }
                     }
                 }
-                // requires maven-failsafe-plugin:2.21 when it is released
-//                stage('Java 9') {
-//                    steps {
-//                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
-//                            sh 'mvn clean install'
-//                        }
-//                    }
-//                }
             }
         }
-        stage('Reporting') {
+        stage('Test Results') {
             steps {
                 junit '**/target/surefire-reports/*.xml'
+            }
+        }
+        stage('Archiving') {
+            steps {
                 archiveArtifacts '**/target/*.jar'
+            }
+        }
+        stage('Coverage') {
+            steps {
+                jacoco(execPattern: '**/target/jacoco.exec')
             }
         }
         stage('Deploy') {
             when { expression { (env.GIT_BRANCH == 'master') } }
             steps {
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
                     sh "${mvn} deploy --activate-profiles release -DskipTests=true"
                 }
             }

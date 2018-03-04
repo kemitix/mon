@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+0.6.0
+-----
+
+* Java 9 compatible
+* Upgrade `assertj` to 3.9.1
+* jenkins: add Coverage stage
+* jenkins: split Reporting stage into Test Results and Archiving
+* jenkins: remove java 9 testing from `develop` branch
+
 0.5.1
 -----
 
