@@ -1,15 +1,8 @@
-final String repoName = "mon"
-final String repoUrl = "git@github.com:kemitix/${repoName}.git"
 final String mvn = "mvn --batch-mode --update-snapshots"
 
 pipeline {
     agent any
     stages {
-        stage('Prepare') {
-            steps {
-                git url: repoUrl, branch: '**', credentialsId: 'github-kemitix'
-            }
-        }
         stage('no SNAPSHOT in master') {
             // checks that the pom version is not a snapshot when the current branch is master
             // TODO: also check for SNAPSHOT when is a pull request with master as the target branch
@@ -20,6 +13,14 @@ pipeline {
             }
             steps {
                 error("Build failed because SNAPSHOT version")
+            }
+        }
+        stage('Static Code Analysis') {
+            steps {
+                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                    sh "${mvn} compile checkstyle:checkstyle pmd:pmd"
+                }
+                pmd canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
             }
         }
         stage('Build') {
@@ -34,7 +35,7 @@ pipeline {
                 stage('Java 9') {
                     steps {
                         withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
-                            sh 'mvn clean install'
+                            sh "${mvn} clean install"
                         }
                     }
                 }
@@ -43,6 +44,14 @@ pipeline {
         stage('Test Results') {
             steps {
                 junit '**/target/surefire-reports/*.xml'
+                jacoco exclusionPattern: '**/*{Test|IT|Main|Application|Immutable}.class'
+                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                    sh "${mvn} com.gavinmogan:codacy-maven-plugin:coverage " +
+                            "-DcoverageReportFile=target/site/jacoco/jacoco.xml " +
+                            "-DprojectToken=`$JENKINS_HOME/codacy/token` " +
+                            "-DapiToken=`$JENKINS_HOME/codacy/apitoken` " +
+                            "-Dcommit=`git rev-parse HEAD`"
+                }
             }
         }
         stage('Archiving') {
@@ -50,15 +59,10 @@ pipeline {
                 archiveArtifacts '**/target/*.jar'
             }
         }
-        stage('Coverage') {
-            steps {
-                jacoco(execPattern: '**/target/jacoco.exec')
-            }
-        }
         stage('Deploy') {
             when { expression { (env.GIT_BRANCH == 'master') } }
             steps {
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
+                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
                     sh "${mvn} deploy --activate-profiles release -DskipTests=true"
                 }
             }
