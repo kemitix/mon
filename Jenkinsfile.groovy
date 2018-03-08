@@ -64,7 +64,7 @@ pipeline {
             }
         }
         stage('Deploy') {
-            when { expression { (env.GIT_BRANCH == 'master') } }
+            when { expression { (env.GIT_BRANCH == 'master' && env.GIT_URL.startsWith('https://')) } }
             steps {
                 withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
                     sh "${mvn} deploy --activate-profiles release -DskipTests=true"
