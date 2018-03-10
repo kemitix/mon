@@ -13,43 +13,47 @@ pipeline {
             when {
                 expression {
                     (env.GIT_BRANCH == 'master' || env.CHANGE_TARGET == 'master') &&
-                            (readMavenPom(file: 'pom.xml').version).contains("SNAPSHOT") }
+                            (readMavenPom(file: 'pom.xml').version).contains("SNAPSHOT")
+                }
             }
             steps {
                 error("Build failed because SNAPSHOT version")
             }
         }
         stage('Static Code Analysis') {
+            when { expression { findFiles(glob: '**/src/main/java/**/*.java').length > 0 } }
             steps {
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
-                    sh "${mvn} compile checkstyle:checkstyle pmd:pmd"
+                withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                    sh "${mvn} compile"
+                    sh "${mvn} checkstyle:checkstyle"
+                    sh "${mvn} pmd:pmd"
+                    pmd canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
+                    withSonarQubeEnv('sonarqube') {
+                        sh "${mvn} org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
+                    }
                 }
-                pmd canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
             }
         }
-        stage('Build') {
-            parallel {
-                stage('Java 8') {
-                    steps {
-                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
-                            sh "${mvn} clean install"
-                        }
-                    }
+        stage('Build Java Next') {
+            steps {
+                withMaven(maven: 'maven', jdk: 'JDK Next') {
+                    sh "${mvn} clean install"
                 }
-                stage('Java 9') {
-                    steps {
-                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
-                            sh "${mvn} clean install"
-                        }
-                    }
+            }
+        }
+        stage('Build Java LTS') {
+            steps {
+                withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                    sh "${mvn} clean install"
                 }
             }
         }
         stage('Test Results') {
+            when { expression { findFiles(glob: '**/target/surefire-reports/*.xml').length > 0 } }
             steps {
                 junit '**/target/surefire-reports/*.xml'
                 jacoco exclusionPattern: '**/*{Test|IT|Main|Application|Immutable}.class'
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                withMaven(maven: 'maven', jdk: 'JDK LTS') {
                     sh "${mvn} com.gavinmogan:codacy-maven-plugin:coverage " +
                             "-DcoverageReportFile=target/site/jacoco/jacoco.xml " +
                             "-DprojectToken=`$JENKINS_HOME/codacy/token` " +
@@ -59,6 +63,7 @@ pipeline {
             }
         }
         stage('Archiving') {
+            when { expression { findFiles(glob: '**/target/*.jar').length > 0 } }
             steps {
                 archiveArtifacts '**/target/*.jar'
             }
@@ -66,7 +71,7 @@ pipeline {
         stage('Deploy') {
             when { expression { (env.GIT_BRANCH == 'master' && env.GIT_URL.startsWith('https://')) } }
             steps {
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                withMaven(maven: 'maven', jdk: 'JDK LTS') {
                     sh "${mvn} deploy --activate-profiles release -DskipTests=true"
                 }
             }
