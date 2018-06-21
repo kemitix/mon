@@ -97,7 +97,7 @@ public class MonTest {
     public void factoryRequiresValidator() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(null, Optional::of, Optional::empty))
-                .withMessage("validator");
+                .withMessageContaining("validator");
     }
 
     @Test
@@ -105,7 +105,7 @@ public class MonTest {
     public void factoryRequiresOnValid() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(v -> true, null, Optional::empty))
-                .withMessage("onValid");
+                .withMessageContaining("onValid");
     }
 
     @Test
@@ -113,7 +113,7 @@ public class MonTest {
     public void factoryRequiresOnInvalid() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(v -> true, Optional::of, null))
-                .withMessage("onInvalid");
+                .withMessageContaining("onInvalid");
     }
 
     @Test

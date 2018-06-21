@@ -24,7 +24,7 @@ public class MaybeTest {
     @Test
     public void justMustBeNonNull() {
         assertThatNullPointerException().isThrownBy(() -> just(null))
-                                        .withMessage("value");
+                                        .withMessageContaining("value");
     }
 
     @Test

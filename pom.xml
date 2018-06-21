@@ -4,12 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>net.kemitix</groupId>
-        <artifactId>kemitix-parent</artifactId>
-        <version>5.1.0</version>
-        <relativePath/>
-    </parent>
     <groupId>net.kemitix</groupId>
     <artifactId>mon</artifactId>
     <version>0.7.0-SNAPSHOT</version>
@@ -21,10 +15,10 @@
         <lombok.version>1.18.0</lombok.version>
         <tiles-maven-plugin.version>2.11</tiles-maven-plugin.version>
         <kemitix-tiles.version>0.8.1</kemitix-tiles.version>
-        <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>2.20.1</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>2.22.0</maven-failsafe-plugin.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
-        <kemitix-checkstyle.version>4.0.1</kemitix-checkstyle.version>
+        <kemitix-checkstyle.version>4.1.1</kemitix-checkstyle.version>
     </properties>
 
     <dependencies>
