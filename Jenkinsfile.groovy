@@ -1,75 +1,90 @@
-final String mvn = "mvn --batch-mode --update-snapshots"
+final String mvn = "mvn --batch-mode --update-snapshots --errors"
+final dependenciesSupportJDK = 9
 
 pipeline {
     agent any
     stages {
-        stage('Environment') {
-            steps {
-                sh 'set'
-            }
-        }
-        stage('no SNAPSHOT in master') {
-            // checks that the pom version is not a snapshot when the current or target branch is master
+        stage('release != SNAPSHOT') {
+            // checks that the pom version is not a SNAPSHOT when the current branch is a release
             when {
                 expression {
-                    (env.GIT_BRANCH == 'master' || env.CHANGE_TARGET == 'master') &&
-                            (readMavenPom(file: 'pom.xml').version).contains("SNAPSHOT") }
-            }
-            steps {
-                error("Build failed because SNAPSHOT version")
-            }
-        }
-        stage('Static Code Analysis') {
-            steps {
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
-                    sh "${mvn} compile checkstyle:checkstyle pmd:pmd"
+                    (branchStartsWith('release/')) &&
+                            (readMavenPom(file: 'pom.xml').version).contains("SNAPSHOT")
                 }
-                pmd canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
+            }
+            steps {
+                error("Build failed because SNAPSHOT version: [" + env.GIT_BRANCH + "]")
             }
         }
-        stage('Build') {
-            parallel {
-                stage('Java 8') {
-                    steps {
-                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
-                            sh "${mvn} clean install"
-                        }
+        stage('Build & Test') {
+            steps {
+                withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                    sh "${mvn} clean compile checkstyle:checkstyle pmd:pmd test"
+                    jacoco exclusionPattern: '**/*{Test|IT|Main|Application|Immutable}.class'
+                    pmd canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
+                    step([$class   : 'hudson.plugins.checkstyle.CheckStylePublisher',
+                          pattern  : '**/target/checkstyle-result.xml',
+                          healthy  : '20',
+                          unHealthy: '100'])
+                }
+            }
+        }
+        stage('Verify & Install') {
+            steps {
+                withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                    sh "${mvn} -DskipTests install"
+                }
+            }
+        }
+        stage('SonarQube (gitlab only)') {
+            when { expression { isPublished() } }
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                        sh "${mvn} org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
                     }
                 }
-                stage('Java 9') {
-                    steps {
-                        withMaven(maven: 'maven 3.5.2', jdk: 'JDK 9') {
-                            sh "${mvn} clean install"
-                        }
-                    }
+            }
+        }
+        stage('Deploy (release on gitlab)') {
+            when {
+                expression {
+                    (branchStartsWith('release/') && isPublished())
                 }
             }
-        }
-        stage('Test Results') {
             steps {
-                junit '**/target/surefire-reports/*.xml'
-                jacoco exclusionPattern: '**/*{Test|IT|Main|Application|Immutable}.class'
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
-                    sh "${mvn} com.gavinmogan:codacy-maven-plugin:coverage " +
-                            "-DcoverageReportFile=target/site/jacoco/jacoco.xml " +
-                            "-DprojectToken=`$JENKINS_HOME/codacy/token` " +
-                            "-DapiToken=`$JENKINS_HOME/codacy/apitoken` " +
-                            "-Dcommit=`git rev-parse HEAD`"
-                }
-            }
-        }
-        stage('Archiving') {
-            steps {
-                archiveArtifacts '**/target/*.jar'
-            }
-        }
-        stage('Deploy') {
-            when { expression { (env.GIT_BRANCH == 'master') } }
-            steps {
-                withMaven(maven: 'maven 3.5.2', jdk: 'JDK 1.8') {
+                withMaven(maven: 'maven', jdk: 'JDK LTS') {
                     sh "${mvn} deploy --activate-profiles release -DskipTests=true"
                 }
             }
         }
+        stage('Build Java 9') {
+            when { expression { dependenciesSupportJDK >= 9 } }
+            steps {
+                withMaven(maven: 'maven', jdk: 'JDK 9') {
+                    sh "${mvn} clean verify -Djava.version=9"
+                }
+            }
+        }
+        stage('Build Java 10') {
+            when { expression { dependenciesSupportJDK >= 10 } }
+            steps {
+                withMaven(maven: 'maven', jdk: 'JDK 10') {
+                    sh "${mvn} clean verify -Djava.version=10"
+                }
+            }
+        }
     }
+}
+
+private boolean branchStartsWith(String branchName) {
+    startsWith(env.GIT_BRANCH, branchName)
+}
+
+private boolean isPublished() {
+    startsWith(env.GIT_URL, 'https://')
+}
+
+private boolean startsWith(String value, String match) {
+    value != null && value.startsWith(match)
 }
