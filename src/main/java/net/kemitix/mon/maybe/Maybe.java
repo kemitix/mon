@@ -19,9 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.mon;
+package net.kemitix.mon.maybe;
 
 import lombok.NonNull;
+import net.kemitix.mon.Functor;
 
 import java.util.Optional;
 import java.util.function.Consumer;

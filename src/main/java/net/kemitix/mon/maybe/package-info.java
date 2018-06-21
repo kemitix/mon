@@ -19,57 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.mon;
-
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 /**
- * A Maybe where no value is present.
+ * An experiment in creating something similar to a Type-Alias in Java.
  *
- * @param <T> the type of the missing content
+ * <p>Ideas initially lifted from the Design with Types series at https://fsharpforfunandprofit.com/</p>
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-public final class Nothing<T> implements Maybe<T> {
 
-    protected static final Maybe<?> INSTANCE = new Nothing<>();
-
-    @Override
-    public <R> Maybe<?> map(final Function<T, R> f) {
-        return this;
-    }
-
-    @Override
-    public T orElseGet(final Supplier<T> supplier) {
-        return supplier.get();
-    }
-
-    @Override
-    public T orElse(final T otherValue) {
-        return otherValue;
-    }
-
-    @Override
-    public Maybe<T> filter(final Predicate<T> predicate) {
-        return this;
-    }
-
-    @Override
-    public Optional<T> toOptional() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Maybe<T> peek(final Consumer<T> consumer) {
-        return this;
-    }
-
-    @Override
-    public void orElseThrow(final Supplier<Exception> e) throws Exception {
-        throw e.get();
-    }
-}
+package net.kemitix.mon.maybe;

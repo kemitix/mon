@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.mon;
+package net.kemitix.mon.maybe;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ import java.util.function.Supplier;
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public final class Just<T> implements Maybe<T> {
+final class Just<T> implements Maybe<T> {
 
     private final T value;
 

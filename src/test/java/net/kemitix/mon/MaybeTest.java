@@ -1,5 +1,6 @@
 package net.kemitix.mon;
 
+import net.kemitix.mon.maybe.Maybe;
 import org.junit.Test;
 
 import java.util.Objects;
@@ -7,9 +8,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-import static net.kemitix.mon.Maybe.just;
-import static net.kemitix.mon.Maybe.maybe;
-import static net.kemitix.mon.Maybe.nothing;
+import static net.kemitix.mon.maybe.Maybe.just;
+import static net.kemitix.mon.maybe.Maybe.maybe;
+import static net.kemitix.mon.maybe.Maybe.nothing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
