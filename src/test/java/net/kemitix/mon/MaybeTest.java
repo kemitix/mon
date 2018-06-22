@@ -85,8 +85,12 @@ public class MaybeTest implements WithAssertions {
 
     @Test
     public void fromOptional() {
+        // deprecated methods
         assertThat(Maybe.fromOptional(Optional.of(1))).isEqualTo(just(1));
         assertThat(Maybe.fromOptional(Optional.empty())).isEqualTo(nothing());
+        // recommended alternative
+        assertThat(Optional.of(1).map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(just(1));
+        assertThat(Optional.empty().map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(nothing());
     }
 
 

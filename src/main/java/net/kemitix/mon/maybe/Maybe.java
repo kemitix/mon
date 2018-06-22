@@ -25,10 +25,6 @@ import lombok.NonNull;
 import net.kemitix.mon.Functor;
 
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 /**
  * A value that may or may not be present.
@@ -37,7 +33,7 @@ import java.util.stream.Stream;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-public interface Maybe<T> extends Functor<T, Maybe<?>> {
+public interface Maybe<T> extends Functor<T, Maybe<?>>, MaybeStream<T>, MaybeOptional<T> {
 
     /**
      * Create a Maybe for the value that is present.
@@ -85,69 +81,14 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
      * @param <T>      the type of the Optional
      *
      * @return a Maybe
+     * @deprecated need to find a better way of converting an Optional to a Maybe, but
+     * without having to pass the Optional as a parameter
+     * Try: Optional.of(1).map(Maybe::just).orElseGet(Maybe::nothing)
      */
+    @Deprecated
     static <T> Maybe<T> fromOptional(final Optional<T> optional) {
         return optional.map(Maybe::maybe)
                        .orElse(nothing());
     }
 
-    /**
-     * Provide a value to use when Maybe is Nothing.
-     *
-     * @param supplier supplier for an alternate value
-     *
-     * @return a Maybe
-     */
-    T orElseGet(Supplier<T> supplier);
-
-    /**
-     * A value to use when Maybe is Nothing.
-     *
-     * @param otherValue an alternate value
-     *
-     * @return a Maybe
-     */
-    T orElse(T otherValue);
-
-    /**
-     * Filter a Maybe by the predicate, replacing with Nothing when it fails.
-     *
-     * @param predicate the test
-     *
-     * @return the Maybe, or Nothing if the test returns false
-     */
-    Maybe<T> filter(Predicate<T> predicate);
-
-    /**
-     * Convert the Maybe to an {@link Optional}.
-     *
-     * @return an Optional containing a value for a Just, or empty for a Nothing
-     */
-    Optional<T> toOptional();
-
-    /**
-     * Provide the value within the Maybe, if it exists, to the Supplier, and returns the Maybe.
-     *
-     * @param consumer the Consumer to the value if present
-     *
-     * @return the Maybe
-     */
-    Maybe<T> peek(Consumer<T> consumer);
-
-    /**
-     * Throw the exception if the Maybe is a Nothing.
-     *
-     * @param e the exception to throw
-     *
-     * @throws Exception if the Maybe is a Nothing
-     */
-    @SuppressWarnings("illegalthrows")
-    void orElseThrow(Supplier<Exception> e) throws Exception;
-
-    /**
-     * Converts the Maybe into either a single value stream or and empty stream.
-     *
-     * @return a Stream containing the value or nothing.
-     */
-    Stream<T> stream();
 }
