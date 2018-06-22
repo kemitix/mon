@@ -41,7 +41,7 @@ public interface Result<T> {
      * @return a successful Result
      */
     static <T> Result<T> ok(final T value) {
-        return new Success<T>(value);
+        return new Success<>(value);
     }
 
     /**
@@ -52,7 +52,7 @@ public interface Result<T> {
      * @return an error Result
      */
     static <T> Result<T> error(final Throwable error) {
-        return new Err<T>(error);
+        return new Err<>(error);
     }
 
     /**
