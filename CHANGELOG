@@ -5,6 +5,7 @@ CHANGELOG
 -----
 
 * Add `Result`
+* Moved `Maybe` to `net.kemitix.mon.maybe.Maybe`
 
 0.6.0
 -----
