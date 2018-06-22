@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * A value that may or may not be present.
@@ -143,4 +144,10 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     @SuppressWarnings("illegalthrows")
     void orElseThrow(Supplier<Exception> e) throws Exception;
 
+    /**
+     * Converts the Maybe into either a single value stream or and empty stream.
+     *
+     * @return a Stream containing the value or nothing.
+     */
+    Stream<T> stream();
 }

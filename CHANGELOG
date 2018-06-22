@@ -6,6 +6,7 @@ CHANGELOG
 
 * Add `Result`
 * Moved `Maybe` to `net.kemitix.mon.maybe.Maybe`
+* Add `Maybe.stream()`
 
 0.6.0
 -----

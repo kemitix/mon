@@ -1,22 +1,20 @@
 package net.kemitix.mon;
 
 import net.kemitix.mon.maybe.Maybe;
+import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static net.kemitix.mon.maybe.Maybe.just;
 import static net.kemitix.mon.maybe.Maybe.maybe;
 import static net.kemitix.mon.maybe.Maybe.nothing;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatNullPointerException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class MaybeTest {
+public class MaybeTest implements WithAssertions {
 
     private static <T> Predicate<T> eq(final T value) {
         return v -> Objects.equals(value, v);
@@ -111,5 +109,21 @@ public class MaybeTest {
     public void nothingOrThrow() {
         assertThatThrownBy(() -> nothing().orElseThrow(IllegalStateException::new)).isInstanceOf(
                 IllegalStateException.class);
+    }
+
+    @Test
+    public void justToStream() {
+        //when
+        final Stream<Integer> stream = just(1).stream();
+        //then
+        assertThat(stream).containsExactly(1);
+    }
+
+    @Test
+    public void nothingToStream() {
+        //when
+        final Stream<Object> stream = nothing().stream();
+        //then
+        assertThat(stream).isEmpty();
     }
 }

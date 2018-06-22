@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * A Maybe where no value is present.
@@ -71,5 +72,10 @@ final class Nothing<T> implements Maybe<T> {
     @Override
     public void orElseThrow(final Supplier<Exception> e) throws Exception {
         throw e.get();
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return Stream.empty();
     }
 }

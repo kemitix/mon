@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * A Maybe where a value is present.
@@ -90,5 +91,10 @@ final class Just<T> implements Maybe<T> {
     @Override
     public void orElseThrow(final Supplier<Exception> e) {
         // do not throw
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return Stream.of(value);
     }
 }
