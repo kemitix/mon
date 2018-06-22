@@ -1,5 +1,6 @@
 package net.kemitix.mon;
 
+import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.result.Result;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
@@ -102,5 +103,92 @@ public class ResultTest implements WithAssertions {
         final Result<String> flatMap = result.flatMap(v -> Result.error(new Exception("bad flat map")));
         //then
         assertThat(flatMap.isError()).isTrue();
+    }
+
+    @Test
+    public void useCase_whenOkay_thenReturnSuccess() {
+        //given
+        final UseCase useCase = UseCase.isOkay();
+        //when
+        final Result<Double> doubleResult = useCase.businessOperation("file a", "file bc");
+        //then
+        assertThat(doubleResult.isOkay()).isTrue();
+        doubleResult.match(
+                success -> assertThat(success).isEqualTo(7.5),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void useCase_whenFirstReadIsError_thenReturnError() {
+        //given
+        final UseCase useCase = UseCase.firstReadInvalid();
+        //when
+        final Result<Double> doubleResult = useCase.businessOperation("file def", "file ghij");
+        //then
+        assertThat(doubleResult.isOkay()).isFalse();
+        doubleResult.match(
+                success -> fail("not okay"),
+                error -> assertThat(error)
+                        .isInstanceOf(RuntimeException.class)
+                        .hasMessage("file def")
+        );
+    }
+
+    @Test
+    public void useCase_whenSecondReadIsError_thenReturnError() {
+        //given
+        final UseCase useCase = UseCase.secondReadInvalid();
+        //when
+        final Result<Double> doubleResult = useCase.businessOperation("file klmno", "file pqrstu");
+        //then
+        assertThat(doubleResult.isOkay()).isFalse();
+        doubleResult.match(
+                success -> fail("not okay"),
+                error -> assertThat(error)
+                        .isInstanceOf(RuntimeException.class)
+                        .hasMessage("file klmno")
+        );
+    }
+
+    @RequiredArgsConstructor
+    private static class UseCase {
+
+        private final Boolean okay;
+
+        static UseCase isOkay() {
+            return new UseCase(true);
+        }
+
+        static UseCase firstReadInvalid() {
+            return new UseCase(false);
+        }
+
+        static UseCase secondReadInvalid() {
+            return new UseCase(false);
+        }
+
+        Result<Double> businessOperation(final String fileName1, final String fileName2) {
+            return readIntFromFile(fileName1).flatMap(intFromFile1 ->
+                    adjustValue(intFromFile1).flatMap(adjustedIntFromFile1 ->
+                            readIntFromFile(fileName2).flatMap(intFromFile2 ->
+                                    calculateAverage(adjustedIntFromFile1, intFromFile2))));
+        }
+
+        private Result<Double> calculateAverage(final Integer val1, final Integer val2) {
+            return Result.ok((double) (val1 + val2) / 2);
+        }
+
+        private Result<Integer> adjustValue(Integer value) {
+            return Result.ok(value + 2);
+        }
+
+        private Result<Integer> readIntFromFile(String fileName) {
+            if (okay) {
+                return Result.ok(fileName.length());
+            }
+            return Result.error(new RuntimeException(fileName));
+        }
+
     }
 }
