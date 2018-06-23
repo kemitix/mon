@@ -22,9 +22,11 @@
 package net.kemitix.mon.result;
 
 import lombok.RequiredArgsConstructor;
+import net.kemitix.mon.maybe.Maybe;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * A Successful Result.
@@ -59,5 +61,13 @@ class Success<T> implements Result<T> {
     @Override
     public void match(final Consumer<T> onSuccess, final Consumer<Throwable> onError) {
         onSuccess.accept(value);
+    }
+
+    @Override
+    public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
+        if (predicate.test(value)) {
+            return Result.ok(Maybe.just(value));
+        }
+        return Result.ok(Maybe.nothing());
     }
 }

@@ -1,9 +1,12 @@
 package net.kemitix.mon;
 
 import lombok.RequiredArgsConstructor;
+import net.kemitix.mon.maybe.Maybe;
 import net.kemitix.mon.result.Result;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
+
+import java.util.function.Predicate;
 
 public class ResultTest implements WithAssertions {
 
@@ -130,6 +133,64 @@ public class ResultTest implements WithAssertions {
         assertThat(result.isError()).isTrue();
         result.match(
                 success -> fail("not an success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void successMaybe_whenPasses_isSuccessJust() {
+        //given
+        final Result<Integer> okResult = Result.ok(1);
+        //when
+        final Result<Maybe<Integer>> maybeResult = okResult.maybe(value -> value >= 0);
+        //then
+        assertThat(maybeResult.isOkay()).isTrue();
+        maybeResult.match(
+                success -> assertThat(success.toOptional()).contains(1),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void successMaybe_whenFails_isSuccessNothing() {
+        //given
+        final Result<Integer> okResult = Result.ok(1);
+        //when
+        final Result<Maybe<Integer>> maybeResult = okResult.maybe(value -> value >= 4);
+        //then
+        assertThat(maybeResult.isOkay()).isTrue();
+        maybeResult.match(
+                success -> assertThat(success.toOptional()).isEmpty(),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void errorMaybe_whenPasses_isError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> errorResult = Result.error(exception);
+        //when
+        final Result<Maybe<Integer>> maybeResult = errorResult.maybe(value -> value >= 0);
+        //then
+        assertThat(maybeResult.isError()).isTrue();
+        maybeResult.match(
+                success -> fail("not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void errorMaybe_whenFails_isError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> errorResult = Result.error(exception);
+        //when
+        final Result<Maybe<Integer>> maybeResult = errorResult.maybe(value -> value >= 4);
+        //then
+        assertThat(maybeResult.isError()).isTrue();
+        maybeResult.match(
+                success -> fail("not a success"),
                 error -> assertThat(error).isSameAs(exception)
         );
     }

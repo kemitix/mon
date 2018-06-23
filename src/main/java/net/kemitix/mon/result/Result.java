@@ -21,8 +21,11 @@
 
 package net.kemitix.mon.result;
 
+import net.kemitix.mon.maybe.Maybe;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * An Either type for holding a result or an error (exception).
@@ -97,4 +100,11 @@ public interface Result<T> {
      */
     void match(Consumer<T> onSuccess, Consumer<Throwable> onError);
 
+    /**
+     * Wraps the value within the Result in a Maybe, either a Just if the predicate is true, or Nothing.
+     *
+     * @param predicate the test to decide
+     * @return a Result containing a Maybe that may or may not contain a value
+     */
+    Result<Maybe<T>> maybe(Predicate<T> predicate);
 }
