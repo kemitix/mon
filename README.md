@@ -21,9 +21,11 @@ TypeAlias, Maybe and Result for Java
 <dependency>
     <groupId>net.kemitix</groupId>
     <artifactId>mon</artifactId>
-    <version>0.6.0</version>
+    <version>RELEASE</version>
 </dependency>
 ```
+
+The latest version should be shown above with the nexus and maven-central badges.
 
 ## Usage
 
@@ -43,7 +45,7 @@ class Goal extends TypeAlias<String> {
 ```
 
 ```java
-class Example {}
+class Example {
     Goal goal = Goal.of("goal");
     void foo(final Goal goal) {
         System.out.println("The goal is " + goal.getValue());
