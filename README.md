@@ -59,25 +59,36 @@ A non-final substitute for Optional with `peek()` and `stream()` methods.
 class Test {
     @Test
     public void maybeTests() {
+        // Constructors: maybe(T), just(T) and nothing()
         assertThat(Maybe.maybe(null)).isEqualTo(Maybe.nothing());
         assertThat(Maybe.maybe(1)).isEqualTo(Maybe.just(1));
+        // .orElseGet(Supplier<T>)
         assertThat(Maybe.nothing().orElseGet(() -> 1)).isEqualTo(1);
         assertThat(Maybe.just(1).orElseGet(() -> 2)).isEqualTo(1);
+        // .orElse(Supplier<T>)
         assertThat(Maybe.nothing().orElse(1)).isEqualTo(1);
         assertThat(Maybe.just(1).orElse(2)).isEqualTo(1);
+        // .filter(Predicate<T>)
         assertThat(Maybe.just(1).filter(v -> v > 2)).isEqualTo(Maybe.nothing());
         assertThat(Maybe.just(3).filter(v -> v > 2)).isEqualTo(Maybe.just(3));
         assertThat(Maybe.just(1).toOptional()).isEqualTo(Optional.of(1));
         assertThat(Maybe.nothing().toOptional()).isEqualTo(Optional.empty());
+        // .fromOptional(Optional<T>) is deprecated
         assertThat(Maybe.fromOptional(Optional.of(1))).isEqualTo(Maybe.just(1));
         assertThat(Maybe.fromOptional(Optional.empty())).isEqualTo(Maybe.nothing());
+        // An alternative to using .fromOptional(Optional<T>)
+        assertThat(Optional.of(1).map(Maybe::just).orElse(Maybe::nothing)).isEqualTo(Maybe.just(1));
+        assertThat(Optional.empty().map(Maybe::just).orElse(Maybe::nothing)).isEqualTo(Maybe.nothing());
+        // .peek(Consumer<T>)
         final AtomicInteger reference = new AtomicInteger(0);
         assertThat(Maybe.just(1).peek(reference::set)).isEqualTo(Maybe.just(1));
         assertThat(reference).hasValue(1);
         assertThat(Maybe.nothing().peek(v -> reference.incrementAndGet())).isEqualTo(Maybe.nothing());
         assertThat(reference).hasValue(1);
+        // .orElseThrow(Supplier<Exception>)
         assertThatCode(() -> Maybe.just(1).orElseThrow(IllegalStateException::new)).doesNotThrowAnyException();
         assertThatThrownBy(() -> Maybe.nothing().orElseThrow(IllegalStateException::new)).isInstanceOf(IllegalStateException.class);
+        // .stream()
         assertThat(Maybe.just(1).stream()).containsExactly(1);
         assertThat(Maybe.nothing().stream()).isEmpty();
     }
