@@ -106,6 +106,35 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
+    public void success_whenMap_isSuccess() {
+        //given
+        final Result<Integer> okResult = Result.ok(1);
+        //when
+        final Result<String> result = okResult.map(value -> String.valueOf(value));
+        //then
+        assertThat(result.isOkay()).isTrue();
+        result.match(
+                success -> assertThat(success).isEqualTo("1"),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void error_whenMap_isError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> errorResult = Result.error(exception);
+        //when
+        final Result<String> result = errorResult.map(value -> String.valueOf(value));
+        //then
+        assertThat(result.isError()).isTrue();
+        result.match(
+                success -> fail("not an success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
     public void useCase_whenOkay_thenReturnSuccess() {
         //given
         final UseCase useCase = UseCase.isOkay();

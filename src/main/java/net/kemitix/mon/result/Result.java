@@ -73,11 +73,21 @@ public interface Result<T> {
      * Returns a new Result consisting of the result of applying the function to the contents of the Result.
      *
      * @param f   the mapping function the produces a Result
-     * @param <R> the type of the result of the mapping function
+     * @param <R> the type of the value withing the Result of the mapping function
      *
      * @return a Result
      */
     <R> Result<R> flatMap(Function<T, Result<R>> f);
+
+    /**
+     * Applies the functions to the value of a successful result, while doing nothing with an error.
+     *
+     * @param f the mapping function to produce the new value
+     * @param <R> the type of the result of the mapping function
+     *
+     * @return a Result
+     */
+    <R> Result<R> map(Function<T, R> f);
 
     /**
      * Matches the Result, either success or error, and supplies the appropriate Consumer with the value or error.

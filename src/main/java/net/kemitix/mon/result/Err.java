@@ -52,6 +52,11 @@ class Err<T> implements Result<T> {
     }
 
     @Override
+    public <R> Result<R> map(final Function<T, R> f) {
+        return Result.error(error);
+    }
+
+    @Override
     public void match(final Consumer<T> onSuccess, final Consumer<Throwable> onError) {
         onError.accept(error);
     }

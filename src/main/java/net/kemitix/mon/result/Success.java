@@ -52,6 +52,11 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public <R> Result<R> map(final Function<T, R> f) {
+        return Result.ok(f.apply(value));
+    }
+
+    @Override
     public void match(final Consumer<T> onSuccess, final Consumer<Throwable> onError) {
         onSuccess.accept(value);
     }
