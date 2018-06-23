@@ -32,7 +32,6 @@ import java.util.stream.Stream;
  * A Maybe where no value is present.
  *
  * @param <T> the type of the missing content
- *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 final class Nothing<T> implements Maybe<T> {
@@ -40,8 +39,8 @@ final class Nothing<T> implements Maybe<T> {
     static final Maybe<?> INSTANCE = new Nothing<>();
 
     @Override
-    public <R> Maybe<?> map(final Function<T, R> f) {
-        return this;
+    public <R> Maybe<R> map(final Function<T, R> f) {
+        return (Maybe<R>) INSTANCE;
     }
 
     @Override

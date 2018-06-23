@@ -26,36 +26,49 @@ import net.kemitix.mon.maybe.Maybe;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * An Either type for holding a result or an error (exception).
  *
  * @param <T> the type of the result when a success
- *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 public interface Result<T> {
 
     /**
-     * Create a Result for a success.
+     * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
      *
-     * @param value the value
-     * @param <T> the type of the value
-     * @return a successful Result
+     * @param maybe the Maybe the might contain the value of the Result
+     * @param error the error that will be the Result if maybe is Nothing
+     * @param <T>   the type of the Maybe and the Result
+     * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
-    static <T> Result<T> ok(final T value) {
-        return new Success<>(value);
+    static <T> Result<T> fromMaybe(final Maybe<T> maybe, final Supplier<Exception> error) {
+        return maybe.map(Result::ok)
+                .orElseGet(() -> Result.error(error.get()));
     }
 
     /**
      * Create a Result for an error.
      *
      * @param error the error (exception)
-     * @param <T> the type had the result been a success
+     * @param <T>   the type had the result been a success
      * @return an error Result
      */
     static <T> Result<T> error(final Throwable error) {
         return new Err<>(error);
+    }
+
+    /**
+     * Create a Result for a success.
+     *
+     * @param value the value
+     * @param <T>   the type of the value
+     * @return a successful Result
+     */
+    static <T> Result<T> ok(final T value) {
+        return new Success<>(value);
     }
 
     /**
@@ -77,7 +90,6 @@ public interface Result<T> {
      *
      * @param f   the mapping function the produces a Result
      * @param <R> the type of the value withing the Result of the mapping function
-     *
      * @return a Result
      */
     <R> Result<R> flatMap(Function<T, Result<R>> f);
@@ -85,9 +97,8 @@ public interface Result<T> {
     /**
      * Applies the functions to the value of a successful result, while doing nothing with an error.
      *
-     * @param f the mapping function to produce the new value
+     * @param f   the mapping function to produce the new value
      * @param <R> the type of the result of the mapping function
-     *
      * @return a Result
      */
     <R> Result<R> map(Function<T, R> f);
@@ -96,7 +107,7 @@ public interface Result<T> {
      * Matches the Result, either success or error, and supplies the appropriate Consumer with the value or error.
      *
      * @param onSuccess the Consumer to pass the value of a successful Result to
-     * @param onError the Consumer to pass the error from an error Result to
+     * @param onError   the Consumer to pass the error from an error Result to
      */
     void match(Consumer<T> onSuccess, Consumer<Throwable> onError);
 
@@ -107,4 +118,5 @@ public interface Result<T> {
      * @return a Result containing a Maybe that may or may not contain a value
      */
     Result<Maybe<T>> maybe(Predicate<T> predicate);
+
 }

@@ -6,8 +6,6 @@ import net.kemitix.mon.result.Result;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
-import java.util.function.Predicate;
-
 public class ResultTest implements WithAssertions {
 
     @Test
@@ -196,6 +194,35 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
+    public void justMaybe_isSuccess() {
+        //given
+        final Maybe<Integer> just = Maybe.just(1);
+        //when
+        final Result<Integer> result = Result.fromMaybe(just, () -> new RuntimeException());
+        //then
+        assertThat(result.isOkay()).isTrue();
+        result.match(
+                success -> assertThat(success).isEqualTo(1),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void nothingMaybe_isError() {
+        //given
+        final Maybe<Object> nothing = Maybe.nothing();
+        final RuntimeException exception = new RuntimeException();
+        //when
+        final Result<Object> result = Result.fromMaybe(nothing, () -> exception);
+        //then
+        assertThat(result.isError()).isTrue();
+        result.match(
+                success -> fail("not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
     public void useCase_whenOkay_thenReturnSuccess() {
         //given
         final UseCase useCase = UseCase.isOkay();
@@ -265,19 +292,19 @@ public class ResultTest implements WithAssertions {
                                     calculateAverage(adjustedIntFromFile1, intFromFile2))));
         }
 
-        private Result<Double> calculateAverage(final Integer val1, final Integer val2) {
-            return Result.ok((double) (val1 + val2) / 2);
-        }
-
-        private Result<Integer> adjustValue(Integer value) {
-            return Result.ok(value + 2);
-        }
-
-        private Result<Integer> readIntFromFile(String fileName) {
+        private Result<Integer> readIntFromFile(final String fileName) {
             if (okay) {
                 return Result.ok(fileName.length());
             }
             return Result.error(new RuntimeException(fileName));
+        }
+
+        private Result<Integer> adjustValue(final Integer value) {
+            return Result.ok(value + 2);
+        }
+
+        private Result<Double> calculateAverage(final Integer val1, final Integer val2) {
+            return Result.ok((double) (val1 + val2) / 2);
         }
 
     }

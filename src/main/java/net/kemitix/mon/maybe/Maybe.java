@@ -25,46 +25,21 @@ import lombok.NonNull;
 import net.kemitix.mon.Functor;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * A value that may or may not be present.
  *
  * @param <T> the type of the content of the Just
- *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 public interface Maybe<T> extends Functor<T, Maybe<?>>, MaybeStream<T>, MaybeOptional<T> {
-
-    /**
-     * Create a Maybe for the value that is present.
-     *
-     * @param value the value, not null
-     * @param <T>   the type of the value
-     *
-     * @return a Maybe of the value
-     */
-    static <T> Maybe<T> just(@NonNull final T value) {
-        return new Just<>(value);
-    }
-
-    /**
-     * Create a Maybe for a lack of a value.
-     *
-     * @param <T> the type of the missing value
-     *
-     * @return an empty Maybe
-     */
-    @SuppressWarnings("unchecked")
-    static <T> Maybe<T> nothing() {
-        return (Maybe<T>) Nothing.INSTANCE;
-    }
 
     /**
      * Create a Maybe for the value that may or may not be present.
      *
      * @param value the value, may be null
      * @param <T>   the type of the value
-     *
      * @return a Maybe, either a Just, or Nothing if value is null
      */
     static <T> Maybe<T> maybe(final T value) {
@@ -75,11 +50,32 @@ public interface Maybe<T> extends Functor<T, Maybe<?>>, MaybeStream<T>, MaybeOpt
     }
 
     /**
+     * Create a Maybe for a lack of a value.
+     *
+     * @param <T> the type of the missing value
+     * @return an empty Maybe
+     */
+    @SuppressWarnings("unchecked")
+    static <T> Maybe<T> nothing() {
+        return (Maybe<T>) Nothing.INSTANCE;
+    }
+
+    /**
+     * Create a Maybe for the value that is present.
+     *
+     * @param value the value, not null
+     * @param <T>   the type of the value
+     * @return a Maybe of the value
+     */
+    static <T> Maybe<T> just(@NonNull final T value) {
+        return new Just<>(value);
+    }
+
+    /**
      * Create a Maybe from an {@link Optional}.
      *
      * @param optional the Optional
      * @param <T>      the type of the Optional
-     *
      * @return a Maybe
      * @deprecated need to find a better way of converting an Optional to a Maybe, but
      * without having to pass the Optional as a parameter
@@ -88,7 +84,9 @@ public interface Maybe<T> extends Functor<T, Maybe<?>>, MaybeStream<T>, MaybeOpt
     @Deprecated
     static <T> Maybe<T> fromOptional(final Optional<T> optional) {
         return optional.map(Maybe::maybe)
-                       .orElse(nothing());
+                .orElse(nothing());
     }
 
+    @Override
+    <R> Maybe<R> map(Function<T, R> f);
 }

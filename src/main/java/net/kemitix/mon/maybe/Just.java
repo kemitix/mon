@@ -36,7 +36,6 @@ import java.util.stream.Stream;
  * A Maybe where a value is present.
  *
  * @param <T> the type of the content
- *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,7 +44,7 @@ final class Just<T> implements Maybe<T> {
     private final T value;
 
     @Override
-    public <R> Maybe<?> map(final Function<T, R> f) {
+    public <R> Maybe<R> map(final Function<T, R> f) {
         return new Just<>(f.apply(value));
     }
 
