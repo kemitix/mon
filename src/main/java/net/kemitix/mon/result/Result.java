@@ -34,6 +34,7 @@ import java.util.function.Supplier;
  * @param <T> the type of the result when a success
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@SuppressWarnings("methodcount")
 public interface Result<T> {
 
     /**
@@ -69,6 +70,35 @@ public interface Result<T> {
      */
     static <T> Result<T> ok(final T value) {
         return new Success<>(value);
+    }
+
+    /**
+     * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
+     *
+     * @param result the Result the might contain the value of the Result
+     * @param <T>   the type of the Maybe and the Result
+     * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
+     */
+    @SuppressWarnings("illegalcatch")
+    static <T> Maybe<T> toMaybe(final Result<T> result) {
+        try {
+            return Maybe.just(result.orElseThrow());
+        } catch (final Throwable throwable) {
+            return Maybe.nothing();
+        }
+    }
+
+    /**
+     * Swaps the inner Result of a Maybe, so that a Result is on the outside.
+     * @param maybeResult the Maybe the contains a Result
+     * @param <T> the type of the value that may be in the Result
+     * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
+     * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
+     * error, then the Result will also be an error.
+     */
+    static <T> Result<Maybe<T>> invert(final Maybe<Result<T>> maybeResult) {
+        return maybeResult.orElseGet(() -> Result.ok(null))
+                .flatMap(value -> Result.ok(Maybe.maybe(value)));
     }
 
     /**

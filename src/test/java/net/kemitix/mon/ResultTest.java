@@ -223,6 +223,26 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
+    public void success_toMaybe_isJust() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final Maybe<Integer> maybe = Result.toMaybe(ok);
+        //then
+        assertThat(maybe.toOptional()).contains(1);
+    }
+
+    @Test
+    public void error_toMaybe_isNothing() {
+        //given
+        final Result<Object> error = Result.error(new RuntimeException());
+        //when
+        final Maybe<Object> maybe = Result.toMaybe(error);
+        //then
+        assertThat(maybe.toOptional()).isEmpty();
+    }
+
+    @Test
     public void success_whenOrElseThrow_isValue() throws Throwable {
         //given
         final Result<Integer> ok = Result.ok(1);
@@ -240,6 +260,46 @@ public class ResultTest implements WithAssertions {
         //when
         assertThatThrownBy(() -> error.orElseThrow())
                 .isSameAs(exception);
+    }
+
+    @Test
+    public void JustSuccess_invert_thenSuccessJust() {
+        //given
+        final Maybe<Result<Integer>> justSuccess = Maybe.just(Result.ok(1));
+        //when
+        final Result<Maybe<Integer>> result = Result.invert(justSuccess);
+        //then
+        result.match(
+                success -> assertThat(success.toOptional()).contains(1),
+                error -> fail("Not an error")
+        );
+    }
+
+    @Test
+    public void JustError_invert_thenError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Maybe<Result<Object>> justError = Maybe.just(Result.error(exception));
+        //when
+        final Result<Maybe<Object>> result = Result.invert(justError);
+        //then
+        result.match(
+                success -> fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void Nothing_invert_thenSuccessNothing() {
+        //given
+        final Maybe<Result<Integer>> nothing = Maybe.nothing();
+        //when
+        final Result<Maybe<Integer>> result = Result.invert(nothing);
+        //then
+        result.match(
+                success -> assertThat(success.toOptional()).isEmpty(),
+                error -> fail("Not an error")
+        );
     }
 
     @Test
