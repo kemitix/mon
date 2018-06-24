@@ -70,4 +70,9 @@ class Success<T> implements Result<T> {
         }
         return Result.ok(Maybe.nothing());
     }
+
+    @Override
+    public T orElseThrow() {
+        return value;
+    }
 }

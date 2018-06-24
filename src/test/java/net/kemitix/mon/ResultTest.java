@@ -223,6 +223,26 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
+    public void success_whenOrElseThrow_isValue() throws Throwable {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final Integer value = ok.orElseThrow();
+        //then
+        assertThat(value).isEqualTo(1);
+    }
+
+    @Test
+    public void error_whenOrElseThrow_throws() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> error = Result.error(exception);
+        //when
+        assertThatThrownBy(() -> error.orElseThrow())
+                .isSameAs(exception);
+    }
+
+    @Test
     public void useCase_whenOkay_thenReturnSuccess() {
         //given
         final UseCase useCase = UseCase.isOkay();

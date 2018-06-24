@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * An Either type for holding a result or an error (exception).
+ * An Either type for holding a result or an error (Throwable).
  *
  * @param <T> the type of the result when a success
  * @author Paul Campbell (pcampbell@kemitix.net)
@@ -44,7 +44,7 @@ public interface Result<T> {
      * @param <T>   the type of the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
-    static <T> Result<T> fromMaybe(final Maybe<T> maybe, final Supplier<Exception> error) {
+    static <T> Result<T> fromMaybe(final Maybe<T> maybe, final Supplier<Throwable> error) {
         return maybe.map(Result::ok)
                 .orElseGet(() -> Result.error(error.get()));
     }
@@ -52,7 +52,7 @@ public interface Result<T> {
     /**
      * Create a Result for an error.
      *
-     * @param error the error (exception)
+     * @param error the error (Throwable)
      * @param <T>   the type had the result been a success
      * @return an error Result
      */
@@ -119,4 +119,12 @@ public interface Result<T> {
      */
     Result<Maybe<T>> maybe(Predicate<T> predicate);
 
+    /**
+     * Extracts the successful value from the result, or throws the error Throwable.
+     *
+     * @return the value if a success
+     * @throws Throwable the result is an error
+     */
+    @SuppressWarnings("illegalthrows")
+    T orElseThrow() throws Throwable;
 }
