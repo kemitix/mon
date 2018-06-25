@@ -101,6 +101,8 @@ class Test {
 
 ### Result
 
+A Monad.
+
 A container for method return values that may raise an Exception. Useful for when a checked exceptions can't be added 
 to the method signature.
 

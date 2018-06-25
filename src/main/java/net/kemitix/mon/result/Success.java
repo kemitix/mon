@@ -24,6 +24,7 @@ package net.kemitix.mon.result;
 import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.maybe.Maybe;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -74,6 +75,16 @@ class Success<T> implements Result<T> {
     @Override
     public T orElseThrow() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Success && Objects.equals(value, ((Success) other).value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     @Override
