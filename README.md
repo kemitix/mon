@@ -55,6 +55,8 @@ class Example {
 
 ### Maybe
 
+A Monad.
+
 A non-final substitute for Optional with `peek()` and `stream()` methods.
 
 ```java

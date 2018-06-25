@@ -39,6 +39,11 @@ final class Nothing<T> implements Maybe<T> {
     static final Maybe<?> INSTANCE = new Nothing<>();
 
     @Override
+    public <R> Maybe<R> flatMap(Function<T, Maybe<R>> f) {
+        return Maybe.nothing();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <R> Maybe<R> map(final Function<T, R> f) {
         return (Maybe<R>) INSTANCE;

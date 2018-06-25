@@ -76,6 +76,15 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
         return new Just<>(value);
     }
 
+    /**
+     * Monad binder maps the Maybe into another Maybe using the binder method f.
+     *
+     * @param f   the mapper function
+     * @param <R> the type of the value in the final maybe
+     * @return a Maybe with the mapped value
+     */
+    <R> Maybe<R> flatMap(Function<T, Maybe<R>> f);
+
     @Override
     <R> Maybe<R> map(Function<T, R> f);
 
