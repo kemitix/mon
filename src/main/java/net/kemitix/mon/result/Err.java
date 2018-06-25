@@ -24,6 +24,7 @@ package net.kemitix.mon.result;
 import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.maybe.Maybe;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -71,6 +72,16 @@ class Err<T> implements Result<T> {
     @Override
     public T orElseThrow() throws Throwable {
         throw error;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Err && Objects.equals(error, ((Err) other).error);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(error);
     }
 
     @Override

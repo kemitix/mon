@@ -9,6 +9,16 @@ import org.junit.Test;
 public class ResultTest implements WithAssertions {
 
     @Test
+    public void equality() {
+        assertThat(Result.ok(1)).isEqualTo(Result.ok(1));
+        assertThat(Result.ok(1)).isNotEqualTo(Result.ok(2));
+        final RuntimeException runtimeException = new RuntimeException();
+        assertThat(Result.ok(1)).isNotEqualTo(Result.error(runtimeException));
+        assertThat(Result.error(runtimeException)).isEqualTo(Result.error(runtimeException));
+        assertThat(Result.ok(1).equals("1")).isFalse();
+    }
+
+    @Test
     public void createSuccess_isSuccess() {
         //when
         final Result<String> result = Result.ok("good");
