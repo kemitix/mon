@@ -24,8 +24,6 @@ package net.kemitix.mon.maybe;
 import lombok.NonNull;
 import net.kemitix.mon.Functor;
 
-import java.util.Optional;
-
 /**
  * A value that may or may not be present.
  *
@@ -72,23 +70,6 @@ public interface Maybe<T> extends Functor<T, Maybe<?>>, MaybeStream<T>, MaybeOpt
             return nothing();
         }
         return just(value);
-    }
-
-    /**
-     * Create a Maybe from an {@link Optional}.
-     *
-     * @param optional the Optional
-     * @param <T>      the type of the Optional
-     *
-     * @return a Maybe
-     * @deprecated need to find a better way of converting an Optional to a Maybe, but
-     * without having to pass the Optional as a parameter
-     * Try: Optional.of(1).map(Maybe::just).orElse(Maybe::nothing)
-     */
-    @Deprecated
-    static <T> Maybe<T> fromOptional(final Optional<T> optional) {
-        return optional.map(Maybe::maybe)
-                       .orElse(nothing());
     }
 
 }
