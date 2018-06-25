@@ -10,9 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static net.kemitix.mon.maybe.Maybe.just;
-import static net.kemitix.mon.maybe.Maybe.maybe;
-import static net.kemitix.mon.maybe.Maybe.nothing;
+import static net.kemitix.mon.maybe.Maybe.*;
 
 public class MaybeTest implements WithAssertions {
 
@@ -85,14 +83,9 @@ public class MaybeTest implements WithAssertions {
 
     @Test
     public void fromOptional() {
-        // deprecated methods
-        assertThat(Maybe.fromOptional(Optional.of(1))).isEqualTo(just(1));
-        assertThat(Maybe.fromOptional(Optional.empty())).isEqualTo(nothing());
-        // recommended alternative
         assertThat(Optional.of(1).map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(just(1));
         assertThat(Optional.empty().map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(nothing());
     }
-
 
     @Test
     public void peek() {
