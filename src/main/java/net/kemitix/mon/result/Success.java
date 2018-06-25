@@ -75,4 +75,9 @@ class Success<T> implements Result<T> {
     public T orElseThrow() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Result.Success{value=%s}", value);
+    }
 }

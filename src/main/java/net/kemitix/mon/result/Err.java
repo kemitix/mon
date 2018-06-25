@@ -72,4 +72,9 @@ class Err<T> implements Result<T> {
     public T orElseThrow() throws Throwable {
         throw error;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Result.Error{error=%s}", error);
+    }
 }

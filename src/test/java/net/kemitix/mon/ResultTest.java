@@ -348,6 +348,26 @@ public class ResultTest implements WithAssertions {
         );
     }
 
+    @Test
+    public void success_toString() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final String toString = ok.toString();
+        //then
+        assertThat(toString).contains("Result.Success{value=1}");
+    }
+
+    @Test
+    public void err_toString() {
+        //given
+        final Result<Integer> error = Result.error(new RuntimeException("failed"));
+        //when
+        final String toString = error.toString();
+        //then
+        assertThat(toString).contains("Result.Error{error=java.lang.RuntimeException: failed}");
+    }
+
     @RequiredArgsConstructor
     private static class UseCase {
 
