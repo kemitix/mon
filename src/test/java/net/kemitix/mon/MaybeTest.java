@@ -10,9 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static net.kemitix.mon.maybe.Maybe.just;
-import static net.kemitix.mon.maybe.Maybe.maybe;
-import static net.kemitix.mon.maybe.Maybe.nothing;
+import static net.kemitix.mon.maybe.Maybe.*;
 
 public class MaybeTest implements WithAssertions {
 
@@ -89,7 +87,6 @@ public class MaybeTest implements WithAssertions {
         assertThat(Optional.empty().map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(nothing());
     }
 
-
     @Test
     public void peek() {
         final AtomicInteger ref = new AtomicInteger(0);
@@ -126,4 +123,47 @@ public class MaybeTest implements WithAssertions {
         //then
         assertThat(stream).isEmpty();
     }
+
+    @Test
+    public void justFlatMap() {
+        //given
+        final Maybe<Integer> just1 = Maybe.just(1);
+        final Maybe<Integer> just2 = Maybe.just(2);
+        //when
+        final Maybe<Integer> result = just1.flatMap(v1 ->
+                just2.flatMap(v2 ->
+                        Maybe.maybe(v1 + v2)
+                ));
+        //then
+        assertThat(result.toOptional()).contains(3);
+    }
+
+    @Test
+    public void nothingFlatMap() {
+        //given
+        final Maybe<Integer> nothing1 = Maybe.nothing();
+        final Maybe<Integer> nothing2 = Maybe.nothing();
+        //when
+        final Maybe<Integer> result = nothing1.flatMap(v1 ->
+                nothing2.flatMap(v2 ->
+                        Maybe.maybe(v1 + v2)
+                ));
+        //then
+        assertThat(result.toOptional()).isEmpty();
+    }
+
+    @Test
+    public void justNothingFlatMap() {
+        //given
+        final Maybe<Integer> just1 = Maybe.just(1);
+        final Maybe<Integer> nothing2 = Maybe.nothing();
+        //when
+        final Maybe<Integer> result = just1.flatMap(v1 ->
+                nothing2.flatMap(v2 ->
+                        Maybe.maybe(v1 + v2)
+                ));
+        //then
+        assertThat(result.toOptional()).isEmpty();
+    }
+
 }

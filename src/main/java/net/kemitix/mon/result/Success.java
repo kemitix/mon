@@ -22,9 +22,12 @@
 package net.kemitix.mon.result;
 
 import lombok.RequiredArgsConstructor;
+import net.kemitix.mon.maybe.Maybe;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * A Successful Result.
@@ -52,7 +55,40 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public <R> Result<R> map(final Function<T, R> f) {
+        return Result.ok(f.apply(value));
+    }
+
+    @Override
     public void match(final Consumer<T> onSuccess, final Consumer<Throwable> onError) {
         onSuccess.accept(value);
+    }
+
+    @Override
+    public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
+        if (predicate.test(value)) {
+            return Result.ok(Maybe.just(value));
+        }
+        return Result.ok(Maybe.nothing());
+    }
+
+    @Override
+    public T orElseThrow() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Success && Objects.equals(value, ((Success) other).value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Result.Success{value=%s}", value);
     }
 }

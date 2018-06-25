@@ -1,6 +1,7 @@
 package net.kemitix.mon;
 
 import lombok.RequiredArgsConstructor;
+import net.kemitix.mon.maybe.Maybe;
 import net.kemitix.mon.result.Result;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
@@ -106,6 +107,202 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
+    public void success_whenMap_isSuccess() {
+        //given
+        final Result<Integer> okResult = Result.ok(1);
+        //when
+        final Result<String> result = okResult.map(value -> String.valueOf(value));
+        //then
+        assertThat(result.isOkay()).isTrue();
+        result.match(
+                success -> assertThat(success).isEqualTo("1"),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void error_whenMap_isError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> errorResult = Result.error(exception);
+        //when
+        final Result<String> result = errorResult.map(value -> String.valueOf(value));
+        //then
+        assertThat(result.isError()).isTrue();
+        result.match(
+                success -> fail("not an success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void successMaybe_whenPasses_isSuccessJust() {
+        //given
+        final Result<Integer> okResult = Result.ok(1);
+        //when
+        final Result<Maybe<Integer>> maybeResult = okResult.maybe(value -> value >= 0);
+        //then
+        assertThat(maybeResult.isOkay()).isTrue();
+        maybeResult.match(
+                success -> assertThat(success.toOptional()).contains(1),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void successMaybe_whenFails_isSuccessNothing() {
+        //given
+        final Result<Integer> okResult = Result.ok(1);
+        //when
+        final Result<Maybe<Integer>> maybeResult = okResult.maybe(value -> value >= 4);
+        //then
+        assertThat(maybeResult.isOkay()).isTrue();
+        maybeResult.match(
+                success -> assertThat(success.toOptional()).isEmpty(),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void errorMaybe_whenPasses_isError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> errorResult = Result.error(exception);
+        //when
+        final Result<Maybe<Integer>> maybeResult = errorResult.maybe(value -> value >= 0);
+        //then
+        assertThat(maybeResult.isError()).isTrue();
+        maybeResult.match(
+                success -> fail("not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void errorMaybe_whenFails_isError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> errorResult = Result.error(exception);
+        //when
+        final Result<Maybe<Integer>> maybeResult = errorResult.maybe(value -> value >= 4);
+        //then
+        assertThat(maybeResult.isError()).isTrue();
+        maybeResult.match(
+                success -> fail("not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void justMaybe_isSuccess() {
+        //given
+        final Maybe<Integer> just = Maybe.just(1);
+        //when
+        final Result<Integer> result = Result.fromMaybe(just, () -> new RuntimeException());
+        //then
+        assertThat(result.isOkay()).isTrue();
+        result.match(
+                success -> assertThat(success).isEqualTo(1),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void nothingMaybe_isError() {
+        //given
+        final Maybe<Object> nothing = Maybe.nothing();
+        final RuntimeException exception = new RuntimeException();
+        //when
+        final Result<Object> result = Result.fromMaybe(nothing, () -> exception);
+        //then
+        assertThat(result.isError()).isTrue();
+        result.match(
+                success -> fail("not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void success_toMaybe_isJust() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final Maybe<Integer> maybe = Result.toMaybe(ok);
+        //then
+        assertThat(maybe.toOptional()).contains(1);
+    }
+
+    @Test
+    public void error_toMaybe_isNothing() {
+        //given
+        final Result<Object> error = Result.error(new RuntimeException());
+        //when
+        final Maybe<Object> maybe = Result.toMaybe(error);
+        //then
+        assertThat(maybe.toOptional()).isEmpty();
+    }
+
+    @Test
+    public void success_whenOrElseThrow_isValue() throws Throwable {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final Integer value = ok.orElseThrow();
+        //then
+        assertThat(value).isEqualTo(1);
+    }
+
+    @Test
+    public void error_whenOrElseThrow_throws() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> error = Result.error(exception);
+        //when
+        assertThatThrownBy(() -> error.orElseThrow())
+                .isSameAs(exception);
+    }
+
+    @Test
+    public void JustSuccess_invert_thenSuccessJust() {
+        //given
+        final Maybe<Result<Integer>> justSuccess = Maybe.just(Result.ok(1));
+        //when
+        final Result<Maybe<Integer>> result = Result.invert(justSuccess);
+        //then
+        result.match(
+                success -> assertThat(success.toOptional()).contains(1),
+                error -> fail("Not an error")
+        );
+    }
+
+    @Test
+    public void JustError_invert_thenError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Maybe<Result<Object>> justError = Maybe.just(Result.error(exception));
+        //when
+        final Result<Maybe<Object>> result = Result.invert(justError);
+        //then
+        result.match(
+                success -> fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void Nothing_invert_thenSuccessNothing() {
+        //given
+        final Maybe<Result<Integer>> nothing = Maybe.nothing();
+        //when
+        final Result<Maybe<Integer>> result = Result.invert(nothing);
+        //then
+        result.match(
+                success -> assertThat(success.toOptional()).isEmpty(),
+                error -> fail("Not an error")
+        );
+    }
+
+    @Test
     public void useCase_whenOkay_thenReturnSuccess() {
         //given
         final UseCase useCase = UseCase.isOkay();
@@ -151,6 +348,26 @@ public class ResultTest implements WithAssertions {
         );
     }
 
+    @Test
+    public void success_toString() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final String toString = ok.toString();
+        //then
+        assertThat(toString).contains("Result.Success{value=1}");
+    }
+
+    @Test
+    public void err_toString() {
+        //given
+        final Result<Integer> error = Result.error(new RuntimeException("failed"));
+        //when
+        final String toString = error.toString();
+        //then
+        assertThat(toString).contains("Result.Error{error=java.lang.RuntimeException: failed}");
+    }
+
     @RequiredArgsConstructor
     private static class UseCase {
 
@@ -175,19 +392,19 @@ public class ResultTest implements WithAssertions {
                                     calculateAverage(adjustedIntFromFile1, intFromFile2))));
         }
 
-        private Result<Double> calculateAverage(final Integer val1, final Integer val2) {
-            return Result.ok((double) (val1 + val2) / 2);
-        }
-
-        private Result<Integer> adjustValue(Integer value) {
-            return Result.ok(value + 2);
-        }
-
-        private Result<Integer> readIntFromFile(String fileName) {
+        private Result<Integer> readIntFromFile(final String fileName) {
             if (okay) {
                 return Result.ok(fileName.length());
             }
             return Result.error(new RuntimeException(fileName));
+        }
+
+        private Result<Integer> adjustValue(final Integer value) {
+            return Result.ok(value + 2);
+        }
+
+        private Result<Double> calculateAverage(final Integer val1, final Integer val2) {
+            return Result.ok((double) (val1 + val2) / 2);
         }
 
     }
