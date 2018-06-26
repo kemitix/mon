@@ -6,7 +6,7 @@
 
     <groupId>net.kemitix</groupId>
     <artifactId>mon</artifactId>
-    <version>0.7.0</version>
+    <version>DEV-SNAPSHOT</version>
 
     <properties>
         <java.version>1.8</java.version>
