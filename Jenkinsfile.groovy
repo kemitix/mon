@@ -54,7 +54,7 @@ pipeline {
             }
             steps {
                 withMaven(maven: 'maven', jdk: 'JDK LTS') {
-                    sh "${mvn} deploy --activate-profiles release -DskipTests=true"
+                    sh "${mvn} deploy --activate-profiles release -DskipTests=true -Dpitest.skip=true"
                 }
             }
         }
