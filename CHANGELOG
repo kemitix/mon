@@ -4,10 +4,11 @@ CHANGELOG
 0.7.0
 -----
 
+* Remove `Identity`
 * Add `Result`
 * Moved `Maybe` to `net.kemitix.mon.maybe.Maybe`
+* `Maybe` is now a Monad
 * Add `Maybe.stream()`
-* Deprecate `Maybe.fromOptional(Optional)`
 
 0.6.0
 -----
