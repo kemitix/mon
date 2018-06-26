@@ -19,43 +19,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.mon;
-
-import lombok.RequiredArgsConstructor;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-/**
- * Helper to create bean-style objects.
- *
- * @param <T> The type of the bean being built
- */
-@RequiredArgsConstructor
-public class BeanBuilder<T> {
-
-    private final Supplier<T> supplier;
-
-    /**
-     * Create a BeanBuilder from the Supplier.
-     *
-     * @param constructor supplies a new instance of the bean
-     * @param <T> the type of the bean being built
-     * @return a BeanBuilder instance
-     */
-    public static <T> BeanBuilder<T> define(final Supplier<T> constructor) {
-        return new BeanBuilder<>(constructor);
-    }
-
-    /**
-     * Creates a new bean and passes it to the customiser.
-     *
-     * @param customiser customises the template bean
-     * @return the final customised bean
-     */
-    public T with(final Consumer<T> customiser) {
-        final T result = supplier.get();
-        customiser.accept(result);
-        return result;
-    }
-}
+package net.kemitix.mon.experimental;
