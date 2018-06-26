@@ -51,8 +51,13 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void testHashCode() {
-        assertThat(just(1).hashCode()).isEqualTo(Objects.hashCode(1));
+    public void justHashCode() {
+        assertThat(just(1).hashCode()).isNotEqualTo(just(2).hashCode());
+    }
+
+    @Test
+    public void nothingHashCode() {
+        assertThat(nothing().hashCode()).isEqualTo(maybe(null).hashCode());
     }
 
     @Test

@@ -19,6 +19,22 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
+    public void successHashCode() {
+        assertThat(Result.ok(1).hashCode()).isNotEqualTo(Result.ok(2).hashCode());
+    }
+
+    @Test
+    public void errorHashCode() {
+        // despite having 'equivalent' exceptions, the exceptions are distinct instances, so should be considered unique
+        final RuntimeException exception1 = new RuntimeException("message");
+        final RuntimeException exception2 = new RuntimeException("message");
+        assertThat(exception1.hashCode()).isNotEqualTo(exception2.hashCode());
+        final Result<Object> error1 = Result.error(exception1);
+        final Result<Object> error2 = Result.error(exception2);
+        assertThat(error1.hashCode()).isNotEqualTo(error2.hashCode());
+    }
+
+    @Test
     public void createSuccess_isSuccess() {
         //when
         final Result<String> result = Result.ok("good");
