@@ -21,6 +21,7 @@
 
 package net.kemitix.mon.result;
 
+import net.kemitix.mon.Functor;
 import net.kemitix.mon.maybe.Maybe;
 
 import java.util.function.Consumer;
@@ -35,7 +36,7 @@ import java.util.function.Supplier;
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @SuppressWarnings("methodcount")
-public interface Result<T> {
+public interface Result<T> extends Functor<T, Result<?>> {
 
     /**
      * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
@@ -124,13 +125,7 @@ public interface Result<T> {
      */
     <R> Result<R> flatMap(Function<T, Result<R>> f);
 
-    /**
-     * Applies the functions to the value of a successful result, while doing nothing with an error.
-     *
-     * @param f   the mapping function to produce the new value
-     * @param <R> the type of the result of the mapping function
-     * @return a Result
-     */
+    @Override
     <R> Result<R> map(Function<T, R> f);
 
     /**
