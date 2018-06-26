@@ -39,7 +39,7 @@ final class Nothing<T> implements Maybe<T> {
     static final Maybe<?> INSTANCE = new Nothing<>();
 
     @Override
-    public <R> Maybe<R> flatMap(Function<T, Maybe<R>> f) {
+    public <R> Maybe<R> flatMap(final Function<T, Maybe<R>> f) {
         return Maybe.nothing();
     }
 

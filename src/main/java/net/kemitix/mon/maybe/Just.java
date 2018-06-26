@@ -38,13 +38,14 @@ import java.util.stream.Stream;
  * @param <T> the type of the content
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@SuppressWarnings("methodcount")
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 final class Just<T> implements Maybe<T> {
 
     private final T value;
 
     @Override
-    public <R> Maybe<R> flatMap(Function<T, Maybe<R>> f) {
+    public <R> Maybe<R> flatMap(final Function<T, Maybe<R>> f) {
         return f.apply(value);
     }
 
@@ -55,7 +56,7 @@ final class Just<T> implements Maybe<T> {
 
     @Override
     public boolean equals(final Object other) {
-        return other instanceof Just && Objects.equals(this.value, ((Just) other).value);
+        return other instanceof Just && Objects.equals(value, ((Just) other).value);
     }
 
     @Override
@@ -70,7 +71,7 @@ final class Just<T> implements Maybe<T> {
 
     @Override
     public T orElse(final T otherValue) {
-        return this.value;
+        return value;
     }
 
     @Override

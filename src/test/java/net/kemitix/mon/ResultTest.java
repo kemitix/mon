@@ -16,6 +16,7 @@ public class ResultTest implements WithAssertions {
         assertThat(Result.ok(1)).isNotEqualTo(Result.error(runtimeException));
         assertThat(Result.error(runtimeException)).isEqualTo(Result.error(runtimeException));
         assertThat(Result.ok(1).equals("1")).isFalse();
+        assertThat(Result.error(new RuntimeException()).equals("1")).isFalse();
     }
 
     @Test
