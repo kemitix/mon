@@ -21,7 +21,7 @@ TypeAlias, Maybe and Result for Java
 <dependency>
     <groupId>net.kemitix</groupId>
     <artifactId>mon</artifactId>
-    <version>RELEASE</version>
+    <version>0.7.0</version>
 </dependency>
 ```
 
