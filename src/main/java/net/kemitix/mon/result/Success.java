@@ -35,6 +35,7 @@ import java.util.function.Predicate;
  * @param <T> the type of the value in the Result
  */
 @RequiredArgsConstructor
+@SuppressWarnings("methodcount")
 class Success<T> implements Result<T> {
 
     private final T value;
@@ -75,6 +76,12 @@ class Success<T> implements Result<T> {
     @Override
     public T orElseThrow() {
         return value;
+    }
+
+    @Override
+    public Result<T> peek(final Consumer<T> consumer) {
+        consumer.accept(value);
+        return this;
     }
 
     @Override

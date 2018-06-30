@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ResultTest implements WithAssertions {
 
@@ -425,6 +426,30 @@ public class ResultTest implements WithAssertions {
                 success -> fail("not a success"),
                 error -> assertThat(error).isInstanceOf(IOException.class)
         );
+    }
+
+    @Test
+    public void success_peek_consumes() {
+        //given
+        final Result<Integer> result = Result.ok(1);
+        final AtomicReference<Integer> consumed = new AtomicReference<>(0);
+        //when
+        final Result<Integer> peeked = result.peek(consumed::set);
+        //then
+        assertThat(consumed).hasValue(1);
+        assertThat(peeked).isSameAs(result);
+    }
+
+    @Test
+    public void error_peek_doesNothing() {
+        //given
+        final Result<Integer> result = Result.error(new RuntimeException());
+        final AtomicReference<Integer> consumed = new AtomicReference<>(0);
+        //when
+        final Result<Integer> peeked = result.peek(consumed::set);
+        //then
+        assertThat(consumed).hasValue(0);
+        assertThat(peeked).isSameAs(result);
     }
 
     @RequiredArgsConstructor

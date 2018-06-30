@@ -136,10 +136,10 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     Maybe<T> filter(Predicate<T> predicate);
 
     /**
-     * Provide the value within the Maybe, if it exists, to the Supplier, and returns the Maybe.
+     * Provide the value within the Maybe, if it exists, to the Consumer, and returns this Maybe.
      *
      * @param consumer the Consumer to the value if present
-     * @return the Maybe
+     * @return this Maybe
      */
     Maybe<T> peek(Consumer<T> consumer);
 }

@@ -169,4 +169,12 @@ public interface Result<T> extends Functor<T, Result<?>> {
      */
     @SuppressWarnings("illegalthrows")
     T orElseThrow() throws Throwable;
+
+    /**
+     * Provide the value within the Result, if it is a success, to the Consumer, and returns this Result.
+     *
+     * @param consumer the Consumer to the value if a success
+     * @return this Result
+     */
+    Result<T> peek(Consumer<T> consumer);
 }
