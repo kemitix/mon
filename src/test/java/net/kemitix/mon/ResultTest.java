@@ -6,6 +6,9 @@ import net.kemitix.mon.result.Result;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.concurrent.Callable;
+
 public class ResultTest implements WithAssertions {
 
     @Test
@@ -394,6 +397,34 @@ public class ResultTest implements WithAssertions {
         final String toString = error.toString();
         //then
         assertThat(toString).contains("Result.Error{error=java.lang.RuntimeException: failed}");
+    }
+
+    @Test
+    public void resultOf_okay_isOkay() {
+        //given
+        final Callable<String> c = () -> "okay";
+        //when
+        final Result<String> result = Result.of(c);
+        //then
+        result.match(
+                success -> assertThat(success).isEqualTo("okay"),
+                error -> fail("not an error")
+        );
+    }
+
+    @Test
+    public void resultOf_error_isError() {
+        //given
+        final Callable<String> c = () -> {
+            throw new IOException();
+        };
+        //when
+        final Result<String> result = Result.of(c);
+        //then
+        result.match(
+                success -> fail("not a success"),
+                error -> assertThat(error).isInstanceOf(IOException.class)
+        );
     }
 
     @RequiredArgsConstructor

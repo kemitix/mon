@@ -24,6 +24,7 @@ package net.kemitix.mon.result;
 import net.kemitix.mon.Functor;
 import net.kemitix.mon.maybe.Maybe;
 
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -71,6 +72,22 @@ public interface Result<T> extends Functor<T, Result<?>> {
      */
     static <T> Result<T> ok(final T value) {
         return new Success<>(value);
+    }
+
+    /**
+     * Create a Result for a output of the Callable.
+     *
+     * @param callable the callable to produce the result
+     * @param <T>      the type of the value
+     * @return a Result
+     */
+    @SuppressWarnings("illegalcatch")
+    static <T> Result<T> of(final Callable<T> callable) {
+        try {
+            return Result.ok(callable.call());
+        } catch (final Exception e) {
+            return Result.error(e);
+        }
     }
 
     /**
