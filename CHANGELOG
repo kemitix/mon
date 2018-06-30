@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+0.8.0
+-----
+
+* Add `Result.of(Callable)`
+
 0.7.0
 -----
 
