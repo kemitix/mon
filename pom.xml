@@ -13,6 +13,24 @@
     <artifactId>mon</artifactId>
     <version>DEV-SNAPSHOT</version>
 
+    <name>Mon</name>
+    <description>TypeAlias, Result and Maybe for Java</description>
+
+    <issueManagement>
+        <url>https://gitlab.com/kemitix/mon/issues</url>
+        <system>GitLab Issues</system>
+    </issueManagement>
+
+    <scm>
+        <url>https://gitlab.com/kemitix/mon</url>
+        <connection>scm:git:https://gitlab.com/kemitix/mon.git</connection>
+        <developerConnection>scm:git:git@gitlab.com:kemitix/mon.git</developerConnection>
+    </scm>
+
+    <url>https://gitlab.com/kemitix/mon</url>
+
+    <inceptionYear>2017</inceptionYear>
+
     <properties>
         <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
