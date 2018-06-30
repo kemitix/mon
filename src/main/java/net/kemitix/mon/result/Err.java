@@ -35,6 +35,7 @@ import java.util.function.Predicate;
  * @param <T> the type of the value in the Result if it has been a success
  */
 @RequiredArgsConstructor
+@SuppressWarnings("methodcount")
 class Err<T> implements Result<T> {
 
     private final Throwable error;
@@ -72,6 +73,11 @@ class Err<T> implements Result<T> {
     @Override
     public T orElseThrow() throws Throwable {
         throw error;
+    }
+
+    @Override
+    public Result<T> peek(final Consumer<T> consumer) {
+        return this;
     }
 
     @Override
