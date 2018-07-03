@@ -14,6 +14,7 @@ TypeAlias, Maybe and Result for Java
 [![Jenkins coverage](https://img.shields.io/jenkins/c/https/jenkins.kemitix.net/job/GitLab/job/kemitix%252Fmon.svg?style=for-the-badge)](https://jenkins.kemitix.net/job/GitLab/job/kemitix%252Fmon/)
 
 [![Codacy grade](https://img.shields.io/codacy/grade/d57096b0639d496aba9a7e43e7cf5b4c.svg?style=for-the-badge)](https://app.codacy.com/project/kemitix/mon/dashboard)
+[![jPeek](http://i.jpeek.org/net.kemitix/mon/badge.svg)](http://i.jpeek.org/net.kemitix/mon/index.html)
 
 ## Maven
 
