@@ -18,7 +18,7 @@ pipeline {
         }
         stage('Build & Test') {
             steps {
-                withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                withMaven(maven: 'maven', jdk: 'JDK 1.8') {
                     sh "${mvn} clean compile checkstyle:checkstyle pmd:pmd test"
                     jacoco exclusionPattern: '**/*{Test|IT|Main|Application|Immutable}.class'
                     pmd canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '', unHealthy: ''
@@ -31,7 +31,7 @@ pipeline {
         }
         stage('Verify & Install') {
             steps {
-                withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                withMaven(maven: 'maven', jdk: 'JDK 1.8') {
                     sh "${mvn} -DskipTests install"
                 }
             }
@@ -40,7 +40,7 @@ pipeline {
             when { expression { isPublished() } }
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                    withMaven(maven: 'maven', jdk: 'JDK 1.8') {
                         sh "${mvn} org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.0.905:sonar"
                     }
                 }
@@ -53,7 +53,7 @@ pipeline {
                 }
             }
             steps {
-                withMaven(maven: 'maven', jdk: 'JDK LTS') {
+                withMaven(maven: 'maven', jdk: 'JDK 1.8') {
                     sh "${mvn} deploy --activate-profiles release -DskipTests=true -Dpitest.skip=true"
                 }
             }
