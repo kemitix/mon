@@ -59,29 +59,28 @@ public abstract class TypeAlias<T> {
      * @return a TypeAlias
      */
     public final <R> R map(final Function<T, R> f) {
-        return f.apply(getValue());
+        return f.apply(value);
     }
 
     @Override
     public final int hashCode() {
-        return getValue().hashCode();
+        return value.hashCode();
     }
 
     @Override
     public final boolean equals(final Object o) {
         if (o instanceof TypeAlias) {
             final TypeAlias other = (TypeAlias) o;
-            final Object otherValue = other.getValue();
-            final Class<?> otherValueClass = otherValue.getClass();
+            final Class<?> otherValueClass = other.value.getClass();
             return otherValueClass.equals(getValue().getClass())
-                   && otherValue.equals(getValue());
+                   && other.value.equals(getValue());
         }
         return map(o::equals);
     }
 
     @Override
     public final String toString() {
-        return getValue().toString();
+        return value.toString();
     }
 
     /**
