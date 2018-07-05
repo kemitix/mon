@@ -9,10 +9,6 @@ TypeAlias, Maybe and Result for Java
 [![SonarQube Coverage](https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/coverage.svg?style=for-the-badge)](https://sonarcloud.io/dashboard?id=net.kemitix%3Amon)
 [![SonarQube Tech Debt](https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/tech_debt.svg?style=for-the-badge)](https://sonarcloud.io/dashboard?id=net.kemitix%3Amon)
 
-[![Jenkins](https://img.shields.io/jenkins/s/https/jenkins.kemitix.net/job/GitLab/job/kemitix%252Fmon.svg?style=for-the-badge)](https://jenkins.kemitix.net/job/GitLab/job/kemitix%252Fmon/)
-[![Jenkins tests](https://img.shields.io/jenkins/t/https/jenkins.kemitix.net/job/GitLab/job/kemitix%252Fmon.svg?style=for-the-badge)](https://jenkins.kemitix.net/job/GitLab/job/kemitix%252Fmon/)
-[![Jenkins coverage](https://img.shields.io/jenkins/c/https/jenkins.kemitix.net/job/GitLab/job/kemitix%252Fmon.svg?style=for-the-badge)](https://jenkins.kemitix.net/job/GitLab/job/kemitix%252Fmon/)
-
 [![Codacy grade](https://img.shields.io/codacy/grade/d57096b0639d496aba9a7e43e7cf5b4c.svg?style=for-the-badge)](https://app.codacy.com/project/kemitix/mon/dashboard)
 [![jPeek](http://i.jpeek.org/net.kemitix/mon/badge.svg)](http://i.jpeek.org/net.kemitix/mon/index.html)
 
