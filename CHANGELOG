@@ -5,6 +5,8 @@ CHANGELOG
 -----
 
 * Add `Maybe.ifNothing(Runnable)`
+* Add `Result.recover(Function)`
+* Add `Result.onError(Consumer)`
 
 0.8.0
 -----
