@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -169,6 +170,28 @@ public class MaybeTest implements WithAssertions {
                 ));
         //then
         assertThat(result.toOptional()).isEmpty();
+    }
+
+    @Test
+    public void just_ifNothing_isIgnored() {
+        //given
+        final Maybe<Integer> just = Maybe.just(1);
+        final AtomicBoolean capture = new AtomicBoolean(false);
+        //when
+        just.ifNothing(() -> capture.set(true));
+        //then
+        assertThat(capture).isFalse();
+    }
+
+    @Test
+    public void nothing_ifNothing_isCalled() {
+        //given
+        final Maybe<Integer> nothing = Maybe.nothing();
+        final AtomicBoolean capture = new AtomicBoolean(false);
+        //when
+        nothing.ifNothing(() -> capture.set(true));
+        //then
+        assertThat(capture).isTrue();
     }
 
 }
