@@ -85,6 +85,16 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public Result<T> recover(final Function<Throwable, Result<T>> f) {
+        return this;
+    }
+
+    @Override
+    public void onError(final Consumer<Throwable> errorConsumer) {
+        // do nothing - this is not an error
+    }
+
+    @Override
     public boolean equals(final Object other) {
         return other instanceof Success && Objects.equals(value, ((Success) other).value);
     }

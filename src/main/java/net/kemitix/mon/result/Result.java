@@ -94,7 +94,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
      *
      * @param result the Result the might contain the value of the Result
-     * @param <T>   the type of the Maybe and the Result
+     * @param <T>    the type of the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
     @SuppressWarnings("illegalcatch")
@@ -108,8 +108,9 @@ public interface Result<T> extends Functor<T, Result<?>> {
 
     /**
      * Swaps the inner Result of a Maybe, so that a Result is on the outside.
+     *
      * @param maybeResult the Maybe the contains a Result
-     * @param <T> the type of the value that may be in the Result
+     * @param <T>         the type of the value that may be in the Result
      * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
      * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
      * error, then the Result will also be an error.
@@ -177,4 +178,22 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return this Result
      */
     Result<T> peek(Consumer<T> consumer);
+
+    /**
+     * Provide a way to attempt to recover from an error state.
+     *
+     * @param f the function to recover from the error
+     * @return a new Result, either a Success, or if recovery is not possible an other Err.
+     */
+    Result<T> recover(Function<Throwable, Result<T>> f);
+
+    /**
+     * A handler for error states.
+     *
+     * <p>When this is an error then tne Consumer will be supplier with the error. When this is a success, then nothing
+     * happens.</p>
+     *
+     * @param errorConsumer the consumer to handle the error
+     */
+    void onError(Consumer<Throwable> errorConsumer);
 }
