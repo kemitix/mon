@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.9.0
+-----
+
+* Add `Maybe.ifNothing(Runnable)`
+* Add `Result.recover(Function)`
+* Add `Result.onError(Consumer)`
+
 0.8.0
 -----
 

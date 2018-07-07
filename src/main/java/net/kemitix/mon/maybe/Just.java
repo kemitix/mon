@@ -94,6 +94,11 @@ final class Just<T> implements Maybe<T> {
     }
 
     @Override
+    public void ifNothing(final Runnable runnable) {
+        // ignore - not nothing
+    }
+
+    @Override
     public void orElseThrow(final Supplier<Exception> e) {
         // do not throw
     }

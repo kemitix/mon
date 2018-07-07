@@ -452,6 +452,54 @@ public class ResultTest implements WithAssertions {
         assertThat(peeked).isSameAs(result);
     }
 
+    @Test public void success_whenOnError_thenIgnore() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        ok.onError(e -> fail("not an error"));
+    }
+
+    @Test public void error_whenOnError_thenConsume() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> error = Result.error(exception);
+        final AtomicReference<Throwable> capture = new AtomicReference<>();
+        //when
+        error.onError(capture::set);
+        //then
+        assertThat(capture).hasValue(exception);
+    }
+
+    @Test
+    public void success_whenRecover_thenNoChange() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final Result<Integer> recovered = ok.recover(e -> Result.ok(2));
+        //then
+        recovered.peek(v -> assertThat(v).isEqualTo(1));
+    }
+
+    @Test
+    public void error_whenRecover_thenSuccess() {
+        //given
+        final Result<Integer> error = Result.error(new RuntimeException());
+        //when
+        final Result<Integer> recovered = error.recover(e -> Result.ok(2));
+        //then
+        recovered.peek(v -> assertThat(v).isEqualTo(2));
+    }
+
+    @Test
+    public void error_whenRecoverFails_thenUpdatedError() {
+        //given
+        final Result<Integer> error = Result.error(new RuntimeException("original"));
+        //when
+        final Result<Integer> recovered = error.recover(e -> Result.error(new RuntimeException("updated")));
+        //then
+        recovered.onError(e -> assertThat(e).hasMessage("updated"));
+    }
+
     @RequiredArgsConstructor
     private static class UseCase {
 

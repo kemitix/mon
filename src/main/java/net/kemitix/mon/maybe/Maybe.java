@@ -142,4 +142,11 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
      * @return this Maybe
      */
     Maybe<T> peek(Consumer<T> consumer);
+
+    /**
+     * Run the runnable if the Maybe is a Nothing, otherwise do nothing.
+     *
+     * @param runnable the runnable to call if this is a Nothing
+     */
+    void ifNothing(Runnable runnable);
 }

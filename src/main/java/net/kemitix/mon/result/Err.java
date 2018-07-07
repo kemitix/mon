@@ -81,6 +81,16 @@ class Err<T> implements Result<T> {
     }
 
     @Override
+    public Result<T> recover(final Function<Throwable, Result<T>> f) {
+        return f.apply(error);
+    }
+
+    @Override
+    public void onError(final Consumer<Throwable> errorConsumer) {
+        errorConsumer.accept(error);
+    }
+
+    @Override
     public boolean equals(final Object other) {
         return other instanceof Err && Objects.equals(error, ((Err) other).error);
     }

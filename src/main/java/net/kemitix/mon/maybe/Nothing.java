@@ -75,6 +75,11 @@ final class Nothing<T> implements Maybe<T> {
     }
 
     @Override
+    public void ifNothing(final Runnable runnable) {
+        runnable.run();
+    }
+
+    @Override
     public void orElseThrow(final Supplier<Exception> e) throws Exception {
         throw e.get();
     }
