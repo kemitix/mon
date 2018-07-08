@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.maybe.Maybe;
 
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -92,6 +93,11 @@ class Success<T> implements Result<T> {
     @Override
     public void onError(final Consumer<Throwable> errorConsumer) {
         // do nothing - this is not an error
+    }
+
+    @Override
+    public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
+        return Result.of(f.apply(value));
     }
 
     @Override

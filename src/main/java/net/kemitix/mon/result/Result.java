@@ -196,4 +196,25 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param errorConsumer the consumer to handle the error
      */
     void onError(Consumer<Throwable> errorConsumer);
+
+    /**
+     * Maps a Success Result to another Result using a Callable that is able to throw a checked exception.
+     *
+     * <p>Combination of {@link #flatMap(Function)} and {@link #of(Callable)}.</p>
+     *
+     * <p>Syntax is:</p>
+     * <pre><code>
+     *     Integer doSomething() {...}
+     *     String doSomethingElse(final Integer value) {...}
+     *     Result&lt;String&gt; r = Result.of(() -&gt; doSomething())
+     *                              .andThen(value -&gt; () -&gt; doSomethingElse(value));
+     * </code></pre>
+     *
+     * <p>When the Result is an Err, then the original error is carried over and the Callable is never called.</p>
+     *
+     * @param f   the function to map the Success value to the Callable
+     * @param <R> the type of the final Result
+     * @return a new Result
+     */
+    <R> Result<R> andThen(Function<T, Callable<R>> f);
 }
