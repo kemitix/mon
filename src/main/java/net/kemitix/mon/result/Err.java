@@ -97,6 +97,11 @@ class Err<T> implements Result<T> {
     }
 
     @Override
+    public Result<T> thenWith(final Function<T, WithResultContinuation<T>> f) {
+        return this;
+    }
+
+    @Override
     public boolean equals(final Object other) {
         return other instanceof Err && Objects.equals(error, ((Err) other).error);
     }

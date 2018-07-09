@@ -101,6 +101,11 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public Result<T> thenWith(final Function<T, WithResultContinuation<T>> f) {
+        return f.apply(value).call(this);
+    }
+
+    @Override
     public boolean equals(final Object other) {
         return other instanceof Success && Objects.equals(value, ((Success) other).value);
     }

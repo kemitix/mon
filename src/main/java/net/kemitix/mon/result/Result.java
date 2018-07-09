@@ -202,7 +202,6 @@ public interface Result<T> extends Functor<T, Result<?>> {
      *
      * <p>Combination of {@link #flatMap(Function)} and {@link #of(Callable)}.</p>
      *
-     * <p>Syntax is:</p>
      * <pre><code>
      *     Integer doSomething() {...}
      *     String doSomethingElse(final Integer value) {...}
@@ -212,9 +211,29 @@ public interface Result<T> extends Functor<T, Result<?>> {
      *
      * <p>When the Result is an Err, then the original error is carried over and the Callable is never called.</p>
      *
-     * @param f   the function to map the Success value to the Callable
+     * @param f   the function to map the Success value into the Callable
      * @param <R> the type of the final Result
      * @return a new Result
      */
     <R> Result<R> andThen(Function<T, Callable<R>> f);
+
+    /**
+     * Perform the continuation with the current Result value then return the current Result, assuming there was no
+     * error in the continuation.
+     *
+     * <pre><code>
+     *     Integer doSomething() {...}
+     *     void doSomethingElse(final Integer value) {...}
+     *     Result&lt;Integer&gt; r = Result.of(() -&gt; doSomething())
+     *                              .thenWith(value -&gt; () -&gt; doSomethingElse(value));
+     * </code></pre>
+     *
+     * <p>Where the Result is an Err, then the Result is returned immediately and the continuation is ignored.</p>
+     * <p>Where the Result is a Success, then if an exception is thrown by the continuation the Result returned will be
+     * a new error Result containing that exception, otherwise the original Result will be returned.</p>
+     *
+     * @param f the function to map the Success value into the result continuation
+     * @return the Result or a new error Result
+     */
+    Result<T> thenWith(Function<T, WithResultContinuation<T>> f);
 }

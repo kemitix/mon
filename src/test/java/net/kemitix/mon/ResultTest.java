@@ -540,7 +540,7 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
-    public void error_andThenError_thenError() {
+    public void error_andThenError_thenOriginalError() {
         //given
         final RuntimeException exception1 = new RuntimeException();
         final Result<Object> error = Result.error(exception1);
@@ -551,6 +551,61 @@ public class ResultTest implements WithAssertions {
         //then
         assertThat(result.isError()).isTrue();
         result.onError(e -> assertThat(e).isSameAs(exception1));
+    }
+
+    @Test
+    public void success_whenThenWith_whenOkay_thenSuccess() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final Result<Integer> result = ok.thenWith(v -> () -> {
+            // do something with v
+        });
+        //then
+        assertThat(result.isOkay()).isTrue();
+        result.peek(v -> assertThat(v).isEqualTo(1));
+    }
+
+    @Test
+    public void success_whenThenWith_whenError_thenError() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        final RuntimeException exception = new RuntimeException();
+        //when
+        final Result<Integer> result = ok.thenWith(v -> () -> {
+            throw exception;
+        });
+        //then
+        assertThat(result.isError()).isTrue();
+        result.onError(e -> assertThat(e).isSameAs(exception));
+    }
+
+    @Test
+    public void error_whenThenWith_whenOkay_thenError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> error = Result.error(exception);
+        //when
+        final Result<Integer> result = error.thenWith(v -> () -> {
+            // do something with v
+        });
+        //then
+        assertThat(result.isError()).isTrue();
+        result.onError(e -> assertThat(e).isSameAs(exception));
+    }
+
+    @Test
+    public void error_whenThenWith_whenError_thenOriginalError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> error = Result.error(exception);
+        //when
+        final Result<Integer> result = error.thenWith(v -> () -> {
+            throw new RuntimeException();
+        });
+        //then
+        assertThat(result.isError()).isTrue();
+        result.onError(e -> assertThat(e).isSameAs(exception));
     }
 
     @RequiredArgsConstructor

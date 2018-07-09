@@ -5,6 +5,7 @@ CHANGELOG
 ------
 
 * Add `andThen(Function)`
+* Add `thenWith(Function)`
 
 0.9.0
 -----
