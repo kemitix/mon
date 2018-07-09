@@ -4,8 +4,9 @@ CHANGELOG
 0.10.0
 ------
 
-* Add `andThen(Function)`
-* Add `thenWith(Function)`
+* Add `Result.andThen(Function)`
+* Add `Result.thenWith(Function)`
+* Add `Result.maybeThen(Result<Maybe<T>>, Function)`
 
 0.9.0
 -----

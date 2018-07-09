@@ -121,6 +121,19 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
+     * Applies the function to the contents of a Maybe within the Result.
+     *
+     * @param maybeResult the Result that may contain a value
+     * @param f           the function to apply to the value
+     * @param <T>         the type of the original Result
+     * @param <R>         the type of the updated Result
+     * @return a new Maybe within a Result
+     */
+    static <T, R> Result<Maybe<R>> maybeThen(Result<Maybe<T>> maybeResult, Function<Maybe<T>, Result<Maybe<R>>> f) {
+        return maybeResult.flatMap(f);
+    }
+
+    /**
      * Checks of the Result is an error.
      *
      * @return true if the Result is an error.
