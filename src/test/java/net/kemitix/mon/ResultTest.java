@@ -626,10 +626,11 @@ public class ResultTest implements WithAssertions {
         }
 
         Result<Double> businessOperation(final String fileName1, final String fileName2) {
-            return readIntFromFile(fileName1).flatMap(intFromFile1 ->
-                    adjustValue(intFromFile1).flatMap(adjustedIntFromFile1 ->
-                            readIntFromFile(fileName2).flatMap(intFromFile2 ->
-                                    calculateAverage(adjustedIntFromFile1, intFromFile2))));
+            return readIntFromFile(fileName1)
+                    .andThen(intFromFile1 -> () -> adjustValue(intFromFile1))
+                    .flatMap(adjustedIntFromFile1 -> readIntFromFile(fileName2)
+                            .flatMap(intFromFile2 -> adjustedIntFromFile1
+                                    .flatMap(aif1 -> calculateAverage(aif1, intFromFile2))));
         }
 
         private Result<Integer> readIntFromFile(final String fileName) {
