@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+0.11.0
+
+* Rename `Result.maybeThen()` as `Result.flatMapMaybe()`
+
 0.10.0
 ------
 
