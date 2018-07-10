@@ -604,6 +604,73 @@ public class ResultTest implements WithAssertions {
         assertThat(result).isSameAs(error);
     }
 
+    @Test
+    public void okayJust_whenMaybeThen_whereOkayJust_thenIsOkayJust() {
+        //given
+        final Result<Maybe<Integer>> okJust = Result.ok(Maybe.just(1));
+        //when
+        final Result<Maybe<Integer>> result = Result.maybeThen(okJust, mv -> Result.ok(Maybe.just(2)));
+        //then
+        result.match(
+                success -> assertThat(success.toOptional()).contains(2),
+                error -> fail("Not an error")
+        );
+    }
+
+    @Test
+    public void okayJust_whenMaybeThen_whereOkayNothing_thenIsOkayNothing() {
+        //given
+        final Result<Maybe<Integer>> okJust = Result.ok(Maybe.just(1));
+        //when
+        final Result<Maybe<Integer>> result = Result.maybeThen(okJust, v -> Result.ok(Maybe.nothing()));
+        //then
+        result.match(
+                success -> assertThat(success.toOptional()).isEmpty(),
+                error -> fail("Not an error")
+        );
+    }
+
+    @Test
+    public void okayJust_whenMaybeThen_whereError_thenIsError() {
+        //given
+        final Result<Maybe<Integer>> okJust = Result.ok(Maybe.just(1));
+        final RuntimeException exception = new RuntimeException();
+        //when
+        final Result<Maybe<Integer>> result = Result.maybeThen(okJust, v -> Result.error(exception));
+        //then
+        result.match(
+                success -> fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void okayNothing_whenMaybeThen_thenDoNotApply() {
+        //given
+        final Result<Maybe<Integer>> okNothing = Result.ok(Maybe.nothing());
+        //when
+        final Result<Maybe<Integer>> result = Result.maybeThen(okNothing, v -> Result.ok(Maybe.just(2)));
+        //then
+        okNothing.match(
+                success -> assertThat(success.toOptional()).isEmpty(),
+                error -> fail("Not an error")
+        );
+    }
+
+    @Test
+    public void error_whenMaybeThen_thenDoNotApply() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Maybe<Integer>> maybeResult = Result.error(exception);
+        //when
+        final Result<Maybe<Integer>> result = Result.maybeThen(maybeResult, v -> Result.ok(Maybe.just(2)));
+        //then
+        maybeResult.match(
+                success -> fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
     @RequiredArgsConstructor
     private static class UseCase {
 
