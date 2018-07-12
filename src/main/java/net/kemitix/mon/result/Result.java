@@ -134,14 +134,14 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
-     * Checks of the Result is an error.
+     * Checks if the Result is an error.
      *
      * @return true if the Result is an error.
      */
     boolean isError();
 
     /**
-     * Checks of the Result is a success.
+     * Checks if the Result is a success.
      *
      * @return true if the Result is a success.
      */

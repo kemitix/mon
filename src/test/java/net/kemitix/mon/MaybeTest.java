@@ -219,4 +219,44 @@ public class MaybeTest implements WithAssertions {
         assertThat(flag).isTrue();
     }
 
+    @Test
+    public void just_isJust_isTrue() {
+        //given
+        final Maybe<Integer> maybe = just(1);
+        //when
+        final boolean isJust = maybe.isJust();
+        //then
+        assertThat(isJust).isTrue();
+    }
+
+    @Test
+    public void just_isNothing_isFalse() {
+        //given
+        final Maybe<Integer> maybe = just(1);
+        //when
+        final boolean isNothing = maybe.isNothing();
+        //then
+        assertThat(isNothing).isFalse();
+    }
+
+    @Test
+    public void nothing_isJust_isFalse() {
+        //given
+        final Maybe<Object> maybe = nothing();
+        //when
+        final boolean isJust = maybe.isJust();
+        //then
+        assertThat(isJust).isFalse();
+    }
+
+    @Test
+    public void nothing_isNothing_isTrue() {
+        //given
+        final Maybe<Object> maybe = nothing();
+        //when
+        final boolean isNothing = maybe.isNothing();
+        //then
+        assertThat(isNothing).isTrue();
+    }
+
 }

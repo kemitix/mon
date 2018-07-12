@@ -45,6 +45,16 @@ final class Just<T> implements Maybe<T> {
     private final T value;
 
     @Override
+    public boolean isJust() {
+        return true;
+    }
+
+    @Override
+    public boolean isNothing() {
+        return false;
+    }
+
+    @Override
     public <R> Maybe<R> flatMap(final Function<T, Maybe<R>> f) {
         return f.apply(value);
     }

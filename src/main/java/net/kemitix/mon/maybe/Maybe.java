@@ -77,6 +77,20 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     }
 
     /**
+     * Checks if the Maybe is a Just.
+     *
+     * @return true if the Maybe is a Just
+     */
+    boolean isJust();
+
+    /**
+     * Checks if the Maybe is Nothing.
+     *
+     * @return true if the Maybe is Nothing
+     */
+    boolean isNothing();
+
+    /**
      * Monad binder maps the Maybe into another Maybe using the binder method f.
      *
      * @param f   the mapper function
