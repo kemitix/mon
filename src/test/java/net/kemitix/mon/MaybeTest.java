@@ -22,7 +22,7 @@ public class MaybeTest implements WithAssertions {
     @Test
     public void justMustBeNonNull() {
         assertThatNullPointerException().isThrownBy(() -> just(null))
-                                        .withMessageContaining("value");
+                .withMessageContaining("value");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class MaybeTest implements WithAssertions {
     public void toOptional() {
         assertThat(just(1).toOptional()).isEqualTo(Optional.of(1));
         assertThat(nothing()
-                        .toOptional()).isEqualTo(Optional.empty());
+                .toOptional()).isEqualTo(Optional.empty());
     }
 
     @Test
@@ -192,6 +192,31 @@ public class MaybeTest implements WithAssertions {
         nothing.ifNothing(() -> capture.set(true));
         //then
         assertThat(capture).isTrue();
+    }
+
+    @Test
+    public void just_whenMatch_thenJustTriggers() {
+        //given
+        final Maybe<Integer> maybe = Maybe.just(1);
+        //then
+        maybe.match(
+                just -> assertThat(just).isEqualTo(1),
+                () -> fail("Not nothing")
+        );
+    }
+
+    @Test
+    public void nothing_whenMatch_thenNothingTriggers() {
+        //given
+        final Maybe<Integer> maybe = Maybe.nothing();
+        final AtomicBoolean flag = new AtomicBoolean(false);
+        //when
+        maybe.match(
+                just -> fail("Not a just"),
+                () -> flag.set(true)
+        );
+        //then
+        assertThat(flag).isTrue();
     }
 
 }

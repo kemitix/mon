@@ -99,6 +99,11 @@ final class Just<T> implements Maybe<T> {
     }
 
     @Override
+    public void match(final Consumer<T> justMatcher, final Runnable nothingMatcher) {
+        justMatcher.accept(value);
+    }
+
+    @Override
     public void orElseThrow(final Supplier<Exception> e) {
         // do not throw
     }

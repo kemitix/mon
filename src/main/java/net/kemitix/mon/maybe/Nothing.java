@@ -34,6 +34,7 @@ import java.util.stream.Stream;
  * @param <T> the type of the missing content
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@SuppressWarnings("methodcount")
 final class Nothing<T> implements Maybe<T> {
 
     static final Maybe<?> INSTANCE = new Nothing<>();
@@ -77,6 +78,11 @@ final class Nothing<T> implements Maybe<T> {
     @Override
     public void ifNothing(final Runnable runnable) {
         runnable.run();
+    }
+
+    @Override
+    public void match(final Consumer<T> justMatcher, final Runnable nothingMatcher) {
+        nothingMatcher.run();
     }
 
     @Override

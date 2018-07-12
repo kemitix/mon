@@ -149,4 +149,12 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
      * @param runnable the runnable to call if this is a Nothing
      */
     void ifNothing(Runnable runnable);
+
+    /**
+     * Matches the Maybe, either just or nothing, and performs either the Consumer, for Just, or Runnable for nothing.
+     *
+     * @param justMatcher    the Consumer to pass the value of a Just to
+     * @param nothingMatcher the Runnable to call if the Maybe is a Nothing
+     */
+    void match(Consumer<T> justMatcher, Runnable nothingMatcher);
 }
