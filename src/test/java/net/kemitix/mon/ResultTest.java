@@ -605,24 +605,24 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
-    public void okayJust_whenMaybeThen_whereOkayJust_thenIsOkayJust() {
+    public void okayJust_whenFlatMapMaybe_whereOkayJust_thenIsOkayJust() {
         //given
         final Result<Maybe<Integer>> okJust = Result.ok(Maybe.just(1));
         //when
-        final Result<Maybe<Integer>> result = Result.maybeThen(okJust, mv -> Result.ok(Maybe.just(2)));
+        final Result<Maybe<String>> result = Result.flatMapMaybe(okJust, maybe -> Result.ok(maybe.flatMap(v -> Maybe.just("2"))));
         //then
         result.match(
-                success -> assertThat(success.toOptional()).contains(2),
+                success -> assertThat(success.toOptional()).contains("2"),
                 error -> fail("Not an error")
         );
     }
 
     @Test
-    public void okayJust_whenMaybeThen_whereOkayNothing_thenIsOkayNothing() {
+    public void okayJust_whenFlatMapMaybe_whereOkayNothing_thenIsOkayNothing() {
         //given
         final Result<Maybe<Integer>> okJust = Result.ok(Maybe.just(1));
         //when
-        final Result<Maybe<Integer>> result = Result.maybeThen(okJust, v -> Result.ok(Maybe.nothing()));
+        final Result<Maybe<String>> result = Result.flatMapMaybe(okJust, maybe -> Result.ok(maybe.flatMap(v -> Maybe.nothing())));
         //then
         result.match(
                 success -> assertThat(success.toOptional()).isEmpty(),
@@ -631,12 +631,12 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
-    public void okayJust_whenMaybeThen_whereError_thenIsError() {
+    public void okayJust_whenFlatMapMaybe_whereError_thenIsError() {
         //given
         final Result<Maybe<Integer>> okJust = Result.ok(Maybe.just(1));
         final RuntimeException exception = new RuntimeException();
         //when
-        final Result<Maybe<Integer>> result = Result.maybeThen(okJust, v -> Result.error(exception));
+        final Result<Maybe<Integer>> result = Result.flatMapMaybe(okJust, v -> Result.error(exception));
         //then
         result.match(
                 success -> fail("Not a success"),
@@ -645,27 +645,27 @@ public class ResultTest implements WithAssertions {
     }
 
     @Test
-    public void okayNothing_whenMaybeThen_thenDoNotApply() {
+    public void okayNothing_whenFlatMapMaybe_thenDoNotApply() {
         //given
         final Result<Maybe<Integer>> okNothing = Result.ok(Maybe.nothing());
         //when
-        final Result<Maybe<Integer>> result = Result.maybeThen(okNothing, v -> Result.ok(Maybe.just(2)));
+        final Result<Maybe<String>> result = Result.flatMapMaybe(okNothing, maybe -> Result.ok(maybe.flatMap(v -> Maybe.just("2"))));
         //then
-        okNothing.match(
+        result.match(
                 success -> assertThat(success.toOptional()).isEmpty(),
                 error -> fail("Not an error")
         );
     }
 
     @Test
-    public void error_whenMaybeThen_thenDoNotApply() {
+    public void error_whenFlatMapMaybe_thenDoNotApply() {
         //given
         final RuntimeException exception = new RuntimeException();
         final Result<Maybe<Integer>> maybeResult = Result.error(exception);
         //when
-        final Result<Maybe<Integer>> result = Result.maybeThen(maybeResult, v -> Result.ok(Maybe.just(2)));
+        final Result<Maybe<String>> result = Result.flatMapMaybe(maybeResult, maybe -> Result.ok(maybe.flatMap(v -> Maybe.just("2"))));
         //then
-        maybeResult.match(
+        result.match(
                 success -> fail("Not a success"),
                 error -> assertThat(error).isSameAs(exception)
         );

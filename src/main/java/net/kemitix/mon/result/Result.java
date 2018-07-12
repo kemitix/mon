@@ -129,19 +129,19 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <R>         the type of the updated Result
      * @return a new Maybe within a Result
      */
-    static <T, R> Result<Maybe<R>> maybeThen(Result<Maybe<T>> maybeResult, Function<Maybe<T>, Result<Maybe<R>>> f) {
+    static <T, R> Result<Maybe<R>> flatMapMaybe(Result<Maybe<T>> maybeResult, Function<Maybe<T>, Result<Maybe<R>>> f) {
         return maybeResult.flatMap(f);
     }
 
     /**
-     * Checks of the Result is an error.
+     * Checks if the Result is an error.
      *
      * @return true if the Result is an error.
      */
     boolean isError();
 
     /**
-     * Checks of the Result is a success.
+     * Checks if the Result is a success.
      *
      * @return true if the Result is a success.
      */

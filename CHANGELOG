@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.11.0
+
+* Rename `Result.maybeThen()` as `Result.flatMapMaybe()`
+* Add `Maybe.match(Consumer,Runnable)`
+* Add `Maybe.isJust()`
+* Add `Maybe.isNothing()`
+
 0.10.0
 ------
 

@@ -77,6 +77,20 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     }
 
     /**
+     * Checks if the Maybe is a Just.
+     *
+     * @return true if the Maybe is a Just
+     */
+    boolean isJust();
+
+    /**
+     * Checks if the Maybe is Nothing.
+     *
+     * @return true if the Maybe is Nothing
+     */
+    boolean isNothing();
+
+    /**
      * Monad binder maps the Maybe into another Maybe using the binder method f.
      *
      * @param f   the mapper function
@@ -149,4 +163,12 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
      * @param runnable the runnable to call if this is a Nothing
      */
     void ifNothing(Runnable runnable);
+
+    /**
+     * Matches the Maybe, either just or nothing, and performs either the Consumer, for Just, or Runnable for nothing.
+     *
+     * @param justMatcher    the Consumer to pass the value of a Just to
+     * @param nothingMatcher the Runnable to call if the Maybe is a Nothing
+     */
+    void match(Consumer<T> justMatcher, Runnable nothingMatcher);
 }
