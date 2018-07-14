@@ -43,6 +43,9 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     /**
      * Create a Maybe for the value that is present.
      *
+     * <p>The {@literal value} must not be {@literal null} or a {@literal NullPointerException} will be thrown.
+     * If you can't prove that the value won't be {@literal null} you should use {@link #maybe(Object)} instead.</p>
+     *
      * @param value the value, not null
      * @param <T>   the type of the value
      * @return a Maybe of the value
@@ -64,6 +67,8 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
 
     /**
      * Create a Maybe for the value that may or may not be present.
+     *
+     * <p>Where the value is {@literal null}, that is taken as not being present.</p>
      *
      * @param value the value, may be null
      * @param <T>   the type of the value
@@ -114,7 +119,7 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
      * A value to use when Maybe is Nothing.
      *
      * @param otherValue an alternate value
-     * @return a Maybe
+     * @return the value of the Maybe if a Just, otherwise the otherValue
      */
     T orElse(T otherValue);
 
@@ -128,14 +133,15 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     /**
      * Throw the exception if the Maybe is a Nothing.
      *
-     * @param e the exception to throw
-     * @throws Exception if the Maybe is a Nothing
+     * @param e   the exception to throw
+     * @param <X> the type of the exception to throw
+     * @return the value of the Maybe if a Just
+     * @throws X if the Maybe is nothing
      */
-    @SuppressWarnings("illegalthrows")
-    void orElseThrow(Supplier<Exception> e) throws Exception;
+    <X extends Throwable> T orElseThrow(Supplier<? extends X> e) throws X;
 
     /**
-     * Converts the Maybe into either a single value stream or and empty stream.
+     * Converts the Maybe into either a single value stream or an empty stream.
      *
      * @return a Stream containing the value or nothing.
      */

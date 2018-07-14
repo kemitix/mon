@@ -91,7 +91,9 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
-     * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
+     * Creates a {@link Maybe} from the Result, where the Result is a success, then the Maybe will contain the value.
+     *
+     * <p>However, if the Result is an error then the Maybe will be nothing.</p>
      *
      * @param result the Result the might contain the value of the Result
      * @param <T>    the type of the Maybe and the Result

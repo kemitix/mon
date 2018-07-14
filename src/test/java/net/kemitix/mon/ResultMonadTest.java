@@ -8,32 +8,39 @@ import java.util.function.Function;
 
 public class ResultMonadTest implements WithAssertions {
 
+    private final int v = 1;
+    private final Function<Integer, Result<Integer>> f = i -> r(i * 2);
+    private final Function<Integer, Result<Integer>> g = i -> r(i + 6);
+
+    private static Result<Integer> r(int v) {
+        return Result.ok(v);
+    }
+
     @Test
     public void leftIdentity() {
-        //given
-        final int value = 1;
-        final Result<Integer> result = Result.ok(value);
-        final Function<Integer, Result<Integer>> f = i -> Result.ok(i * 2);
-        //then
-        assertThat(result.flatMap(f)).isEqualTo(f.apply(value));
+        assertThat(
+                r(v).flatMap(f)
+        ).isEqualTo(
+                f.apply(v)
+        );
     }
 
     @Test
     public void rightIdentity() {
-        //given
-        final Result<Integer> result = Result.ok(1);
-        //then
-        assertThat(result.flatMap(Result::ok)).isEqualTo(result);
+        assertThat(
+                r(v).flatMap(x -> r(x))
+        ).isEqualTo(
+                r(v)
+        );
     }
 
     @Test
     public void associativity() {
-        //given
-        final Result<Integer> result = Result.ok(1);
-        final Function<Integer, Result<Integer>> f = i -> Result.ok(i * 2);
-        final Function<Integer, Result<Integer>> g = i -> Result.ok(i + 6);
-        //then
-        assertThat(result.flatMap(f).flatMap(g)).isEqualTo(result.flatMap(x -> f.apply(x).flatMap(g)));
+        assertThat(
+                r(v).flatMap(f).flatMap(g)
+        ).isEqualTo(
+                r(v).flatMap(x -> f.apply(x).flatMap(g))
+        );
     }
 
 }

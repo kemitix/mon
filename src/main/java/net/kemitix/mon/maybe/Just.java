@@ -98,6 +98,11 @@ final class Just<T> implements Maybe<T> {
     }
 
     @Override
+    public <X extends Throwable> T orElseThrow(final Supplier<? extends X> e) throws X {
+        return value;
+    }
+
+    @Override
     public Maybe<T> peek(final Consumer<T> consumer) {
         consumer.accept(value);
         return this;
@@ -111,11 +116,6 @@ final class Just<T> implements Maybe<T> {
     @Override
     public void match(final Consumer<T> justMatcher, final Runnable nothingMatcher) {
         justMatcher.accept(value);
-    }
-
-    @Override
-    public void orElseThrow(final Supplier<Exception> e) {
-        // do not throw
     }
 
     @Override
