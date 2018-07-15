@@ -7,6 +7,8 @@ CHANGELOG
 * Add `Maybe.match(Consumer,Runnable)`
 * Add `Maybe.isJust()`
 * Add `Maybe.isNothing()`
+* BUG: `Maybe.orElseThrow()` now returns value when a Just
+* Rewrite README
 
 0.10.0
 ------

@@ -52,6 +52,29 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
+    public void mapToNull_thenJustNull() {
+        //given
+        final Maybe<Integer> maybe = just(1);
+        //when
+        final Maybe<Object> result = maybe.map(x -> null);
+        //then
+        result.match(
+                just -> assertThat(just).isNull(),
+                () -> fail("mapped to a null, not a Nothing - use flatMap() to convert to Nothing in null")
+        );
+    }
+
+    @Test
+    public void optional_mapToNull_thenJustNull() {
+        //given
+        final Optional<Integer> optional = Optional.ofNullable(1);
+        //when
+        final Optional<Object> result = optional.map(x -> null);
+        //then
+        assertThat(result.isPresent()).isFalse();
+    }
+
+    @Test
     public void justHashCode() {
         assertThat(just(1).hashCode()).isNotEqualTo(just(2).hashCode());
     }
@@ -104,8 +127,18 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void justOrThrow() {
+    public void justOrThrowDoesNotThrow() {
         assertThatCode(() -> just(1).orElseThrow(IllegalStateException::new)).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void justOrThrowReturnsValue() {
+        //given
+        final Maybe<Integer> maybe = just(1);
+        //when
+        final Integer result = maybe.orElseThrow(() -> new RuntimeException());
+        //then
+        assertThat(result).isEqualTo(1);
     }
 
     @Test
@@ -133,8 +166,8 @@ public class MaybeTest implements WithAssertions {
     @Test
     public void justFlatMap() {
         //given
-        final Maybe<Integer> just1 = Maybe.just(1);
-        final Maybe<Integer> just2 = Maybe.just(2);
+        final Maybe<Integer> just1 = just(1);
+        final Maybe<Integer> just2 = just(2);
         //when
         final Maybe<Integer> result = just1.flatMap(v1 ->
                 just2.flatMap(v2 ->
@@ -147,8 +180,8 @@ public class MaybeTest implements WithAssertions {
     @Test
     public void nothingFlatMap() {
         //given
-        final Maybe<Integer> nothing1 = Maybe.nothing();
-        final Maybe<Integer> nothing2 = Maybe.nothing();
+        final Maybe<Integer> nothing1 = nothing();
+        final Maybe<Integer> nothing2 = nothing();
         //when
         final Maybe<Integer> result = nothing1.flatMap(v1 ->
                 nothing2.flatMap(v2 ->
@@ -161,8 +194,8 @@ public class MaybeTest implements WithAssertions {
     @Test
     public void justNothingFlatMap() {
         //given
-        final Maybe<Integer> just1 = Maybe.just(1);
-        final Maybe<Integer> nothing2 = Maybe.nothing();
+        final Maybe<Integer> just1 = just(1);
+        final Maybe<Integer> nothing2 = nothing();
         //when
         final Maybe<Integer> result = just1.flatMap(v1 ->
                 nothing2.flatMap(v2 ->
@@ -175,7 +208,7 @@ public class MaybeTest implements WithAssertions {
     @Test
     public void just_ifNothing_isIgnored() {
         //given
-        final Maybe<Integer> just = Maybe.just(1);
+        final Maybe<Integer> just = just(1);
         final AtomicBoolean capture = new AtomicBoolean(false);
         //when
         just.ifNothing(() -> capture.set(true));
@@ -186,7 +219,7 @@ public class MaybeTest implements WithAssertions {
     @Test
     public void nothing_ifNothing_isCalled() {
         //given
-        final Maybe<Integer> nothing = Maybe.nothing();
+        final Maybe<Integer> nothing = nothing();
         final AtomicBoolean capture = new AtomicBoolean(false);
         //when
         nothing.ifNothing(() -> capture.set(true));
@@ -197,7 +230,7 @@ public class MaybeTest implements WithAssertions {
     @Test
     public void just_whenMatch_thenJustTriggers() {
         //given
-        final Maybe<Integer> maybe = Maybe.just(1);
+        final Maybe<Integer> maybe = just(1);
         //then
         maybe.match(
                 just -> assertThat(just).isEqualTo(1),
@@ -208,7 +241,7 @@ public class MaybeTest implements WithAssertions {
     @Test
     public void nothing_whenMatch_thenNothingTriggers() {
         //given
-        final Maybe<Integer> maybe = Maybe.nothing();
+        final Maybe<Integer> maybe = nothing();
         final AtomicBoolean flag = new AtomicBoolean(false);
         //when
         maybe.match(
