@@ -119,6 +119,125 @@
    }
    #+END_SRC
 
+*** =TypeAlias= *can* be a Monad
+
+    #+BEGIN_SRC java
+    package net.kemitix.mon;
+
+    import org.assertj.core.api.WithAssertions;
+    import org.junit.Test;
+
+    import java.util.function.Function;
+
+    public class TypeAliasMonadTest implements WithAssertions {
+
+        private final int v = 1;
+        private final Function<Integer, AnAlias<Integer>> f = i -> a(i * 2);
+        private final Function<Integer, AnAlias<Integer>> g = i -> a(i + 6);
+
+        private static AnAlias<Integer> a(Integer v) {
+            return AnAlias.of(v);
+        }
+
+        @Test
+        public void leftIdentity() {
+            assertThat(
+                a(v).flatMap(f)
+            ).isEqualTo(
+                f.apply(v)
+            );
+        }
+
+        @Test
+        public void rightIdentity_inline() {
+            // java isn't able to properly infer the correct types when used in-line
+            assertThat(
+                a(v).<Integer, AnAlias<Integer>>flatMap(x -> a(x))
+            ).isEqualTo(
+                a(v)
+            );
+        }
+
+        @Test
+        public void rightIdentity_explicitValue() {
+            final AnAlias<Integer> integerAnAlias = a(v).flatMap(x -> a(x));
+            assertThat(
+                integerAnAlias
+            ).isEqualTo(
+                a(v)
+            );
+        }
+
+        @Test
+        public void associativity() {
+            assertThat(
+                a(v).flatMap(f).flatMap(g)
+            ).isEqualTo(
+                a(v).flatMap(x -> f.apply(x).flatMap(g))
+            );
+        }
+
+        static class AnAlias<T> extends TypeAlias<T> {
+            private AnAlias(T value) {
+                super(value);
+            }
+
+            static <T> AnAlias<T> of(T value) {
+                return new AnAlias<>(value);
+            }
+        }
+    }
+    #+END_SRC
+
+
+*** Instance Methods
+
+**** =final <R> R map(final Function<T, R> f)=
+
+     Map the TypeAlias into another value.
+
+     #+BEGIN_SRC java
+     final StudentId studentId = StudentId.of(123);
+     final String idString = studentId.map(id -> String.valueOf(id));
+
+     class StudentId extends TypeAlias<Integer> {
+         private StudentId(Integer value) {
+             super(value);
+         }
+         static StudentId of(Integer id) {
+             return new StudentId(id);
+         }
+     }
+     #+END_SRC
+
+
+**** =final <R, U extends TypeAlias<R>> U flatMap(final Function<T, U> f)=
+
+     Map the TypeAlias into another TypeAlias.
+
+     #+BEGIN_SRC java
+     final StudentId studentId = StudentId.of(123);
+     final StudentName studentName = studentId.flatMap(id -> getStudentName(id));
+
+     class StudentName extends TypeAlias<String> {
+         private StudentName(String value) {
+             super(value);
+         }
+         static StudentName of(final String name) {
+             return new StudentName(name);
+         }
+     }
+     #+END_SRC
+
+
+**** =T getValue()=
+
+     Get the value of the TypeAlias.
+
+     #+BEGIN_SRC java
+     final String name = studentName.getValue();
+     #+END_SRC
+
 
 ** Maybe
 
@@ -734,7 +853,7 @@
    convention, used to indicate the error, and right the success. An alternative
    is to use the =Result= which more clearly distinguishes success from failure.
 
-   =Either= is not a Monad.
+*** =Either= *is not* a Monad.
 
 *** Static Constructors
 
@@ -745,6 +864,7 @@
      #+BEGIN_SRC java
      final Either<Integer, String> left = Either.left(getIntegerValue());
      #+END_SRC
+
 
 **** =static <L, R> Either<L, R> right(final R r)=
 
@@ -765,6 +885,7 @@
      final boolean leftIsLeft = Either.<Integer, String>left(getIntegerValue()).isLeft();
      final boolean rightIsLeft = Either.<Integer, String>right(getStringValue()).isLeft();
      #+END_SRC
+
 
 **** =boolean isRight()=
 
@@ -788,6 +909,7 @@
            );
      #+END_SRC
 
+
 **** =<T> Either<T, R> mapLeft(Function<L, T> f)=
 
      Map the function across the left value.
@@ -797,6 +919,7 @@
                                                  .mapLeft(i -> i.doubleValue());
      #+END_SRC
 
+
 **** =<T> Either<L, T> mapRight(Function<R, T> f)=
 
      Map the function across the right value.
@@ -805,3 +928,5 @@
      final Either<Integer, String> either = Either.<Integer, String>left(getIntegerValue())
                                                   .mapRight(s -> s + "x");
      #+END_SRC
+
+
