@@ -2,6 +2,7 @@ CHANGELOG
 =========
 
 0.11.0
+------
 
 * Rename `Result.maybeThen()` as `Result.flatMapMaybe()`
 * Add `Maybe.match(Consumer,Runnable)`
@@ -9,6 +10,7 @@ CHANGELOG
 * Add `Maybe.isNothing()`
 * BUG: `Maybe.orElseThrow()` now returns value when a Just
 * Rewrite README
+* Add `Either` (experimental)
 
 0.10.0
 ------
