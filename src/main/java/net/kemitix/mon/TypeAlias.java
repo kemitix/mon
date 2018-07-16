@@ -30,7 +30,6 @@ import java.util.function.Function;
  * for the type being aliased.</p>
  *
  * @param <T> the type of the alias
- *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @SuppressWarnings("abstractclassname")
@@ -55,10 +54,21 @@ public abstract class TypeAlias<T> {
      *
      * @param f   the function to create the new value
      * @param <R> the type of the new value
-     *
-     * @return a TypeAlias
+     * @return the result of the function
      */
     public final <R> R map(final Function<T, R> f) {
+        return f.apply(value);
+    }
+
+    /**
+     * Map the TypeAlias into another TypeAlias.
+     *
+     * @param f   the function to create the new value
+     * @param <R> the type of the new value within a TypeAlias
+     * @param <U> the type of the TypeAlias superclass containing the new value
+     * @return a TypeAlias
+     */
+    public final <R, U extends TypeAlias<R>> U flatMap(final Function<T, U> f) {
         return f.apply(value);
     }
 
@@ -73,7 +83,7 @@ public abstract class TypeAlias<T> {
             final TypeAlias other = (TypeAlias) o;
             final Class<?> otherValueClass = other.value.getClass();
             return otherValueClass.equals(getValue().getClass())
-                   && other.value.equals(getValue());
+                    && other.value.equals(getValue());
         }
         return map(o::equals);
     }
