@@ -21,7 +21,6 @@
 
 package net.kemitix.mon.experimental.either;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.function.Consumer;
@@ -37,12 +36,17 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 class Left<L, R> implements Either<L, R> {
 
-    @Getter
-    private final boolean left = true;
-    @Getter
-    private final boolean right = false;
-
     private final L value;
+
+    @Override
+    public boolean isLeft() {
+        return true;
+    }
+
+    @Override
+    public boolean isRight() {
+        return false;
+    }
 
     @Override
     public void match(final Consumer<L> onLeft, final Consumer<R> onRight) {
