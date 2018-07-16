@@ -11,6 +11,7 @@ CHANGELOG
 * BUG: `Maybe.orElseThrow()` now returns value when a Just
 * Rewrite README
 * Add `Either` (experimental)
+* Add `flatMap` to `TypeAlias`
 
 0.10.0
 ------
