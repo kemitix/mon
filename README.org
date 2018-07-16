@@ -722,3 +722,86 @@
      #+END_SRC
 
 
+** Either
+
+   Allows handling a value that can be one of two types, a left value/type or a
+   right value/type.
+
+   When an =Either= is returned from a method it will contain either a left or a
+   right.
+
+   Where the =Either= is used to represent success/failure, the left case is, by
+   convention, used to indicate the error, and right the success. An alternative
+   is to use the =Result= which more clearly distinguishes success from failure.
+
+   =Either= is not a Monad.
+
+*** Static Constructors
+
+**** =static <L, R> Either<L, R> left(final L l)=
+
+     Create a new Either holding a left value.
+
+     #+BEGIN_SRC java
+     final Either<Integer, String> left = Either.left(getIntegerValue());
+     #+END_SRC
+
+**** =static <L, R> Either<L, R> right(final R r)=
+
+     Create a new Either holding a right value.
+
+     #+BEGIN_SRC java
+     final Either<Integer, String> right = Either.right(getStringValue());
+     #+END_SRC
+
+
+*** Instance Methods
+
+**** =boolean isLeft()=
+
+     Checks if the Either holds a left value.
+
+     #+BEGIN_SRC java
+     final boolean leftIsLeft = Either.<Integer, String>left(getIntegerValue()).isLeft();
+     final boolean rightIsLeft = Either.<Integer, String>right(getStringValue()).isLeft();
+     #+END_SRC
+
+**** =boolean isRight()=
+
+     Checks if the Either holds a right value.
+
+     #+BEGIN_SRC java
+     final boolean leftIsRight = Either.<Integer, String>left(getIntegerValue()).isRight();
+     final boolean rightIsRight = Either.<Integer, String>right(getStringValue()).isRight();
+     #+END_SRC
+
+
+**** =void match(Consumer<L> onLeft, Consumer<R> onRight)=
+
+     Matches the Either, invoking the correct Consumer.
+
+     #+BEGIN_SRC java
+     Either.<Integer, String>left(getIntegerValue())
+           .match(
+               left -> handleIntegerValue(left),
+               right -> handleStringValue(right)
+           );
+     #+END_SRC
+
+**** =<T> Either<T, R> mapLeft(Function<L, T> f)=
+
+     Map the function across the left value.
+
+     #+BEGIN_SRC java
+     final Either<Double, String> either = Either.<Integer, String>left(getIntegerValue())
+                                                 .mapLeft(i -> i.doubleValue());
+     #+END_SRC
+
+**** =<T> Either<L, T> mapRight(Function<R, T> f)=
+
+     Map the function across the right value.
+
+     #+BEGIN_SRC java
+     final Either<Integer, String> either = Either.<Integer, String>left(getIntegerValue())
+                                                  .mapRight(s -> s + "x");
+     #+END_SRC
