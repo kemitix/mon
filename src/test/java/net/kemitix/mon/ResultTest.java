@@ -671,6 +671,66 @@ public class ResultTest implements WithAssertions {
         );
     }
 
+    @Test
+    public void okayOkay_whenReduce_thenCombine() {
+        //given
+        final Result<Integer> result1 = Result.ok(1);
+        final Result<Integer> result10 = Result.ok(10);
+        //when
+        final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
+        //then
+        result11.match(
+                success -> assertThat(success).isEqualTo(11),
+                error -> fail("Not an error")
+        );
+    }
+
+    @Test
+    public void okayError_whenReduce_thenError() {
+        //given
+        final Result<Integer> result1 = Result.ok(1);
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> result10 = Result.error(exception);
+        //when
+        final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
+        //then
+        result11.match(
+                success->fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void errorOkay_whenReduce_thenError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> result1 = Result.error(exception);
+        final Result<Integer> result10 = Result.ok(10);
+        //when
+        final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
+        //then
+        result11.match(
+                success->fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void errorError_whenReduce_thenError() {
+        //given
+        final RuntimeException exception1 = new RuntimeException();
+        final Result<Integer> result1 = Result.error(exception1);
+        final RuntimeException exception10 = new RuntimeException();
+        final Result<Integer> result10 = Result.error(exception10);
+        //when
+        final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
+        //then
+        result11.match(
+                success->fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception1)
+        );
+    }
+
     @RequiredArgsConstructor
     private static class UseCase {
 

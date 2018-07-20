@@ -26,6 +26,7 @@ import net.kemitix.mon.maybe.Maybe;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -49,11 +50,6 @@ class Success<T> implements Result<T> {
     @Override
     public boolean isOkay() {
         return true;
-    }
-
-    @Override
-    public <R> Result<R> flatMap(final Function<T, Result<R>> f) {
-        return f.apply(value);
     }
 
     @Override
@@ -103,6 +99,16 @@ class Success<T> implements Result<T> {
     @Override
     public Result<T> thenWith(final Function<T, WithResultContinuation<T>> f) {
         return f.apply(value).call(this);
+    }
+
+    @Override
+    public Result<T> reduce(final Result<T> identity, final BinaryOperator<T> operator) {
+        return flatMap(a -> identity.flatMap(b -> Result.of(() -> operator.apply(a, b))));
+    }
+
+    @Override
+    public <R> Result<R> flatMap(final Function<T, Result<R>> f) {
+        return f.apply(value);
     }
 
     @Override
