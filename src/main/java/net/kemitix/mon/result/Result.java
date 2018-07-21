@@ -123,7 +123,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
      * error, then the Result will also be an error.
      */
-    static <T> Result<Maybe<T>> invert(final Maybe<Result<T>> maybeResult) {
+    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
         return maybeResult.orElseGet(() -> Result.ok(null))
                 .flatMap(value -> Result.ok(Maybe.maybe(value)));
     }

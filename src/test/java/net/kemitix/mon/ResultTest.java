@@ -300,7 +300,7 @@ public class ResultTest implements WithAssertions {
         //given
         final Maybe<Result<Integer>> justSuccess = Maybe.just(Result.ok(1));
         //when
-        final Result<Maybe<Integer>> result = Result.invert(justSuccess);
+        final Result<Maybe<Integer>> result = Result.swap(justSuccess);
         //then
         result.match(
                 success -> assertThat(success.toOptional()).contains(1),
@@ -314,7 +314,7 @@ public class ResultTest implements WithAssertions {
         final RuntimeException exception = new RuntimeException();
         final Maybe<Result<Object>> justError = Maybe.just(Result.error(exception));
         //when
-        final Result<Maybe<Object>> result = Result.invert(justError);
+        final Result<Maybe<Object>> result = Result.swap(justError);
         //then
         result.match(
                 success -> fail("Not a success"),
@@ -327,7 +327,7 @@ public class ResultTest implements WithAssertions {
         //given
         final Maybe<Result<Integer>> nothing = Maybe.nothing();
         //when
-        final Result<Maybe<Integer>> result = Result.invert(nothing);
+        final Result<Maybe<Integer>> result = Result.swap(nothing);
         //then
         result.match(
                 success -> assertThat(success.toOptional()).isEmpty(),
@@ -695,7 +695,7 @@ public class ResultTest implements WithAssertions {
         final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
         //then
         result11.match(
-                success->fail("Not a success"),
+                success -> fail("Not a success"),
                 error -> assertThat(error).isSameAs(exception)
         );
     }
@@ -710,7 +710,7 @@ public class ResultTest implements WithAssertions {
         final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
         //then
         result11.match(
-                success->fail("Not a success"),
+                success -> fail("Not a success"),
                 error -> assertThat(error).isSameAs(exception)
         );
     }
@@ -726,7 +726,7 @@ public class ResultTest implements WithAssertions {
         final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
         //then
         result11.match(
-                success->fail("Not a success"),
+                success -> fail("Not a success"),
                 error -> assertThat(error).isSameAs(exception1)
         );
     }
