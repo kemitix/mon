@@ -17,17 +17,17 @@
     <description>TypeAlias, Result and Maybe for Java</description>
 
     <issueManagement>
-        <url>https://gitlab.com/kemitix/mon/issues</url>
-        <system>GitLab Issues</system>
+        <url>https://github.com/kemitix/mon/issues</url>
+        <system>github Issues</system>
     </issueManagement>
 
     <scm>
-        <url>https://gitlab.com/kemitix/mon</url>
-        <connection>scm:git:https://gitlab.com/kemitix/mon.git</connection>
-        <developerConnection>scm:git:git@gitlab.com:kemitix/mon.git</developerConnection>
+        <url>https://github.com/kemitix/mon</url>
+        <connection>scm:git:https://github.com/kemitix/mon.git</connection>
+        <developerConnection>scm:git:git@github.com:kemitix/mon.git</developerConnection>
     </scm>
 
-    <url>https://gitlab.com/kemitix/mon</url>
+    <url>https://github.com/kemitix/mon</url>
 
     <inceptionYear>2017</inceptionYear>
 
