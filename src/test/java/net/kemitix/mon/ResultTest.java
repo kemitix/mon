@@ -300,7 +300,7 @@ public class ResultTest implements WithAssertions {
         //given
         final Maybe<Result<Integer>> justSuccess = Maybe.just(Result.ok(1));
         //when
-        final Result<Maybe<Integer>> result = Result.invert(justSuccess);
+        final Result<Maybe<Integer>> result = Result.swap(justSuccess);
         //then
         result.match(
                 success -> assertThat(success.toOptional()).contains(1),
@@ -314,7 +314,7 @@ public class ResultTest implements WithAssertions {
         final RuntimeException exception = new RuntimeException();
         final Maybe<Result<Object>> justError = Maybe.just(Result.error(exception));
         //when
-        final Result<Maybe<Object>> result = Result.invert(justError);
+        final Result<Maybe<Object>> result = Result.swap(justError);
         //then
         result.match(
                 success -> fail("Not a success"),
@@ -327,7 +327,7 @@ public class ResultTest implements WithAssertions {
         //given
         final Maybe<Result<Integer>> nothing = Maybe.nothing();
         //when
-        final Result<Maybe<Integer>> result = Result.invert(nothing);
+        final Result<Maybe<Integer>> result = Result.swap(nothing);
         //then
         result.match(
                 success -> assertThat(success.toOptional()).isEmpty(),
@@ -668,6 +668,66 @@ public class ResultTest implements WithAssertions {
         result.match(
                 success -> fail("Not a success"),
                 error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void okayOkay_whenReduce_thenCombine() {
+        //given
+        final Result<Integer> result1 = Result.ok(1);
+        final Result<Integer> result10 = Result.ok(10);
+        //when
+        final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
+        //then
+        result11.match(
+                success -> assertThat(success).isEqualTo(11),
+                error -> fail("Not an error")
+        );
+    }
+
+    @Test
+    public void okayError_whenReduce_thenError() {
+        //given
+        final Result<Integer> result1 = Result.ok(1);
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> result10 = Result.error(exception);
+        //when
+        final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
+        //then
+        result11.match(
+                success -> fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void errorOkay_whenReduce_thenError() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Integer> result1 = Result.error(exception);
+        final Result<Integer> result10 = Result.ok(10);
+        //when
+        final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
+        //then
+        result11.match(
+                success -> fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception)
+        );
+    }
+
+    @Test
+    public void errorError_whenReduce_thenError() {
+        //given
+        final RuntimeException exception1 = new RuntimeException();
+        final Result<Integer> result1 = Result.error(exception1);
+        final RuntimeException exception10 = new RuntimeException();
+        final Result<Integer> result10 = Result.error(exception10);
+        //when
+        final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
+        //then
+        result11.match(
+                success -> fail("Not a success"),
+                error -> assertThat(error).isSameAs(exception1)
         );
     }
 

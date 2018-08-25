@@ -26,6 +26,7 @@ import net.kemitix.mon.maybe.Maybe;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -99,6 +100,11 @@ class Err<T> implements Result<T> {
     @Override
     public Result<T> thenWith(final Function<T, WithResultContinuation<T>> f) {
         return this;
+    }
+
+    @Override
+    public Result<T> reduce(final Result<T> identify, final BinaryOperator<T> operator) {
+        return Result.error(error);
     }
 
     @Override

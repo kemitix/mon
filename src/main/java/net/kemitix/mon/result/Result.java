@@ -25,10 +25,7 @@ import net.kemitix.mon.Functor;
 import net.kemitix.mon.maybe.Maybe;
 
 import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /**
  * An Either type for holding a result or an error (Throwable).
@@ -64,17 +61,6 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
-     * Create a Result for a success.
-     *
-     * @param value the value
-     * @param <T>   the type of the value
-     * @return a successful Result
-     */
-    static <T> Result<T> ok(final T value) {
-        return new Success<>(value);
-    }
-
-    /**
      * Create a Result for a output of the Callable.
      *
      * @param callable the callable to produce the result
@@ -88,6 +74,17 @@ public interface Result<T> extends Functor<T, Result<?>> {
         } catch (final Exception e) {
             return Result.error(e);
         }
+    }
+
+    /**
+     * Create a Result for a success.
+     *
+     * @param value the value
+     * @param <T>   the type of the value
+     * @return a successful Result
+     */
+    static <T> Result<T> ok(final T value) {
+        return new Success<>(value);
     }
 
     /**
@@ -109,6 +106,15 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
+     * Extracts the successful value from the result, or throws the error Throwable.
+     *
+     * @return the value if a success
+     * @throws Throwable the result is an error
+     */
+    @SuppressWarnings("illegalthrows")
+    T orElseThrow() throws Throwable;
+
+    /**
      * Swaps the inner Result of a Maybe, so that a Result is on the outside.
      *
      * @param maybeResult the Maybe the contains a Result
@@ -117,10 +123,19 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
      * error, then the Result will also be an error.
      */
-    static <T> Result<Maybe<T>> invert(final Maybe<Result<T>> maybeResult) {
+    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
         return maybeResult.orElseGet(() -> Result.ok(null))
                 .flatMap(value -> Result.ok(Maybe.maybe(value)));
     }
+
+    /**
+     * Returns a new Result consisting of the result of applying the function to the contents of the Result.
+     *
+     * @param f   the mapping function the produces a Result
+     * @param <R> the type of the value withing the Result of the mapping function
+     * @return a Result
+     */
+    <R> Result<R> flatMap(Function<T, Result<R>> f);
 
     /**
      * Applies the function to the contents of a Maybe within the Result.
@@ -131,7 +146,10 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <R>         the type of the updated Result
      * @return a new Maybe within a Result
      */
-    static <T, R> Result<Maybe<R>> flatMapMaybe(Result<Maybe<T>> maybeResult, Function<Maybe<T>, Result<Maybe<R>>> f) {
+    static <T, R> Result<Maybe<R>> flatMapMaybe(
+            final Result<Maybe<T>> maybeResult,
+            final Function<Maybe<T>, Result<Maybe<R>>> f
+    ) {
         return maybeResult.flatMap(f);
     }
 
@@ -148,15 +166,6 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return true if the Result is a success.
      */
     boolean isOkay();
-
-    /**
-     * Returns a new Result consisting of the result of applying the function to the contents of the Result.
-     *
-     * @param f   the mapping function the produces a Result
-     * @param <R> the type of the value withing the Result of the mapping function
-     * @return a Result
-     */
-    <R> Result<R> flatMap(Function<T, Result<R>> f);
 
     @Override
     <R> Result<R> map(Function<T, R> f);
@@ -176,15 +185,6 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return a Result containing a Maybe that may or may not contain a value
      */
     Result<Maybe<T>> maybe(Predicate<T> predicate);
-
-    /**
-     * Extracts the successful value from the result, or throws the error Throwable.
-     *
-     * @return the value if a success
-     * @throws Throwable the result is an error
-     */
-    @SuppressWarnings("illegalthrows")
-    T orElseThrow() throws Throwable;
 
     /**
      * Provide the value within the Result, if it is a success, to the Consumer, and returns this Result.
@@ -251,4 +251,16 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return the Result or a new error Result
      */
     Result<T> thenWith(Function<T, WithResultContinuation<T>> f);
+
+    /**
+     * Reduce two Results of the same type into one using the reducing function provided.
+     *
+     * <p>If either Result is an error, then the reduce will return the error. If both are errors, then the error of
+     * {@link this} Result will be returned.</p>
+     *
+     * @param identify the identify Result
+     * @param operator the function to combine the values the Results
+     * @return a Result containing the combination of the two Results
+     */
+    Result<T> reduce(Result<T> identify, BinaryOperator<T> operator);
 }
