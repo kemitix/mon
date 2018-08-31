@@ -292,4 +292,23 @@ public class MaybeTest implements WithAssertions {
         assertThat(isNothing).isTrue();
     }
 
+    @Test
+    public void just_or_ignoreTheAlternative() {
+        //given
+        final Maybe<String> one = Maybe.just("one");
+        //when
+        final Maybe<String> result = one.or(() -> Maybe.just("two"));
+        //then
+        assertThat(result.toOptional()).contains("one");
+    }
+
+    @Test
+    public void nothing_or_isTheAlternative() {
+        //given
+        final Maybe<String> one = Maybe.nothing();
+        //when
+        final Maybe<String> result = one.or(() -> Maybe.just("two"));
+        //then
+        assertThat(result.toOptional()).contains("two");
+    }
 }

@@ -444,6 +444,16 @@
      #+END_SRC
 
 
+**** =T or(Supplier<Maybe<T> alternative)=
+
+     Provide an alternative Maybe to use when Maybe is Nothing.
+
+     #+BEGIN_SRC java
+     final Maybe<Integer> value = Maybe.maybe(getValue())
+                                       .or(() -> Maybe.just(defaultValue));
+     #+END_SRC
+
+
 **** =void orElseThrow(Supplier<Exception> error)=
 
      Throw the exception if the Maybe is a Nothing.
