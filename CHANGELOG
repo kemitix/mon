@@ -4,6 +4,7 @@ CHANGELOG
 0.12.0
 ------
 
+* Add Maybe.or(Supplier<Maybe>)
 * Add Result.reduce(Result,BinaryOperator)
 * Rename Result.invert() as Result.swap()
 * [admin] pom: update urls to github

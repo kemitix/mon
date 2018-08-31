@@ -119,6 +119,11 @@ final class Just<T> implements Maybe<T> {
     }
 
     @Override
+    public Maybe<T> or(final Supplier<Maybe<T>> alternative) {
+        return this;
+    }
+
+    @Override
     public Stream<T> stream() {
         return Stream.of(value);
     }

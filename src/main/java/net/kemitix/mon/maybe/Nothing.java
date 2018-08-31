@@ -101,6 +101,11 @@ final class Nothing<T> implements Maybe<T> {
     }
 
     @Override
+    public Maybe<T> or(final Supplier<Maybe<T>> alternative) {
+        return alternative.get();
+    }
+
+    @Override
     public Stream<T> stream() {
         return Stream.empty();
     }
