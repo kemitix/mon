@@ -256,7 +256,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * Reduce two Results of the same type into one using the reducing function provided.
      *
      * <p>If either Result is an error, then the reduce will return the error. If both are errors, then the error of
-     * {@link this} Result will be returned.</p>
+     * {@code this} Result will be returned.</p>
      *
      * @param identify the identify Result
      * @param operator the function to combine the values the Results
