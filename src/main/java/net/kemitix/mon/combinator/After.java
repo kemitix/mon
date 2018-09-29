@@ -52,7 +52,7 @@ public interface After<T, R> extends
      * @return a partially applied Function that will take an argument and return the result of applying it to the
      * function parameter
      */
-    static <T, R> Function<T, R> decorate(
+    public static <T, R> Function<T, R> decorate(
             final Function<T, R> function,
             final BiConsumer<T, R> after
                                          ) {
@@ -68,7 +68,7 @@ public interface After<T, R> extends
      *
      * @return a curried function that will pass the argument and the result of the function to the supplied bi-consumer
      */
-    static <T, R> After<T, R> create() {
+    public static <T, R> After<T, R> create() {
         return function -> after -> argument -> {
             final R result = function.apply(argument);
             after.accept(argument, result);

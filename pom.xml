@@ -39,7 +39,7 @@
         <tiles-maven-plugin.version>2.12</tiles-maven-plugin.version>
         <kemitix-maven-tiles.version>1.2.0</kemitix-maven-tiles.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
-        <kemitix-checkstyle.version>4.1.1</kemitix-checkstyle.version>
+        <kemitix-checkstyle.version>5.0.0</kemitix-checkstyle.version>
     </properties>
 
     <dependencies>
