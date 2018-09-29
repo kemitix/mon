@@ -35,10 +35,10 @@ public interface WithResultContinuation<T> {
      *
      * @throws Exception to replace the current Result with an error
      */
-    void run() throws Exception;
+    public abstract void run() throws Exception;
 
     @SuppressWarnings({"illegalcatch", "javadocmethod"})
-    default Result<T> call(final Result<T> currentResult) {
+    public default Result<T> call(final Result<T> currentResult) {
         try {
             run();
         } catch (Throwable e) {

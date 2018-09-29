@@ -44,7 +44,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <T>   the type of the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
-    static <T> Result<T> fromMaybe(final Maybe<T> maybe, final Supplier<Throwable> error) {
+    public static <T> Result<T> fromMaybe(final Maybe<T> maybe, final Supplier<Throwable> error) {
         return maybe.map(Result::ok)
                 .orElseGet(() -> Result.error(error.get()));
     }
@@ -56,7 +56,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <T>   the type had the result been a success
      * @return an error Result
      */
-    static <T> Result<T> error(final Throwable error) {
+    public static <T> Result<T> error(final Throwable error) {
         return new Err<>(error);
     }
 
@@ -68,7 +68,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return a Result
      */
     @SuppressWarnings("illegalcatch")
-    static <T> Result<T> of(final Callable<T> callable) {
+    public static <T> Result<T> of(final Callable<T> callable) {
         try {
             return Result.ok(callable.call());
         } catch (final Exception e) {
@@ -83,7 +83,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <T>   the type of the value
      * @return a successful Result
      */
-    static <T> Result<T> ok(final T value) {
+    public static <T> Result<T> ok(final T value) {
         return new Success<>(value);
     }
 
@@ -97,7 +97,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
     @SuppressWarnings("illegalcatch")
-    static <T> Maybe<T> toMaybe(final Result<T> result) {
+    public static <T> Maybe<T> toMaybe(final Result<T> result) {
         try {
             return Maybe.just(result.orElseThrow());
         } catch (final Throwable throwable) {
@@ -112,7 +112,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @throws Throwable the result is an error
      */
     @SuppressWarnings("illegalthrows")
-    T orElseThrow() throws Throwable;
+    public abstract T orElseThrow() throws Throwable;
 
     /**
      * Swaps the inner Result of a Maybe, so that a Result is on the outside.
@@ -123,7 +123,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
      * error, then the Result will also be an error.
      */
-    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
+    public static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
         return maybeResult.orElseGet(() -> Result.ok(null))
                 .flatMap(value -> Result.ok(Maybe.maybe(value)));
     }
@@ -135,7 +135,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <R> the type of the value withing the Result of the mapping function
      * @return a Result
      */
-    <R> Result<R> flatMap(Function<T, Result<R>> f);
+    public abstract <R> Result<R> flatMap(Function<T, Result<R>> f);
 
     /**
      * Applies the function to the contents of a Maybe within the Result.
@@ -146,7 +146,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <R>         the type of the updated Result
      * @return a new Maybe within a Result
      */
-    static <T, R> Result<Maybe<R>> flatMapMaybe(
+    public static <T, R> Result<Maybe<R>> flatMapMaybe(
             final Result<Maybe<T>> maybeResult,
             final Function<Maybe<T>, Result<Maybe<R>>> f
     ) {
@@ -158,17 +158,17 @@ public interface Result<T> extends Functor<T, Result<?>> {
      *
      * @return true if the Result is an error.
      */
-    boolean isError();
+    public abstract boolean isError();
 
     /**
      * Checks if the Result is a success.
      *
      * @return true if the Result is a success.
      */
-    boolean isOkay();
+    public abstract boolean isOkay();
 
     @Override
-    <R> Result<R> map(Function<T, R> f);
+    public abstract <R> Result<R> map(Function<T, R> f);
 
     /**
      * Matches the Result, either success or error, and supplies the appropriate Consumer with the value or error.
@@ -176,7 +176,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param onSuccess the Consumer to pass the value of a successful Result to
      * @param onError   the Consumer to pass the error from an error Result to
      */
-    void match(Consumer<T> onSuccess, Consumer<Throwable> onError);
+    public abstract void match(Consumer<T> onSuccess, Consumer<Throwable> onError);
 
     /**
      * Wraps the value within the Result in a Maybe, either a Just if the predicate is true, or Nothing.
@@ -184,7 +184,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param predicate the test to decide
      * @return a Result containing a Maybe that may or may not contain a value
      */
-    Result<Maybe<T>> maybe(Predicate<T> predicate);
+    public abstract Result<Maybe<T>> maybe(Predicate<T> predicate);
 
     /**
      * Provide the value within the Result, if it is a success, to the Consumer, and returns this Result.
@@ -192,7 +192,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param consumer the Consumer to the value if a success
      * @return this Result
      */
-    Result<T> peek(Consumer<T> consumer);
+    public abstract Result<T> peek(Consumer<T> consumer);
 
     /**
      * Provide a way to attempt to recover from an error state.
@@ -200,7 +200,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param f the function to recover from the error
      * @return a new Result, either a Success, or if recovery is not possible an other Err.
      */
-    Result<T> recover(Function<Throwable, Result<T>> f);
+    public abstract Result<T> recover(Function<Throwable, Result<T>> f);
 
     /**
      * A handler for error states.
@@ -210,7 +210,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      *
      * @param errorConsumer the consumer to handle the error
      */
-    void onError(Consumer<Throwable> errorConsumer);
+    public abstract void onError(Consumer<Throwable> errorConsumer);
 
     /**
      * Maps a Success Result to another Result using a Callable that is able to throw a checked exception.
@@ -230,7 +230,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <R> the type of the final Result
      * @return a new Result
      */
-    <R> Result<R> andThen(Function<T, Callable<R>> f);
+    public abstract <R> Result<R> andThen(Function<T, Callable<R>> f);
 
     /**
      * Perform the continuation with the current Result value then return the current Result, assuming there was no
@@ -250,7 +250,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param f the function to map the Success value into the result continuation
      * @return the Result or a new error Result
      */
-    Result<T> thenWith(Function<T, WithResultContinuation<T>> f);
+    public abstract Result<T> thenWith(Function<T, WithResultContinuation<T>> f);
 
     /**
      * Reduce two Results of the same type into one using the reducing function provided.
@@ -262,5 +262,5 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param operator the function to combine the values the Results
      * @return a Result containing the combination of the two Results
      */
-    Result<T> reduce(Result<T> identify, BinaryOperator<T> operator);
+    public abstract Result<T> reduce(Result<T> identify, BinaryOperator<T> operator);
 }

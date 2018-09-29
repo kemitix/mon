@@ -53,7 +53,7 @@ public interface Before<T, R> extends
      * @return a partially applied Function that will take an argument and return the result of applying it to the
      * function parameter
      */
-    static <T, R> Function<T, R> decorate(
+    public static <T, R> Function<T, R> decorate(
             final Consumer<T> before,
             final Function<T, R> function
                                          ) {
@@ -69,7 +69,7 @@ public interface Before<T, R> extends
      *
      * @return a curried function that will pass the argument to before applying the supplied function
      */
-    static <T, R> Before<T, R> create() {
+    public static <T, R> Before<T, R> create() {
         return before -> function -> argument -> {
             before.accept(argument);
             return function.apply(argument);

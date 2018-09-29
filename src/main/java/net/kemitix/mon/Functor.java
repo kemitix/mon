@@ -48,5 +48,5 @@ public interface Functor<T, F extends Functor<?, ?>> {
      *
      * @return a Functor containing the result of the function {@code f} applied to the value
      */
-    <R> F map(Function<T, R> f);
+    public abstract <R> F map(Function<T, R> f);
 }
