@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+1.0.0
+-----
+
+* [lazy] Add a lazy evaluator
+* [tree] Add a generalised tree
+* Bump kemitix-checkstyle-ruleset from 4.1.1 to 5.0.0
+* Bump kemitix-maven-tiles from 0.8.1 to 1.2.0
+
 0.12.0
 ------
 
