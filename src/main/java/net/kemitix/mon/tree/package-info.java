@@ -19,4 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.kemitix.mon.combinator;
+/**
+ * Tree data structures.
+ *
+ * @author Paul Campbell (pcampbell@kemitix.net)
+ */
+
+package net.kemitix.mon.tree;
