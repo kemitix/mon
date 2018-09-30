@@ -25,7 +25,9 @@
    - [Maybe]
    - [Result]
    - [Tree]
+   - [Lazy]
    - [Either]
+
 
 ** Maven Usage
 
@@ -924,6 +926,51 @@
        final List<Tree<Item>> result = tree.subTrees();
      #+END_SRC
 
+
+** Lazy
+
+   A Lazy evaluated expression. Using a Supplier to provide the value, only
+   evaluates the value when required, and never more than once.
+
+*** Static Constructors
+
+**** =static <R> Lazy<R> of(Supplier<R> supplier)=
+
+     Create a new Lazy value from the supplier.
+
+     #+BEGIN_SRC java
+       final Suppler<UUID> supplier = ...;
+       final Lazy<UUID> lazy = Lazy.of(supplier);
+     #+END_SRC
+
+*** Instance Methods
+
+**** =boolean isEvaluated()=
+
+     Checks if the value has been evaluated.
+
+     #+BEGIN_SRC java
+       final Lazy<UUID> lazy = ...;
+       final boolean isEvaluated = lazy.isEvaluated();
+     #+END_SRC
+
+**** =T value()=
+
+     The value, evaluating it if necessary.
+
+     #+BEGIN_SRC java
+       final Lazy<UUID> lazy = ...;
+       final UUID value = lazy.value();
+     #+END_SRC
+
+**** =<R> Lazy<R> map(Function<T, R> f)=
+
+     Maps the Lazy instance into a new Lazy instance using the function.
+
+     #+BEGIN_SRC java
+       final Lazy<UUID> uuidLazy = ...;
+       final Lazy<String> stringLazy = uuidLazy.map(v -> v.toString());
+     #+END_SRC
 
 ** Either
 
