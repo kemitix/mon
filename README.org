@@ -2,26 +2,32 @@
 
 ** TypeAlias, Maybe and Result for Java.
 
- [[https://oss.sonatype.org/content/repositories/releases/net/kemitix/mon][file:https://img.shields.io/nexus/r/https/oss.sonatype.org/net.kemitix/mon.svg?style=for-the-badge]]
- [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][file:https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge]]
+   [[https://oss.sonatype.org/content/repositories/releases/net/kemitix/mon][file:https://img.shields.io/nexus/r/https/oss.sonatype.org/net.kemitix/mon.svg?style=for-the-badge]]
+   [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][file:https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge]]
 
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/coverage.svg?style=for-the-badge#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/tech_debt.svg?style=for-the-badge#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=sqale_rating#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=alert_status#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=reliability_rating#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=security_rating#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=sqale_index#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=vulnerabilities#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=bugs#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=code_smells#.svg]]
- [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=ncloc#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/coverage.svg?style=for-the-badge#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/tech_debt.svg?style=for-the-badge#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=sqale_rating#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=alert_status#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=reliability_rating#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=security_rating#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=sqale_index#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=vulnerabilities#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=bugs#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=code_smells#.svg]]
+   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=ncloc#.svg]]
 
- [[https://app.codacy.com/project/kemitix/mon/dashboard][file:https://img.shields.io/codacy/grade/d57096b0639d496aba9a7e43e7cf5b4c.svg?style=for-the-badge]]
- [[http://i.jpeek.org/net.kemitix/mon/index.html][file:http://i.jpeek.org/net.kemitix/mon/badge.svg]]
+   [[https://app.codacy.com/project/kemitix/mon/dashboard][file:https://img.shields.io/codacy/grade/d57096b0639d496aba9a7e43e7cf5b4c.svg?style=for-the-badge]]
+   [[http://i.jpeek.org/net.kemitix/mon/index.html][file:http://i.jpeek.org/net.kemitix/mon/badge.svg]]
 
+   - [Maven Usage]
+   - [TypeAlias]
+   - [Maybe]
+   - [Result]
+   - [Tree]
+   - [Either]
 
-** Maven
+** Maven Usage
 
 #+BEGIN_SRC xml
     <dependency>
@@ -798,7 +804,6 @@
                                            .thenWith(v -> () -> {throw new IOException();});
      #+END_SRC
 
-
 **** =Result<Maybe<T>> maybe(Predicate<T> predicate)=
 
      Wraps the value within the Result in a Maybe, either a Just if the
@@ -848,6 +853,75 @@
      #+BEGIN_SRC java
      final boolean isError = Result.of(() -> getValue())
                                    .isError();
+     #+END_SRC
+
+
+** Tree
+
+   A Generalised tree, where each node may or may not have an item, and may have
+   any number of sub-trees. Leaf nodes are Trees with zero sub-trees.
+
+*** Static Constructors
+
+**** =static <R> Tree<R> leaf(R item)=
+
+     Create a leaf containing the item. The leaf has no sub-trees.
+
+     #+BEGIN_SRC java
+       final Tree<String> tree = Tree.leaf("item");
+     #+END_SRC
+
+
+**** =static<R> Tree<R> of(R item, Collection<Tree<R>> subtrees)=
+
+     Create a tree containing the item and sub-trees.
+
+     #+BEGIN_SRC java
+       final Tree<String> tree = Tree.of("item", Collections.singletonList(Tree.leaf("leaf"));
+     #+END_SRC
+
+
+*** Instance Methods
+
+**** =<R> Tree<R> map(Function<T, R> f)=
+
+     Applies the function to the item within the Tree and to all sub-trees,
+     returning a new Tree.
+
+     #+BEGIN_SRC java
+       final Tree<UUID> tree = ...;
+       final Tree<String> result = tree.map(UUID::toString);
+     #+END_SRC
+
+
+**** =Optional<T> item()=
+
+     Returns the contents of the Tree node within an Optional.
+
+     #+BEGIN_SRC java
+       final Tree<Item> tree = ...;
+       final Optional<Item> result = tree.item();
+     #+END_SRC
+
+
+**** =int count()=
+
+     Returns the total number of items in the tree, including sub-trees. Null
+     items don't count.
+
+     #+BEGIN_SRC java
+       final Tree<Item> tree = ...;
+       final int result = tree.count();
+     #+END_SRC
+
+
+**** =List<Tree<T> subTrees()=
+
+     Returns a list of sub-trees within the tree.
+
+     #+BEGIN_SRC java
+       final Tree<Item> tree = ...;
+       final List<Tree<Item>> result = tree.subTrees();
      #+END_SRC
 
 
