@@ -1,14 +1,20 @@
 package net.kemitix.mon.lazy;
 
 import org.assertj.core.api.WithAssertions;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import java.util.UUID;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public class LazySupplierTest implements WithAssertions {
+
+    @Rule
+    public final Timeout timeout = Timeout.seconds(1);
 
     @Test
     public void whenCreateLazyThenSupplierIsNotCalled() {
@@ -136,6 +142,35 @@ public class LazySupplierTest implements WithAssertions {
         final String value = stringLazy.value();
         //then
         assertThat(value).isEqualTo(uuid.toString());
+    }
+
+    @Test
+    public void whenLazyValueCalledOnTwoThreadsThenSupplierIsOnlyCalledOnce() throws ExecutionException, InterruptedException {
+        //given
+        final AtomicInteger supplierCalledCounter = new AtomicInteger(0);
+        final CountDownLatch latch = new CountDownLatch(1);
+        final UUID uuid = UUID.randomUUID();
+        final Supplier<UUID> supplier = () -> {
+            supplierCalledCounter.incrementAndGet();
+            for (int i = 0; i < 10000; i++) {
+                // hum
+            };
+            return uuid;
+        };
+        final Lazy<UUID> lazy = Lazy.of(supplier);
+        final Callable<UUID> callable = () -> {
+            latch.await();
+            return lazy.value();
+        };
+        final ExecutorService executorService = Executors.newFixedThreadPool(2);
+        //when
+        final Future<UUID> call1 = executorService.submit(callable);
+        final Future<UUID> call2 = executorService.submit(callable);
+        latch.countDown();
+        //then
+        assertThat(call1.get()).isEqualTo(uuid);
+        assertThat(call2.get()).isEqualTo(uuid);
+        assertThat(supplierCalledCounter).hasValue(1);
     }
 
 }
