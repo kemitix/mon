@@ -73,8 +73,8 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    public T orElseThrow() throws Throwable {
-        throw error;
+    public T orElseThrow() throws MonResultException {
+        throw MonResultException.with(error);
     }
 
     @Override

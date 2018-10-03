@@ -109,10 +109,9 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * Extracts the successful value from the result, or throws the error Throwable.
      *
      * @return the value if a success
-     * @throws Throwable the result is an error
+     * @throws MonResultException if the result is an error
      */
-    @SuppressWarnings("illegalthrows")
-    public abstract T orElseThrow() throws Throwable;
+    public abstract T orElseThrow() throws MonResultException;
 
     /**
      * Swaps the inner Result of a Maybe, so that a Result is on the outside.

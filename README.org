@@ -806,6 +806,7 @@
                                            .thenWith(v -> () -> {throw new IOException();});
      #+END_SRC
 
+
 **** =Result<Maybe<T>> maybe(Predicate<T> predicate)=
 
      Wraps the value within the Result in a Maybe, either a Just if the
@@ -820,7 +821,7 @@
 **** =T orElseThrow()=
 
      Extracts the successful value from the result, or throws the error
-     Throwable.
+     as the cause within a the unchecked exception =MonResultException=.
 
      #+BEGIN_SRC java
      final Integer result = Result.of(() -> getValue())
@@ -971,6 +972,7 @@
        final Lazy<UUID> uuidLazy = ...;
        final Lazy<String> stringLazy = uuidLazy.map(v -> v.toString());
      #+END_SRC
+
 
 ** Either
 

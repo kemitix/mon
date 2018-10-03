@@ -292,7 +292,7 @@ public class ResultTest implements WithAssertions {
         final RuntimeException exception = new RuntimeException();
         final Result<Integer> error = Result.error(exception);
         //when
-        assertThatThrownBy(() -> error.orElseThrow()).isSameAs(exception);
+        assertThatThrownBy(() -> error.orElseThrow()).hasCause(exception);
     }
 
     @Test

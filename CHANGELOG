@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+1.1.0
+-----
+
+* [result] orElseThrow() wraps the error exception in an unchecked MonResultException
+
 1.0.0
 -----
 
