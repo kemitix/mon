@@ -99,7 +99,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
     @SuppressWarnings("illegalcatch")
     public static <T> Maybe<T> toMaybe(final Result<T> result) {
         try {
-            return Maybe.just(result.orElseThrow(Exception.class));
+            return Maybe.just(result.orElseThrow());
         } catch (final Throwable throwable) {
             return Maybe.nothing();
         }
