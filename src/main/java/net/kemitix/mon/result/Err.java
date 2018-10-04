@@ -73,8 +73,22 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    public T orElseThrow() throws MonResultException {
-        throw MonResultException.with(error);
+    public T orElseThrow() throws Throwable {
+        throw error;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E extends Exception> T orElseThrow(final Class<E> type) throws E {
+        if (type.isInstance(error)) {
+            throw (E) error;
+        }
+        throw UnexpectedErrorResultException.with(error);
+    }
+
+    @Override
+    public T orElseThrowUnchecked() {
+        throw ErrorResultException.with(error);
     }
 
     @Override

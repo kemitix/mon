@@ -2,6 +2,8 @@ package net.kemitix.mon;
 
 import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.maybe.Maybe;
+import net.kemitix.mon.result.ErrorResultException;
+import net.kemitix.mon.result.UnexpectedErrorResultException;
 import net.kemitix.mon.result.Result;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
@@ -292,7 +294,53 @@ public class ResultTest implements WithAssertions {
         final RuntimeException exception = new RuntimeException();
         final Result<Integer> error = Result.error(exception);
         //when
-        assertThatThrownBy(() -> error.orElseThrow()).hasCause(exception);
+        assertThatThrownBy(() -> error.orElseThrow()).isSameAs(exception);
+    }
+
+    @Test public void okay_whenOrElseThrowT_isValue() throws Exception {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final Integer value = ok.orElseThrow(Exception.class);
+        //then
+        assumeThat(value).isEqualTo(1);
+    }
+
+    @Test public void errorT_whenOrElseThrowT_throwsT() {
+        //given
+        final RuntimeException exception = new RuntimeException();
+        final Result<Object> error = Result.error(exception);
+        //then
+        assertThatThrownBy(() -> error.orElseThrow(RuntimeException.class)).isSameAs(exception);
+    }
+
+    @Test public void errorR_whenOrElseThrowT_throwsWrappedR() {
+        //given
+        final IOException exception = new IOException();
+        final Result<Object> error = Result.error(exception);
+        //then
+        assertThatThrownBy(() -> error.orElseThrow(RuntimeException.class))
+                .isInstanceOf(UnexpectedErrorResultException.class)
+                .hasCause(exception);
+    }
+
+    @Test public void okay_whenOrElseThrowUnchecked_isValue() {
+        //given
+        final Result<Integer> ok = Result.ok(1);
+        //when
+        final Integer value = ok.orElseThrowUnchecked();
+        //then
+        assumeThat(value).isEqualTo(1);
+    }
+
+    @Test public void error_whenOrElseThrowUnchecked_throwsWrapped() {
+        //given
+        final IOException exception = new IOException();
+        final Result<Object> error = Result.error(exception);
+        //then
+        assertThatThrownBy(() -> error.orElseThrowUnchecked())
+                .isInstanceOf(ErrorResultException.class)
+                .hasCause(exception);
     }
 
     @Test

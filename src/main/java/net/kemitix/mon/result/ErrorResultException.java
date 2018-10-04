@@ -22,13 +22,15 @@
 package net.kemitix.mon.result;
 
 /**
- * An Unchecked wrapper for exceptions thrown within a {@code Result}.
+ * An unchecked wrapper fot exceptions thrown within a {@link Result}.
+ *
+ * <p>Used by {@link Result#orElseThrowUnchecked()} when the {@link Result} is an error.</p>
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-public final class MonResultException extends RuntimeException {
+public final class ErrorResultException extends RuntimeException {
 
-    private MonResultException(final Throwable cause) {
+    private ErrorResultException(final Throwable cause) {
         super(cause);
     }
 
@@ -36,9 +38,9 @@ public final class MonResultException extends RuntimeException {
      * Creates a new object.
      *
      * @param cause the cause
-     * @return a MonResultException contain the cause
+     * @return a {@link ErrorResultException} containing the cause
      */
-    static MonResultException with(final Throwable cause) {
-        return new MonResultException(cause);
+    static ErrorResultException with(final Throwable cause) {
+        return new ErrorResultException(cause);
     }
 }

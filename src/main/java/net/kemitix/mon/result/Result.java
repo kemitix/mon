@@ -99,7 +99,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
     @SuppressWarnings("illegalcatch")
     public static <T> Maybe<T> toMaybe(final Result<T> result) {
         try {
-            return Maybe.just(result.orElseThrow());
+            return Maybe.just(result.orElseThrow(Exception.class));
         } catch (final Throwable throwable) {
             return Maybe.nothing();
         }
@@ -109,9 +109,28 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * Extracts the successful value from the result, or throws the error Throwable.
      *
      * @return the value if a success
-     * @throws MonResultException if the result is an error
+     * @throws Throwable if the result is an error
      */
-    public abstract T orElseThrow() throws MonResultException;
+    @SuppressWarnings("illegalthrows")
+    public abstract T orElseThrow() throws Throwable;
+
+    /**
+     * Extracts the successful value from the result, or throws the error Throwable.
+     *
+     * @param type the type of checked exception that may be thrown
+     * @param <E> the type of the checked exception to throw
+     *
+     * @return the value if a success
+     * @throws E if the result is an error
+     */
+    public abstract <E extends Exception> T orElseThrow(Class<E> type) throws E;
+
+    /**
+     * Extracts the successful value from the result, or throws the error in a {@link UnexpectedErrorResultException}.
+     *
+     * @return the value if a success
+     */
+    public abstract T orElseThrowUnchecked();
 
     /**
      * Swaps the inner Result of a Maybe, so that a Result is on the outside.
