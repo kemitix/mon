@@ -76,6 +76,16 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public <E extends Exception> T orElseThrow(final Class<E> type) throws E {
+        return value;
+    }
+
+    @Override
+    public T orElseThrowUnchecked() {
+        return value;
+    }
+
+    @Override
     public Result<T> peek(final Consumer<T> consumer) {
         consumer.accept(value);
         return this;

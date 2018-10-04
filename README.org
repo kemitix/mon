@@ -806,6 +806,7 @@
                                            .thenWith(v -> () -> {throw new IOException();});
      #+END_SRC
 
+
 **** =Result<Maybe<T>> maybe(Predicate<T> predicate)=
 
      Wraps the value within the Result in a Maybe, either a Just if the
@@ -820,11 +821,34 @@
 **** =T orElseThrow()=
 
      Extracts the successful value from the result, or throws the error
-     Throwable.
+     =Throwable=.
 
      #+BEGIN_SRC java
      final Integer result = Result.of(() -> getValue())
                                   .orElseThrow();
+     #+END_SRC
+
+
+**** =<E extends Exception> T orElseThrow(Class<E> type) throws E=
+
+     Extracts the successful value from the result, or throws the error when it
+     is of the given type. Any other errors will be thrown inside an
+     =UnexpectedErrorResultException=.
+
+     #+BEGIN_SRC java
+     final Integer result = Result.of(() -> getValue())
+                                  .orElseThrow(IOException.class);
+     #+END_SRC
+
+
+**** =T orElseThrowUnchecked()=
+
+     Extracts the successful value from the result, or throws the error within
+     an =ErrorResultException=.
+
+     #+BEGIN_SRC java
+     final Integer result = Result.of(() -> getValue())
+                                  .orElseThrowUnchecked();
      #+END_SRC
 
 
@@ -971,6 +995,7 @@
        final Lazy<UUID> uuidLazy = ...;
        final Lazy<String> stringLazy = uuidLazy.map(v -> v.toString());
      #+END_SRC
+
 
 ** Either
 

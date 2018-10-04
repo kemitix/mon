@@ -78,6 +78,20 @@ class Err<T> implements Result<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <E extends Exception> T orElseThrow(final Class<E> type) throws E {
+        if (type.isInstance(error)) {
+            throw (E) error;
+        }
+        throw UnexpectedErrorResultException.with(error);
+    }
+
+    @Override
+    public T orElseThrowUnchecked() {
+        throw ErrorResultException.with(error);
+    }
+
+    @Override
     public Result<T> peek(final Consumer<T> consumer) {
         return this;
     }
