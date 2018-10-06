@@ -2,6 +2,7 @@ package net.kemitix.mon;
 
 import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.maybe.Maybe;
+import net.kemitix.mon.result.CheckedErrorResultException;
 import net.kemitix.mon.result.ErrorResultException;
 import net.kemitix.mon.result.UnexpectedErrorResultException;
 import net.kemitix.mon.result.Result;
@@ -294,7 +295,9 @@ public class ResultTest implements WithAssertions {
         final RuntimeException exception = new RuntimeException();
         final Result<Integer> error = Result.error(exception);
         //when
-        assertThatThrownBy(() -> error.orElseThrow()).isSameAs(exception);
+        assertThatThrownBy(() -> error.orElseThrow())
+                .isInstanceOf(CheckedErrorResultException.class)
+                .hasCause(exception);
     }
 
     @Test public void okay_whenOrElseThrowT_isValue() throws Exception {
