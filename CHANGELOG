@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+1.2.0
+-----
+
+* [result] orElseThrow() throws error within a CheckedErrorResultException
+
 1.1.0
 -----
 

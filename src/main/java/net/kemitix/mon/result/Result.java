@@ -96,23 +96,21 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <T>    the type of the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
-    @SuppressWarnings("illegalcatch")
     public static <T> Maybe<T> toMaybe(final Result<T> result) {
         try {
             return Maybe.just(result.orElseThrow());
-        } catch (final Throwable throwable) {
+        } catch (final CheckedErrorResultException throwable) {
             return Maybe.nothing();
         }
     }
 
     /**
-     * Extracts the successful value from the result, or throws the error Throwable.
+     * Extracts the successful value from the result, or throws the error within a {@link CheckedErrorResultException}.
      *
      * @return the value if a success
-     * @throws Throwable if the result is an error
+     * @throws CheckedErrorResultException if the result is an error
      */
-    @SuppressWarnings("illegalthrows")
-    public abstract T orElseThrow() throws Throwable;
+    public abstract T orElseThrow() throws CheckedErrorResultException;
 
     /**
      * Extracts the successful value from the result, or throws the error Throwable.
