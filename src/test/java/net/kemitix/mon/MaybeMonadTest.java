@@ -2,11 +2,11 @@ package net.kemitix.mon;
 
 import net.kemitix.mon.maybe.Maybe;
 import org.assertj.core.api.WithAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
-public class MaybeMonadTest implements WithAssertions {
+class MaybeMonadTest implements WithAssertions {
 
     private final int v = 1;
     private final Function<Integer, Maybe<Integer>> f = i -> m(i * 2);
@@ -17,7 +17,7 @@ public class MaybeMonadTest implements WithAssertions {
     }
 
     @Test
-    public void leftIdentity() {
+    void leftIdentity() {
         assertThat(
                 m(v).flatMap(f)
         ).isEqualTo(
@@ -26,7 +26,7 @@ public class MaybeMonadTest implements WithAssertions {
     }
 
     @Test
-    public void rightIdentity() {
+    void rightIdentity() {
         assertThat(
                 m(v).flatMap(x -> m(x))
         ).isEqualTo(
@@ -35,7 +35,7 @@ public class MaybeMonadTest implements WithAssertions {
     }
 
     @Test
-    public void associativity() {
+    void associativity() {
         assertThat(
                 m(v).flatMap(f).flatMap(g)
         ).isEqualTo(

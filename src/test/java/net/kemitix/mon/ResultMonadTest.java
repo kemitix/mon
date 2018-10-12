@@ -2,11 +2,11 @@ package net.kemitix.mon;
 
 import net.kemitix.mon.result.Result;
 import org.assertj.core.api.WithAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
-public class ResultMonadTest implements WithAssertions {
+class ResultMonadTest implements WithAssertions {
 
     private final int v = 1;
     private final Function<Integer, Result<Integer>> f = i -> r(i * 2);
@@ -17,7 +17,7 @@ public class ResultMonadTest implements WithAssertions {
     }
 
     @Test
-    public void leftIdentity() {
+    void leftIdentity() {
         assertThat(
                 r(v).flatMap(f)
         ).isEqualTo(
@@ -26,7 +26,7 @@ public class ResultMonadTest implements WithAssertions {
     }
 
     @Test
-    public void rightIdentity() {
+    void rightIdentity() {
         assertThat(
                 r(v).flatMap(x -> r(x))
         ).isEqualTo(
@@ -35,7 +35,7 @@ public class ResultMonadTest implements WithAssertions {
     }
 
     @Test
-    public void associativity() {
+    void associativity() {
         assertThat(
                 r(v).flatMap(f).flatMap(g)
         ).isEqualTo(

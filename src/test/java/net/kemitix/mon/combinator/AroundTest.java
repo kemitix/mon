@@ -1,6 +1,6 @@
 package net.kemitix.mon.combinator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,10 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AroundTest {
+class AroundTest {
 
     @Test
-    public void canCreateAnAroundCombinator() {
+    void canCreateAnAroundCombinator() {
         //given
         final List<String> events = new ArrayList<>();
         final Function<Integer, Integer> squareDecorated =

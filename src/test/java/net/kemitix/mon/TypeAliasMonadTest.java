@@ -1,11 +1,11 @@
 package net.kemitix.mon;
 
 import org.assertj.core.api.WithAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
-public class TypeAliasMonadTest implements WithAssertions {
+class TypeAliasMonadTest implements WithAssertions {
 
     private final int v = 1;
     private final Function<Integer, AnAlias<Integer>> f = i -> a(i * 2);
@@ -16,7 +16,7 @@ public class TypeAliasMonadTest implements WithAssertions {
     }
 
     @Test
-    public void leftIdentity() {
+    void leftIdentity() {
         assertThat(
                 a(v).flatMap(f)
         ).isEqualTo(
@@ -25,7 +25,7 @@ public class TypeAliasMonadTest implements WithAssertions {
     }
 
     @Test
-    public void rightIdentity() {
+    void rightIdentity() {
         final AnAlias<Integer> integerAnAlias = a(v).flatMap(x -> a(x));
         assertThat(
                 integerAnAlias
@@ -35,7 +35,7 @@ public class TypeAliasMonadTest implements WithAssertions {
     }
 
     @Test
-    public void associativity() {
+    void associativity() {
         assertThat(
                 a(v).flatMap(f).flatMap(g)
         ).isEqualTo(

@@ -1,12 +1,12 @@
 package net.kemitix.mon;
 
 import org.assertj.core.api.WithAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-public class OptionalMonadTest implements WithAssertions {
+class OptionalMonadTest implements WithAssertions {
 
     private final int v = 1;
     private final Function<Integer, Optional<Integer>> f = i -> o(i * 2);
@@ -17,7 +17,7 @@ public class OptionalMonadTest implements WithAssertions {
     }
 
     @Test
-    public void leftIdentity() {
+    void leftIdentity() {
         assertThat(
                 o(v).flatMap(f)
         ).isEqualTo(
@@ -26,7 +26,7 @@ public class OptionalMonadTest implements WithAssertions {
     }
 
     @Test
-    public void rightIdentity() {
+    void rightIdentity() {
         assertThat(
                 o(v).flatMap(x -> o(x))
         ).isEqualTo(
@@ -35,7 +35,7 @@ public class OptionalMonadTest implements WithAssertions {
     }
 
     @Test
-    public void associativity() {
+    void associativity() {
         assertThat(
                 o(v).flatMap(f).flatMap(g)
         ).isEqualTo(

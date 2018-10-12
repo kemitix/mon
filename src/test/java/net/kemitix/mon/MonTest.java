@@ -1,6 +1,6 @@
 package net.kemitix.mon;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -8,10 +8,10 @@ import java.util.function.Function;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
-public class MonTest {
+class MonTest {
 
     @Test
-    public void canCreateAndMapCanGetValue() {
+    void canCreateAndMapCanGetValue() {
         //when
         final Mon<String> wrap = Mon.of("test");
         //then
@@ -26,7 +26,7 @@ public class MonTest {
     }
 
     @Test
-    public void canMap() {
+    void canMap() {
         //given
         final Mon<String> wrap = Mon.of("test");
         //when
@@ -36,7 +36,7 @@ public class MonTest {
     }
 
     @Test
-    public void canMapInstance() {
+    void canMapInstance() {
         //given
         final Mon<String> wrap = Mon.of("test");
         //when
@@ -46,7 +46,7 @@ public class MonTest {
     }
 
     @Test
-    public void createWithValidatorAndContinuations() {
+    void createWithValidatorAndContinuations() {
         //given
         final Function<String, Optional<Mon<String>>> factory =
                 Mon.factory(
@@ -65,7 +65,7 @@ public class MonTest {
 
     @Test
 
-    public void canCompare() {
+    void canCompare() {
         //given
         final Mon<String> one = Mon.of("test");
         final Mon<String> same = Mon.of("test");
@@ -76,7 +76,7 @@ public class MonTest {
     }
 
     @Test
-    public void canFlatMap() {
+    void canFlatMap() {
         //given
         final Mon<String> wrap = Mon.of("test");
         //when
@@ -88,13 +88,13 @@ public class MonTest {
     }
 
     @Test
-    public void ofRequiresNonNull() {
+    void ofRequiresNonNull() {
         assertThatNullPointerException().isThrownBy(() -> Mon.of(null));
     }
 
     @Test
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void factoryRequiresValidator() {
+    void factoryRequiresValidator() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(null, Optional::of, Optional::empty))
                 .withMessageContaining("validator");
@@ -102,7 +102,7 @@ public class MonTest {
 
     @Test
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void factoryRequiresOnValid() {
+    void factoryRequiresOnValid() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(v -> true, null, Optional::empty))
                 .withMessageContaining("onValid");
@@ -110,14 +110,14 @@ public class MonTest {
 
     @Test
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void factoryRequiresOnInvalid() {
+    void factoryRequiresOnInvalid() {
         assertThatNullPointerException().isThrownBy(
                 () -> Mon.factory(v -> true, Optional::of, null))
                 .withMessageContaining("onInvalid");
     }
 
     @Test
-    public void factory() {
+    void factory() {
         //given
         final Function<Integer, Optional<?>> evenMonFactory =
                 Mon.factory((Integer v) -> v % 2 == 0, Optional::of, Optional::empty);
@@ -131,7 +131,7 @@ public class MonTest {
     }
 
     @Test
-    public void shouldGetInvalidResultWhenFactoryApplyWithNull() {
+    void shouldGetInvalidResultWhenFactoryApplyWithNull() {
         //given
         final Function<Object, Optional<?>> factory = Mon.factory(v -> true, Optional::of, Optional::empty);
         //when
@@ -141,7 +141,7 @@ public class MonTest {
     }
 
     @Test
-    public void shouldHaveHashCodeBasedOnContent() {
+    void shouldHaveHashCodeBasedOnContent() {
         //given
         final int hashOfOne = Mon.of("one")
                 .hashCode();
@@ -155,7 +155,7 @@ public class MonTest {
     }
 
     @Test
-    public void shouldHaveEquals() {
+    void shouldHaveEquals() {
         //given
         final Mon<String> one = Mon.of("one");
         final Mon<String> two = Mon.of("two");
