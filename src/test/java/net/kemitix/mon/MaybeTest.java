@@ -2,7 +2,7 @@ package net.kemitix.mon;
 
 import net.kemitix.mon.maybe.Maybe;
 import org.assertj.core.api.WithAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -13,25 +13,25 @@ import java.util.stream.Stream;
 
 import static net.kemitix.mon.maybe.Maybe.*;
 
-public class MaybeTest implements WithAssertions {
+class MaybeTest implements WithAssertions {
 
     private static <T> Predicate<T> eq(final T value) {
         return v -> Objects.equals(value, v);
     }
 
     @Test
-    public void justMustBeNonNull() {
+    void justMustBeNonNull() {
         assertThatNullPointerException().isThrownBy(() -> just(null))
                 .withMessageContaining("value");
     }
 
     @Test
-    public void nothingReusesTheSameInstance() {
+    void nothingReusesTheSameInstance() {
         assertThat(nothing()).isSameAs(nothing());
     }
 
     @Test
-    public void equality() {
+    void equality() {
         assertThat(just(1)).isEqualTo(just(1));
         assertThat(just(1)).isNotEqualTo(just(2));
         assertThat(just(1)).isNotEqualTo(nothing());
@@ -40,19 +40,19 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void maybeAllowsNull() {
+    void maybeAllowsNull() {
         assertThat(just(1)).isEqualTo(maybe(1));
         assertThat(nothing()).isEqualTo(maybe(null));
     }
 
     @Test
-    public void map() {
+    void map() {
         assertThat(just(1).map(v -> v + 1)).isEqualTo(just(2));
         assertThat(nothing().map(v -> v)).isEqualTo(nothing());
     }
 
     @Test
-    public void mapToNull_thenJustNull() {
+    void mapToNull_thenJustNull() {
         //given
         final Maybe<Integer> maybe = just(1);
         //when
@@ -65,7 +65,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void optional_mapToNull_thenJustNull() {
+    void optional_mapToNull_thenJustNull() {
         //given
         final Optional<Integer> optional = Optional.ofNullable(1);
         //when
@@ -75,49 +75,49 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void justHashCode() {
+    void justHashCode() {
         assertThat(just(1).hashCode()).isNotEqualTo(just(2).hashCode());
     }
 
     @Test
-    public void nothingHashCode() {
+    void nothingHashCode() {
         assertThat(nothing().hashCode()).isEqualTo(maybe(null).hashCode());
     }
 
     @Test
-    public void orElseGet() {
+    void orElseGet() {
         assertThat(just(1).orElseGet(() -> -1)).isEqualTo(1);
         assertThat(nothing().orElseGet(() -> -1)).isEqualTo(-1);
     }
 
     @Test
-    public void orElse() {
+    void orElse() {
         assertThat(just(1).orElse(-1)).isEqualTo(1);
         assertThat(nothing().orElse(-1)).isEqualTo(-1);
     }
 
     @Test
-    public void filter() {
+    void filter() {
         assertThat(just(1).filter(eq(1))).isEqualTo(just(1));
         assertThat(just(1).filter(eq(0))).isEqualTo(nothing());
         assertThat(nothing().filter(eq(1))).isEqualTo(nothing());
     }
 
     @Test
-    public void toOptional() {
+    void toOptional() {
         assertThat(just(1).toOptional()).isEqualTo(Optional.of(1));
         assertThat(nothing()
                 .toOptional()).isEqualTo(Optional.empty());
     }
 
     @Test
-    public void fromOptional() {
+    void fromOptional() {
         assertThat(Optional.of(1).map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(just(1));
         assertThat(Optional.empty().map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(nothing());
     }
 
     @Test
-    public void peek() {
+    void peek() {
         final AtomicInteger ref = new AtomicInteger(0);
         assertThat(just(1).peek(x -> ref.incrementAndGet())).isEqualTo(just(1));
         assertThat(ref.get()).isEqualTo(1);
@@ -127,12 +127,12 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void justOrThrowDoesNotThrow() {
+    void justOrThrowDoesNotThrow() {
         assertThatCode(() -> just(1).orElseThrow(IllegalStateException::new)).doesNotThrowAnyException();
     }
 
     @Test
-    public void justOrThrowReturnsValue() {
+    void justOrThrowReturnsValue() {
         //given
         final Maybe<Integer> maybe = just(1);
         //when
@@ -142,13 +142,13 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void nothingOrThrow() {
+    void nothingOrThrow() {
         assertThatThrownBy(() -> nothing().orElseThrow(IllegalStateException::new)).isInstanceOf(
                 IllegalStateException.class);
     }
 
     @Test
-    public void justToStream() {
+    void justToStream() {
         //when
         final Stream<Integer> stream = just(1).stream();
         //then
@@ -156,7 +156,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void nothingToStream() {
+    void nothingToStream() {
         //when
         final Stream<Object> stream = nothing().stream();
         //then
@@ -164,7 +164,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void justFlatMap() {
+    void justFlatMap() {
         //given
         final Maybe<Integer> just1 = just(1);
         final Maybe<Integer> just2 = just(2);
@@ -178,7 +178,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void nothingFlatMap() {
+    void nothingFlatMap() {
         //given
         final Maybe<Integer> nothing1 = nothing();
         final Maybe<Integer> nothing2 = nothing();
@@ -192,7 +192,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void justNothingFlatMap() {
+    void justNothingFlatMap() {
         //given
         final Maybe<Integer> just1 = just(1);
         final Maybe<Integer> nothing2 = nothing();
@@ -206,7 +206,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void just_ifNothing_isIgnored() {
+    void just_ifNothing_isIgnored() {
         //given
         final Maybe<Integer> just = just(1);
         final AtomicBoolean capture = new AtomicBoolean(false);
@@ -217,7 +217,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void nothing_ifNothing_isCalled() {
+    void nothing_ifNothing_isCalled() {
         //given
         final Maybe<Integer> nothing = nothing();
         final AtomicBoolean capture = new AtomicBoolean(false);
@@ -228,7 +228,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void just_whenMatch_thenJustTriggers() {
+    void just_whenMatch_thenJustTriggers() {
         //given
         final Maybe<Integer> maybe = just(1);
         //then
@@ -239,7 +239,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void nothing_whenMatch_thenNothingTriggers() {
+    void nothing_whenMatch_thenNothingTriggers() {
         //given
         final Maybe<Integer> maybe = nothing();
         final AtomicBoolean flag = new AtomicBoolean(false);
@@ -253,7 +253,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void just_isJust_isTrue() {
+    void just_isJust_isTrue() {
         //given
         final Maybe<Integer> maybe = just(1);
         //when
@@ -263,7 +263,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void just_isNothing_isFalse() {
+    void just_isNothing_isFalse() {
         //given
         final Maybe<Integer> maybe = just(1);
         //when
@@ -273,7 +273,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void nothing_isJust_isFalse() {
+    void nothing_isJust_isFalse() {
         //given
         final Maybe<Object> maybe = nothing();
         //when
@@ -283,7 +283,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void nothing_isNothing_isTrue() {
+    void nothing_isNothing_isTrue() {
         //given
         final Maybe<Object> maybe = nothing();
         //when
@@ -293,7 +293,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void just_or_ignoreTheAlternative() {
+    void just_or_ignoreTheAlternative() {
         //given
         final Maybe<String> one = Maybe.just("one");
         //when
@@ -303,7 +303,7 @@ public class MaybeTest implements WithAssertions {
     }
 
     @Test
-    public void nothing_or_isTheAlternative() {
+    void nothing_or_isTheAlternative() {
         //given
         final Maybe<String> one = Maybe.nothing();
         //when

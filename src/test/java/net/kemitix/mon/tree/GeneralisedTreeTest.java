@@ -1,17 +1,17 @@
 package net.kemitix.mon.tree;
 
 import org.assertj.core.api.WithAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
-public class GeneralisedTreeTest implements WithAssertions {
+class GeneralisedTreeTest implements WithAssertions {
 
     @Test
-    public void canCreateAnEmptyLeaf() {
+    void canCreateAnEmptyLeaf() {
         //when
         final Tree<String> leaf = Tree.leaf(null);
         //then
@@ -19,7 +19,7 @@ public class GeneralisedTreeTest implements WithAssertions {
     }
 
     @Test
-    public void canCreateANonEmptyLeaf() {
+    void canCreateANonEmptyLeaf() {
         //given
         final String item = "item";
         //when
@@ -29,7 +29,7 @@ public class GeneralisedTreeTest implements WithAssertions {
     }
 
     @Test
-    public void emptyLeafHasCountZero() {
+    void emptyLeafHasCountZero() {
         //given
         final Tree<Object> tree = Tree.leaf(null);
         //when
@@ -39,7 +39,7 @@ public class GeneralisedTreeTest implements WithAssertions {
     }
 
     @Test
-    public void nonEmptyLeafHasCountOne() {
+    void nonEmptyLeafHasCountOne() {
         //given
         final Tree<String> tree = Tree.leaf("value");
         //when
@@ -49,7 +49,7 @@ public class GeneralisedTreeTest implements WithAssertions {
     }
 
     @Test
-    public void canCreateTreeWithSubTrees() {
+    void canCreateTreeWithSubTrees() {
         //given
         final String treeItem = "tree";
         final String leafItem = "leaf";
@@ -60,7 +60,7 @@ public class GeneralisedTreeTest implements WithAssertions {
     }
 
     @Test
-    public void canMapNestedTrees() {
+    void canMapNestedTrees() {
         //given
         final UUID uid1 = UUID.randomUUID();
         final UUID uid2 = UUID.randomUUID();

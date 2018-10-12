@@ -5,15 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.kemitix.mon.experimental.BeanBuilder;
 import org.assertj.core.api.WithAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class BeanBuilderTest implements WithAssertions {
+class BeanBuilderTest implements WithAssertions {
 
     @Test
-    public void canCreateAndSetupObject() {
+    void canCreateAndSetupObject() {
         //given
         final Supplier<DataObject> template = () -> new DataObject("name");
         final Consumer<DataObject> value = data -> data.setValue("value");

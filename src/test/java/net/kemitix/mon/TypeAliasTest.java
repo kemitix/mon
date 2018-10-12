@@ -1,7 +1,7 @@
 package net.kemitix.mon;
 
 import org.assertj.core.util.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,10 +9,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TypeAliasTest {
+class TypeAliasTest {
 
     @Test
-    public void shouldCreateATypeAliasAndGetTheValue() {
+    void shouldCreateATypeAliasAndGetTheValue() {
         //given
         final String value = "value";
         //when
@@ -27,7 +27,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldCreateATypeAliasWithNestedGenericTypes() {
+    void shouldCreateATypeAliasWithNestedGenericTypes() {
         //given
         final Iterable<String> iterable = Collections.emptyList();
         //when
@@ -39,7 +39,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldCreateATypeAliasSubclassAndGetTheValue() {
+    void shouldCreateATypeAliasSubclassAndGetTheValue() {
         //given
         final String value = "value";
         //when
@@ -49,7 +49,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldNotBeEqualWhenValueTypesAreDifferent() {
+    void shouldNotBeEqualWhenValueTypesAreDifferent() {
         //given
         final TypeAlias<String> stringTypeAlias = givenTypeAlias("1");
         final TypeAlias<Integer> integerTypeAlias = new TypeAlias<Integer>(1) {
@@ -59,7 +59,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldBeEqualWhenValuesAreTheSame() {
+    void shouldBeEqualWhenValuesAreTheSame() {
         //given
         final String value = "value";
         final AnAlias anAlias1 = AnAlias.of(value);
@@ -69,7 +69,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldNotBeEqualWhenValuesAreNotTheSame() {
+    void shouldNotBeEqualWhenValuesAreNotTheSame() {
         //given
         final AnAlias valueA = AnAlias.of("value a");
         final AnAlias valueB = AnAlias.of("value b");
@@ -78,7 +78,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldBeEqualToRawValue() {
+    void shouldBeEqualToRawValue() {
         //given
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
@@ -87,7 +87,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldHaveHashCodeOfValue() {
+    void shouldHaveHashCodeOfValue() {
         //given
         final String value = "value";
         final AnAlias anAlias = AnAlias.of(value);
@@ -96,7 +96,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldHaveSameToStringAsAliasedType() {
+    void shouldHaveSameToStringAsAliasedType() {
         //given
         final List<Integer> value = Arrays.asList(1, 2, 3);
         //when
@@ -107,7 +107,7 @@ public class TypeAliasTest {
     }
 
     @Test
-    public void shouldMapTypeAlias() {
+    void shouldMapTypeAlias() {
         //given
         final AnAlias anAlias = AnAlias.of("text");
         //when

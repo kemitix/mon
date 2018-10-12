@@ -2,12 +2,12 @@ package net.kemitix.mon;
 
 import net.kemitix.mon.experimental.either.Either;
 import org.assertj.core.api.WithAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class EitherTest implements WithAssertions {
+class EitherTest implements WithAssertions {
 
     @Test
-    public void whenLeft_isLeft() {
+    void whenLeft_isLeft() {
         //when
         final Either<Integer, String> either = Either.left(1);
         //then
@@ -15,7 +15,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void whenLeft_isNotRight() {
+    void whenLeft_isNotRight() {
         //when
         final Either<Integer, String> either = Either.left(1);
         //then
@@ -23,7 +23,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void whenRight_isNotLeft() {
+    void whenRight_isNotLeft() {
         //when
         final Either<Integer, String> either = Either.right("1");
         //then
@@ -31,7 +31,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void whenRight_isRight() {
+    void whenRight_isRight() {
         //when
         final Either<Integer, String> either = Either.right("1");
         //then
@@ -39,7 +39,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void whenLeft_matchLeft() {
+    void whenLeft_matchLeft() {
         //given
         final Either<Integer, String> either = Either.left(1);
         //then
@@ -50,7 +50,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void whenRight_matchRight() {
+    void whenRight_matchRight() {
         //given
         final Either<Integer, String> either = Either.right("1");
         //then
@@ -61,7 +61,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void givenLeft_whenMapLeft_thenMap() {
+    void givenLeft_whenMapLeft_thenMap() {
         //given
         final Either<Integer, String> either = Either.left(2);
         //when
@@ -74,7 +74,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void givenRight_whenMapRight_thenMap() {
+    void givenRight_whenMapRight_thenMap() {
         //given
         final Either<Integer, String> either = Either.right("2");
         //when
@@ -87,7 +87,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void givenLeft_whenMapRight_thenDoNothing() {
+    void givenLeft_whenMapRight_thenDoNothing() {
         //given
         final Either<Integer, String> either = Either.left(2);
         //when
@@ -100,7 +100,7 @@ public class EitherTest implements WithAssertions {
     }
 
     @Test
-    public void givenRight_whenMapLeft_thenDoNothing() {
+    void givenRight_whenMapLeft_thenDoNothing() {
         //given
         final Either<Integer, String> either = Either.right("2");
         //when

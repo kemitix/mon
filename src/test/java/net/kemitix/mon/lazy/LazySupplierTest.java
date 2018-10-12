@@ -1,9 +1,7 @@
 package net.kemitix.mon.lazy;
 
 import org.assertj.core.api.WithAssertions;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.Timeout;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -11,13 +9,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
-public class LazySupplierTest implements WithAssertions {
-
-    @Rule
-    public final Timeout timeout = Timeout.seconds(1);
+class LazySupplierTest implements WithAssertions {
 
     @Test
-    public void whenCreateLazyThenSupplierIsNotCalled() {
+    void whenCreateLazyThenSupplierIsNotCalled() {
         //given
         final AtomicBoolean supplierCalled = new AtomicBoolean(false);
         final Supplier<UUID> supplier = () -> {
@@ -31,7 +26,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenCreateLazyThenIsEvaluatedIsFalse() {
+    void whenCreateLazyThenIsEvaluatedIsFalse() {
         //given
         final Supplier<UUID> supplier = UUID::randomUUID;
         //when
@@ -41,7 +36,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenValueThenSupplierIsCalled() {
+    void whenValueThenSupplierIsCalled() {
         //given
         final AtomicBoolean supplierCalled = new AtomicBoolean(false);
         final Supplier<UUID> supplier = () -> {
@@ -56,7 +51,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenValueThenValueIsSameAsSupplier() {
+    void whenValueThenValueIsSameAsSupplier() {
         //given
         final UUID uuid = UUID.randomUUID();
         final Supplier<UUID> supplier = () -> uuid;
@@ -68,7 +63,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenValueThenIsEvaluatedIsTrue() {
+    void whenValueThenIsEvaluatedIsTrue() {
         //given
         final Supplier<UUID> supplier = () -> UUID.randomUUID();
         final Lazy<UUID> lazy = Lazy.of(supplier);
@@ -79,7 +74,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenValueCalledTwiceThenSupplierIsNotCalledAgain() {
+    void whenValueCalledTwiceThenSupplierIsNotCalledAgain() {
         //given
         final AtomicInteger supplierCalledCounter = new AtomicInteger(0);
         final Supplier<UUID> supplier = () -> {
@@ -95,7 +90,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenMapLazyThenSupplierNotCalled() {
+    void whenMapLazyThenSupplierNotCalled() {
         //given
         final UUID uuid = UUID.randomUUID();
         final AtomicBoolean supplierCalled = new AtomicBoolean(false);
@@ -111,7 +106,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenMapLazyValueThenSupplierIsCalled() {
+    void whenMapLazyValueThenSupplierIsCalled() {
         //given
         final UUID uuid = UUID.randomUUID();
         final AtomicBoolean supplierCalled = new AtomicBoolean(false);
@@ -128,7 +123,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenMapLazyValueThenValueIsCorrect() {
+    void whenMapLazyValueThenValueIsCorrect() {
         //given
         final UUID uuid = UUID.randomUUID();
         final AtomicBoolean supplierCalled = new AtomicBoolean(false);
@@ -145,7 +140,7 @@ public class LazySupplierTest implements WithAssertions {
     }
 
     @Test
-    public void whenLazyValueCalledOnTwoThreadsThenSupplierIsOnlyCalledOnce() throws ExecutionException, InterruptedException {
+    void whenLazyValueCalledOnTwoThreadsThenSupplierIsOnlyCalledOnce() throws ExecutionException, InterruptedException {
         //given
         final AtomicInteger supplierCalledCounter = new AtomicInteger(0);
         final CountDownLatch latch = new CountDownLatch(1);
