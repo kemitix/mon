@@ -62,6 +62,18 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
         return new GeneralisedTree<>(item, subtrees);
     }
 
+    /**
+     * Create a new {@link TreeBuilder}.
+     *
+     * @param type the type
+     * @param <B> the type of the tree
+     *
+     * @return a TreeBuilder
+     */
+    public static <B> TreeBuilder<B> builder(final Class<B> type) {
+        return new MutableTreeBuilder<B>();
+    }
+
     @Override
     public abstract <R> Tree<R> map(Function<T, R> f);
 
