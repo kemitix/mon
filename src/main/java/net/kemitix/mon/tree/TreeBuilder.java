@@ -36,4 +36,11 @@ public interface TreeBuilder<T> {
      * @return a {@link Tree}
      */
     public abstract Tree<T> build();
+
+    /**
+     * Set the current {@link Tree}'s item.
+     *
+     * @param item the item for the current {@link Tree}
+     */
+    public abstract void item(T item);
 }

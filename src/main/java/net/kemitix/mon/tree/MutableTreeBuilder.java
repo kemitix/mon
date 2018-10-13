@@ -21,6 +21,9 @@
 
 package net.kemitix.mon.tree;
 
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+
 /**
  * Builder for a {@link Tree}.
  *
@@ -30,9 +33,17 @@ package net.kemitix.mon.tree;
  */
 class MutableTreeBuilder<B> implements TreeBuilder<B> {
 
+    private final MutableTree<B> root = MutableTree.create();
+    private final AtomicReference<MutableTree<B>> current = new AtomicReference<>(root);
+
     @Override
     public Tree<B> build() {
-        return Tree.leaf(null);
+        return root.map(Function.identity());
+    }
+
+    @Override
+    public void item(final B item) {
+        current.get().set(item);
     }
 
 }
