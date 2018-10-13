@@ -101,6 +101,14 @@ final class Nothing<T> implements Maybe<T> {
     }
 
     @Override
+    public <R> R matchValue(
+            final Function<T, R> justMatcher,
+            final Supplier<R> nothingMatcher
+    ) {
+        return nothingMatcher.get();
+    }
+
+    @Override
     public Maybe<T> or(final Supplier<Maybe<T>> alternative) {
         return alternative.get();
     }
