@@ -21,7 +21,8 @@
 
 package net.kemitix.mon.tree;
 
-import java.util.concurrent.atomic.AtomicReference;
+import net.kemitix.mon.maybe.Maybe;
+
 import java.util.function.Function;
 
 /**
@@ -33,8 +34,23 @@ import java.util.function.Function;
  */
 class MutableTreeBuilder<T> implements TreeBuilder<T> {
 
-    private final MutableTree<T> root = MutableTree.create();
-    private final AtomicReference<MutableTree<T>> current = new AtomicReference<>(root);
+    private final MutableTree<T> root;
+
+    /**
+     * Create empty tree builder.
+     */
+    MutableTreeBuilder() {
+        root = MutableTree.create();
+    }
+
+    /**
+     * Create a tree builder to work with the given tree.
+     *
+     * @param tree the tree to build upon
+     */
+    MutableTreeBuilder(final MutableTree<T> tree) {
+        root = tree;
+    }
 
     @Override
     public Tree<T> build() {
@@ -43,14 +59,33 @@ class MutableTreeBuilder<T> implements TreeBuilder<T> {
 
     @Override
     public TreeBuilder<T> item(final T item) {
-        current.get().set(item);
+        root.set(item);
         return this;
     }
 
     @Override
     public TreeBuilder<T> add(final Tree<T> subtree) {
-        current.get().add(subtree);
+        root.add(subtree);
         return this;
+    }
+
+    @Override
+    public TreeBuilder<T> addChild(final T childItem) {
+        root.add(MutableTree.leaf(childItem));
+        return this;
+    }
+
+    @Override
+    public Maybe<TreeBuilder<T>> select(final T childItem) {
+        return Maybe.findFirst(
+                root.subTreesAsMutable()
+                        .stream()
+                        .filter((MutableTree<T> tree) -> matchesItem(childItem, tree))
+                        .map(Tree::builder));
+    }
+
+    private Boolean matchesItem(final T childItem, final MutableTree<T> tree) {
+        return tree.item().map(childItem::equals).orElse(false);
     }
 
 }

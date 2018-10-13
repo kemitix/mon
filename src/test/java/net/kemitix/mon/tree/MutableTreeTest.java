@@ -3,6 +3,8 @@ package net.kemitix.mon.tree;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
@@ -15,7 +17,7 @@ class MutableTreeTest implements WithAssertions {
         //when
         final Tree<String> leaf = MutableTree.create();
         //then
-        assertThat(leaf.item()).isEmpty();
+        assertThat(leaf.item().isNothing()).isTrue();
     }
 
     @Test
@@ -26,7 +28,7 @@ class MutableTreeTest implements WithAssertions {
         final MutableTree<String> leaf = MutableTree.create();
         leaf.set(item);
         //then
-        assertThat(leaf.item()).contains(item);
+        assertThat(leaf.item().toOptional()).contains(item);
     }
 
     @Test
@@ -53,14 +55,13 @@ class MutableTreeTest implements WithAssertions {
     @Test
     void canCreateTreeWithSubTrees() {
         //given
-        final String treeItem = "tree";
         final String leafItem = "leaf";
-        //when
+        final MutableTree<String> leaf = MutableTree.leaf(leafItem);
         final MutableTree<String> tree = MutableTree.create();
-        tree.set(treeItem)
-                .subTrees(singletonList(Tree.leaf(leafItem)));
+        //when
+        tree.subTrees(singletonList(leaf));
         //then
-        assertThat(tree.subTrees()).containsExactly(Tree.leaf(leafItem));
+        assertThat(tree.subTrees()).containsExactly(leaf);
     }
 
     @Test
@@ -86,6 +87,22 @@ class MutableTreeTest implements WithAssertions {
                         MutableTree.leaf(sid2),
                         MutableTree.leaf(sid3)));
         assertThat(result).isEqualToComparingFieldByFieldRecursively(expectedTree);
+    }
+
+    @Test
+    void canCloneNonMutableTree() {
+        //given
+        final UUID rootItem = UUID.randomUUID();
+        final UUID leafItem = UUID.randomUUID();
+        final Tree<UUID> immutableTree = Tree.of(rootItem, singletonList(Tree.leaf(leafItem)));
+        //when
+        final MutableTree<UUID> mutableTree = MutableTree.of(immutableTree);
+        //then
+        assertThat(mutableTree.count()).isEqualTo(2);
+        assertThat(mutableTree.item().toOptional()).contains(rootItem);
+        final List<Tree<UUID>> subTrees = mutableTree.subTrees();
+        assertThat(subTrees).hasSize(1);
+        assertThat(subTrees.get(0).item().toOptional()).contains(leafItem);
     }
 
 }

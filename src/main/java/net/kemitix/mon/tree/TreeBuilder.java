@@ -21,6 +21,8 @@
 
 package net.kemitix.mon.tree;
 
+import net.kemitix.mon.maybe.Maybe;
+
 /**
  * Mutable builder for a {@link Tree}.
  *
@@ -53,5 +55,21 @@ public interface TreeBuilder<T> {
      *
      * @return the TreeBuilder
      */
-    public abstract TreeBuilder<T> add(final Tree<T> subtree);
+    public abstract TreeBuilder<T> add(Tree<T> subtree);
+
+    /**
+     * Add the Child item as a subTree.
+     *
+     * @param childItem the item to add as a subtree
+     * @return the TreeBuilder
+     */
+    public abstract TreeBuilder<T> addChild(T childItem);
+
+    /**
+     * Create a TreeBuilder for the subTree of the current Tree that has the childItem.
+     *
+     * @param childItem the item of search the subtrees for
+     * @return a Maybe containing the TreeBuilder for the subtree, or Nothing if there child item is not found
+     */
+    public abstract Maybe<TreeBuilder<T>> select(T childItem);
 }

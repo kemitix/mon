@@ -22,6 +22,7 @@
 package net.kemitix.mon.tree;
 
 import lombok.EqualsAndHashCode;
+import net.kemitix.mon.maybe.Maybe;
 
 import java.util.*;
 import java.util.function.Function;
@@ -65,8 +66,8 @@ class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
     }
 
     @Override
-    public Optional<T> item() {
-        return Optional.ofNullable(item);
+    public Maybe<T> item() {
+        return Maybe.maybe(item);
     }
 
     /**

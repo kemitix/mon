@@ -43,7 +43,10 @@ interface TreeMapper<T> {
      *
      * @return a List of mapped sub-trees
      */
-    public default <R> List<Tree<R>> mapTrees(final Function<T, R> f, final List<Tree<T>> trees) {
+    public default <R> List<Tree<R>> mapTrees(
+            final Function<T, R> f,
+            final List<Tree<T>> trees
+    ) {
         return trees.stream()
                 .map(subTree -> subTree.map(f))
                 .collect(Collectors.toList());

@@ -22,13 +22,14 @@
 package net.kemitix.mon.tree;
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import net.kemitix.mon.maybe.Maybe;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A mutable {@link Tree}.
@@ -37,11 +38,11 @@ import java.util.function.Function;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@ToString
 @EqualsAndHashCode
+@SuppressWarnings("methodcount")
 class MutableTree<T> implements Tree<T>, TreeMapper<T> {
 
-    private final List<Tree<T>> mySubTrees = new ArrayList<>();
+    private final List<MutableTree<T>> mySubTrees = new ArrayList<>();
 
     private T item;
 
@@ -52,7 +53,7 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
      *
      * @return the MutableTree
      */
-    public static <B> MutableTree<B> create() {
+    static <B> MutableTree<B> create() {
         return new MutableTree<>();
     }
 
@@ -64,7 +65,7 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
      *
      * @return a empty mutable tree
      */
-    public static <B> MutableTree<B> leaf(final B item) {
+    static <B> MutableTree<B> leaf(final B item) {
         return MutableTree.<B>create().set(item);
     }
 
@@ -76,21 +77,40 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
      * @param <B> the type of the item
      * @return a leaf node of a generalised tree
      */
-    public static <B> MutableTree<B> of(final B item, final Collection<Tree<B>> subtrees) {
+    static <B> MutableTree<B> of(final B item, final Collection<MutableTree<B>> subtrees) {
         return MutableTree.<B>create().set(item).subTrees(subtrees);
+    }
+
+    /**
+     * Duplicate, or cast if possible, an existing Tree as a {@link MutableTree}.
+     * @param tree the tree to duplicate/cast
+     * @param <T> the type of the tree
+     * @return the mutable tree
+     */
+    static <T> MutableTree<T> of(final Tree<T> tree) {
+        if (tree instanceof MutableTree) {
+            return (MutableTree<T>) tree;
+        }
+        final T item = tree.item().orElse(null);
+        final List<MutableTree<T>> subtrees = tree.subTrees()
+                .stream().map(MutableTree::of).collect(Collectors.toList());
+        return MutableTree.of(item, subtrees);
     }
 
     @Override
     public <R> MutableTree<R> map(final Function<T, R> f) {
         final MutableTree<R> mutableTree = MutableTree.create();
+        final List<MutableTree<R>> trees = subTreesAsMutable().stream()
+                .map(subTree -> subTree.map(f))
+                .collect(Collectors.toList());
         return mutableTree
                 .set(f.apply(item))
-                .subTrees(mapTrees(f, subTrees()));
+                .subTrees(trees);
     }
 
     @Override
-    public Optional<T> item() {
-        return Optional.ofNullable(item);
+    public Maybe<T> item() {
+        return Maybe.maybe(item);
     }
 
     /**
@@ -106,8 +126,12 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Tree<T>> subTrees() {
-        return mySubTrees;
+        final Stream<MutableTree<T>> mutableTreeStream = mySubTrees.stream();
+        final Stream<Tree<T>> treeStream = mutableTreeStream.map(Tree.class::cast);
+        final List<Tree<T>> treeList = treeStream.collect(Collectors.toList());
+        return treeList;
     }
 
     /**
@@ -116,7 +140,7 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
      * @param subTrees the subtrees
      * @return the tree
      */
-    MutableTree<T> subTrees(final Collection<Tree<T>> subTrees) {
+    MutableTree<T> subTrees(final Collection<MutableTree<T>> subTrees) {
         this.mySubTrees.clear();
         this.mySubTrees.addAll(subTrees);
         return this;
@@ -129,7 +153,16 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
      * @return the current tree
      */
     MutableTree<T> add(final Tree<T> subtree) {
-        mySubTrees.add(subtree);
+        mySubTrees.add(MutableTree.of(subtree));
         return this;
+    }
+
+    /**
+     * The mutable subtrees of the tree.
+     *
+     * @return a list of Trees
+     */
+    List<MutableTree<T>> subTreesAsMutable() {
+        return mySubTrees;
     }
 }
