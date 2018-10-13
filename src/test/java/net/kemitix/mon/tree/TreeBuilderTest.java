@@ -1,23 +1,21 @@
 package net.kemitix.mon.tree;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import net.kemitix.mon.maybe.Maybe;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TreeBuilderTest {
 
     @Test
     void whenEmptyBuilderBuildThenTreeIsAnEmptyLeaf() {
-        //given
-        final TreeBuilder<Node> builder = Tree.builder(Node.class);
         //when
-        final Tree<Node> result = builder.build();
+        final Tree<Node> result = Tree.builder(Node.class).build();
         //then
         assertThat(result.count()).isZero();
         assertThat(result.item().isNothing()).isTrue();
@@ -26,11 +24,11 @@ class TreeBuilderTest {
     @Test
     void whenAddLeafThenTreeHasLeaf() {
         //given
-        final TreeBuilder<Node> builder = Tree.builder(Node.class);
         final Node node = createANode();
-        builder.item(node);
         //when
-        final Tree<Node> result = builder.build();
+        final Tree<Node> result =
+                Tree.builder(Node.class)
+                        .item(node).build();
         //then
         assertThat(result.count()).isEqualTo(1);
         assertThat(result.item().toOptional()).contains(node);
@@ -39,13 +37,13 @@ class TreeBuilderTest {
     @Test
     void whenAddSubTreeThenTreeHasSubTree() {
         //given
-        final TreeBuilder<Node> builder = Tree.builder(Node.class);
-        /// add subtree
         final Tree<Node> subtree = MutableTree.leaf(createANode());
-        builder.item(createANode());
-        builder.add(subtree);
         //when
-        final Tree<Node> result = builder.build();
+        final Tree<Node> result =
+                Tree.builder(Node.class)
+                        .item(createANode())
+                        .add(subtree)
+                        .build();
         //then
         assertThat(result.count()).isEqualTo(2);
         assertThat(result.subTrees()).contains(subtree);
@@ -57,12 +55,13 @@ class TreeBuilderTest {
         final Node rootNode = new Node("root");
         final Node childNode = new Node("child");
         final Node grandchildNode = new Node("grandchild");
-        final TreeBuilder<Node> rootBuilder = Tree.builder(Node.class)
-                .item(rootNode)
-                .addChild(childNode);
-        final Maybe<TreeBuilder<Node>> select = rootBuilder.select(childNode);
-        select.map(childBuilder -> childBuilder.addChild(grandchildNode));
         //when
+        final TreeBuilder<Node> rootBuilder =
+                Tree.builder(Node.class)
+                        .item(rootNode)
+                        .addChild(childNode);
+        rootBuilder.select(childNode)
+                .map(childBuilder -> childBuilder.addChild(grandchildNode));
         final Tree<Node> result = rootBuilder.build();
         //then
         assertThat(result.count()).isEqualTo(3);
@@ -70,6 +69,28 @@ class TreeBuilderTest {
                 MutableTree.of(rootNode, Collections.singleton(
                         MutableTree.of(childNode, Collections.singleton(
                                 MutableTree.leaf(grandchildNode))))));
+    }
+
+    @Test
+    void whenAddMultipleChildrenThenTreeHasAllChildren() {
+        //given
+        final Node rootNode = new Node("root");
+        final Node child1Node = createANode();
+        final Node child2Node = createANode();
+        final Node child3Node = createANode();
+        //when
+        final Tree<Node> result =
+                Tree.builder(Node.class)
+                        .item(rootNode)
+                        .addChildren(asList(child1Node, child2Node, child3Node))
+                        .build();
+        //then
+        assertThat(result.count()).isEqualTo(4);
+        assertThat(result).isEqualToComparingFieldByFieldRecursively(
+                MutableTree.of(rootNode, asList(
+                        MutableTree.leaf(child1Node),
+                        MutableTree.leaf(child2Node),
+                        MutableTree.leaf(child3Node))));
     }
 
     private Node createANode() {
