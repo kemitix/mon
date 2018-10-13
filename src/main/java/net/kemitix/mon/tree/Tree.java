@@ -82,8 +82,8 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
      *
      * @return a TreeBuilder
      */
-    public static <B> TreeBuilder<B> builder(final MutableTree<B> tree) {
-        return new MutableTreeBuilder<>(tree);
+    public static <B> TreeBuilder<B> builder(final Tree<B> tree) {
+        return new MutableTreeBuilder<>(MutableTree.of(tree));
     }
 
     @Override
