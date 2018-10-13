@@ -4,6 +4,7 @@ CHANGELOG
 1.2.1
 -----
 
+* [tree] Add TreeBuilder
 * [maybe] Add static Maybe.findFirst(Stream)
 * [maybe] Add matchValue(Function, Supplier)
 * Bump kemitix-parent from 5.1.1 to 5.2.0 (#55)
