@@ -77,18 +77,6 @@ class GeneralisedTree<T> implements Tree<T> {
     }
 
     /**
-     * Counts the number of items in the subtree.
-     *
-     * @return the sum of the subtrees, plus 1 if there is an item in this node
-     */
-    @Override
-    @SuppressWarnings("avoidinlineconditionals")
-    public int count() {
-        return (item != null ? 1 : 0)
-                + subTrees.stream().mapToInt(Tree::count).sum();
-    }
-
-    /**
      * Returns a list of subtrees.
      *
      * @return a List of trees

@@ -87,9 +87,14 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
     /**
      * Count the number of item in the tree, including subtrees.
      *
-     * @return the number of items
+     * @return the sum of the subtrees, plus 1 if there is an item in this node
      */
-    public abstract int count();
+    @SuppressWarnings("avoidinlineconditionals")
+    public default int count() {
+        return (item().isPresent() ? 1 : 0)
+                + subTrees().stream().mapToInt(Tree::count).sum();
+    }
+
 
     /**
      * The subtrees of the tree.
