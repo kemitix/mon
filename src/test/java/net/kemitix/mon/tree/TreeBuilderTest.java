@@ -24,13 +24,32 @@ class TreeBuilderTest {
     void whenAddLeafThenTreeHasLeaf() {
         //given
         final TreeBuilder<Node> builder = Tree.builder(Node.class);
-        final Node node = new Node(createAName());
+        final Node node = createANode();
         builder.item(node);
         //when
         final Tree<Node> result = builder.build();
         //then
         assertThat(result.count()).isEqualTo(1);
         assertThat(result.item()).contains(node);
+    }
+
+    @Test
+    void whenAddSubTreeThenTreeHasSubTree() {
+        //given
+        final TreeBuilder<Node> builder = Tree.builder(Node.class);
+        /// add subtree
+        final Tree<Node> subtree = Tree.leaf(createANode());
+        builder.item(createANode());
+        builder.add(subtree);
+        //when
+        final Tree<Node> result = builder.build();
+        //then
+        assertThat(result.count()).isEqualTo(2);
+        assertThat(result.subTrees()).contains(subtree);
+    }
+
+    private Node createANode() {
+        return new Node(createAName());
     }
 
     private String createAName() {

@@ -41,6 +41,17 @@ public interface TreeBuilder<T> {
      * Set the current {@link Tree}'s item.
      *
      * @param item the item for the current {@link Tree}
+     *
+     * @return the TreeBuilder
      */
-    public abstract void item(T item);
+    public abstract TreeBuilder<T> item(T item);
+
+    /**
+     * Adds the subtree to the current tree.
+     *
+     * @param subtree the tree to add
+     *
+     * @return the TreeBuilder
+     */
+    public abstract TreeBuilder<T> add(final Tree<T> subtree);
 }

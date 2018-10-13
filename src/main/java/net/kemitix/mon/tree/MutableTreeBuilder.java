@@ -27,23 +27,30 @@ import java.util.function.Function;
 /**
  * Builder for a {@link Tree}.
  *
- * @param <B> the type of the tree
+ * @param <T> the type of the tree
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-class MutableTreeBuilder<B> implements TreeBuilder<B> {
+class MutableTreeBuilder<T> implements TreeBuilder<T> {
 
-    private final MutableTree<B> root = MutableTree.create();
-    private final AtomicReference<MutableTree<B>> current = new AtomicReference<>(root);
+    private final MutableTree<T> root = MutableTree.create();
+    private final AtomicReference<MutableTree<T>> current = new AtomicReference<>(root);
 
     @Override
-    public Tree<B> build() {
+    public Tree<T> build() {
         return root.map(Function.identity());
     }
 
     @Override
-    public void item(final B item) {
+    public TreeBuilder<T> item(final T item) {
         current.get().set(item);
+        return this;
+    }
+
+    @Override
+    public TreeBuilder<T> add(final Tree<T> subtree) {
+        current.get().add(subtree);
+        return this;
     }
 
 }

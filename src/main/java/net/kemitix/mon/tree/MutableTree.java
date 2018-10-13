@@ -122,4 +122,14 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
         return this;
     }
 
+    /**
+     * Adds the subtree to the existing subtrees.
+     *
+     * @param subtree the subtree
+     * @return the current tree
+     */
+    MutableTree<T> add(final Tree<T> subtree) {
+        mySubTrees.add(subtree);
+        return this;
+    }
 }
