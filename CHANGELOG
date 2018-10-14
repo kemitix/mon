@@ -1,9 +1,10 @@
 CHANGELOG
 =========
 
-1.2.1
+2.0.0
 -----
 
+* [BREAKING] [tree] Tree.item() now returns a Maybe
 * [tree] Add TreeBuilder
 * [maybe] Add static Maybe.findFirst(Stream)
 * [maybe] Add matchValue(Function, Supplier)
