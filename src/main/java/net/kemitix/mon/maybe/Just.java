@@ -119,6 +119,14 @@ final class Just<T> implements Maybe<T> {
     }
 
     @Override
+    public <R> R matchValue(
+            final Function<T, R> justMatcher,
+            final Supplier<R> nothingMatcher
+    ) {
+        return justMatcher.apply(value);
+    }
+
+    @Override
     public Maybe<T> or(final Supplier<Maybe<T>> alternative) {
         return this;
     }

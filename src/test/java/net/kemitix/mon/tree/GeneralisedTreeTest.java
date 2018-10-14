@@ -15,7 +15,7 @@ class GeneralisedTreeTest implements WithAssertions {
         //when
         final Tree<String> leaf = Tree.leaf(null);
         //then
-        assertThat(leaf.item()).isEmpty();
+        assertThat(leaf.item().isNothing()).isTrue();
     }
 
     @Test
@@ -25,7 +25,7 @@ class GeneralisedTreeTest implements WithAssertions {
         //when
         final Tree<String> leaf = Tree.leaf(item);
         //then
-        assertThat(leaf.item()).contains(item);
+        assertThat(leaf.item().toOptional()).contains(item);
     }
 
     @Test

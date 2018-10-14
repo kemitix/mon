@@ -82,6 +82,19 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     }
 
     /**
+     * Creates a Maybe from the first item in the stream, or nothing if the stream is empty.
+     *
+     * @param stream the Stream
+     * @param <T> the type of the stream
+     * @return a Maybe containing the first item in the stream
+     */
+    public static <T> Maybe<T> findFirst(Stream<T> stream) {
+        return stream.findFirst()
+                .map(Maybe::just)
+                .orElse(Maybe.nothing());
+    }
+
+    /**
      * Checks if the Maybe is a Just.
      *
      * @return true if the Maybe is a Just
@@ -173,10 +186,25 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     /**
      * Matches the Maybe, either just or nothing, and performs either the Consumer, for Just, or Runnable for nothing.
      *
+     * <p>Unlike {@link #matchValue(Function, Supplier)}, this method does not return a value.</p>
+     *
      * @param justMatcher    the Consumer to pass the value of a Just to
      * @param nothingMatcher the Runnable to call if the Maybe is a Nothing
      */
     public abstract void match(Consumer<T> justMatcher, Runnable nothingMatcher);
+
+    /**
+     * Matches the Maybe, either just or nothing, and performs either the Function, for Just, or Supplier for nothing.
+     *
+     * <p>Unlike {@link #match(Consumer, Runnable)}, this method returns a value.</p>
+     *
+     * @param justMatcher    the Function to pass the value of a Just to
+     * @param nothingMatcher the Supplier to call if the Maybe is a Nothing
+     * @param <R> the type of the matched result
+     *
+     * @return the matched result, from either the justMatcher or the nothingMatcher
+     */
+    public abstract <R> R matchValue(Function<T, R> justMatcher, Supplier<R> nothingMatcher);
 
     /**
      * Maps the Maybe into another Maybe only when it is nothing.

@@ -22,11 +22,11 @@
 package net.kemitix.mon.tree;
 
 import net.kemitix.mon.Functor;
+import net.kemitix.mon.maybe.Maybe;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -62,22 +62,49 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
         return new GeneralisedTree<>(item, subtrees);
     }
 
+    /**
+     * Create a new {@link TreeBuilder} starting with an empty tree.
+     *
+     * @param type the type
+     * @param <B> the type of the tree
+     *
+     * @return a TreeBuilder
+     */
+    public static <B> TreeBuilder<B> builder(final Class<B> type) {
+        return new MutableTreeBuilder<>();
+    }
+
+    /**
+     * Create a new {@link TreeBuilder} for the given tree.
+     *
+     * @param tree the tree to build upon
+     * @param <B> the type of the tree
+     *
+     * @return a TreeBuilder
+     */
+    public static <B> TreeBuilder<B> builder(final Tree<B> tree) {
+        return new MutableTreeBuilder<>(MutableTree.of(tree));
+    }
+
     @Override
     public abstract <R> Tree<R> map(Function<T, R> f);
 
     /**
      * Return the item within the node of the tree, if present.
      *
-     * @return an Optional containing the item
+     * @return a Maybe containing the item
      */
-    public abstract Optional<T> item();
+    public abstract Maybe<T> item();
 
     /**
      * Count the number of item in the tree, including subtrees.
      *
-     * @return the number of items
+     * @return the sum of the subtrees, plus 1 if there is an item in this node
      */
-    public abstract int count();
+    public default int count() {
+        return item().matchValue(x -> 1, () -> 0)
+                + subTrees().stream().mapToInt(Tree::count).sum();
+    }
 
     /**
      * The subtrees of the tree.

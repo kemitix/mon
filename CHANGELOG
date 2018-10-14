@@ -1,9 +1,13 @@
 CHANGELOG
 =========
 
-1.2.1
+2.0.0
 -----
 
+* [BREAKING] [tree] Tree.item() now returns a Maybe
+* [tree] Add TreeBuilder
+* [maybe] Add static Maybe.findFirst(Stream)
+* [maybe] Add matchValue(Function, Supplier)
 * Bump kemitix-parent from 5.1.1 to 5.2.0 (#55)
 * Bump junit from 4.12 to 5.3.1 [#56)
 

@@ -1,6 +1,7 @@
 package net.kemitix.mon;
 
 import net.kemitix.mon.maybe.Maybe;
+import org.assertj.core.api.AbstractIntegerAssert;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static net.kemitix.mon.maybe.Maybe.*;
@@ -253,6 +256,26 @@ class MaybeTest implements WithAssertions {
     }
 
     @Test
+    void just_whenMatchValue_thenJustTriggers() {
+        //given
+        final Maybe<Integer> maybe = just(1);
+        //when
+        final String result = maybe.matchValue(integer -> "just", () -> "nothing");
+        //then
+        assertThat(result).isEqualTo("just");
+    }
+
+    @Test
+    void nothing_whenMatchValue_thenNothingTriggers() {
+        //given
+        final Maybe<Integer> maybe = nothing();
+        //when
+        final String result = maybe.matchValue(integer -> "just", () -> "nothing");
+        //then
+        assertThat(result).isEqualTo("nothing");
+    }
+
+    @Test
     void just_isJust_isTrue() {
         //given
         final Maybe<Integer> maybe = just(1);
@@ -310,5 +333,37 @@ class MaybeTest implements WithAssertions {
         final Maybe<String> result = one.or(() -> Maybe.just("two"));
         //then
         assertThat(result.toOptional()).contains("two");
+    }
+
+    @Test
+    void emptyStream_findFirst_isNothing() {
+        //given
+        final Stream<Object> stream = Stream.empty();
+        //when
+        final Maybe<Object> result = Maybe.findFirst(stream);
+        //then
+        assertThat(result.isNothing()).isTrue();
+    }
+
+    @Test
+    void singleItemStream_findFirst_isJustItem() {
+        //given
+        final String item = "item";
+        final Stream<String> stream = Stream.of(item);
+        //when
+        final Maybe<String> result = Maybe.findFirst(stream);
+        //then
+        assertThat(result.toOptional()).contains(item);
+    }
+
+    @Test
+    void multipleItemStream_findFirst_isJustFirst() {
+        //given
+        final String first = "first";
+        final Stream<String> stream = Stream.of(first, "second");
+        //when
+        final Maybe<String> result = Maybe.findFirst(stream);
+        //then
+        assertThat(result.toOptional()).contains(first);
     }
 }

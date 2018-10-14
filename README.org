@@ -255,7 +255,7 @@
    have a =get()= method.
 
    Unlike =Optional=, when a =map()= results in a =null=, the =Maybe= will
-   continue to be a =Just=. =Optional= would switch to being empty. [[http://blog.vavr.io/the-agonizing-death-of-an-astronaut/][vavi.io
+   continue to be a =Just=. =Optional= would switch to being empty. [[http://blog.vavr.io/the-agonizing-death-of-an-astronaut/][vavr.io
    follows the same behaviour as =Maybe=]].
 
    #+BEGIN_SRC java
@@ -385,6 +385,16 @@
      #+END_SRC
 
 
+**** =static <T> Maybe<T> findFirst(Stream<T> stream)=
+
+     Creates a Maybe from the first item in the stream, or nothing if the stream is empty.
+
+     #+BEGIN_SRC java
+       final Maybe<Integer> just3 = Maybe.findFirst(Stream.of(3, 4, 2, 4));
+       final Maybe<Integer> nothing = Maybe.findFirst(Stream.empty());
+     #+END_SRC
+
+
 *** Instance Methods
 
 **** =Maybe<T> filter(Predicate<T> predicate)=
@@ -421,7 +431,8 @@
 
 **** =void match(Consumer<T> just, Runnable nothing)=
 
-     Matches the Maybe, either just or nothing, and performs either the Consumer, for Just, or Runnable for nothing.
+     Matches the Maybe, either just or nothing, and performs either the
+     Consumer, for Just, or Runnable for nothing.
 
      #+BEGIN_SRC java
      Maybe.maybe(getValue())
@@ -429,6 +440,20 @@
               just -> workWithValue(just),
                 () -> nothingToWorkWith()
           );
+     #+END_SRC
+
+
+**** =<R> R matchValue(Function<T, R> justMatcher, Supplier<R> nothingMatcher)=
+
+     Matches the Maybe, either just or nothing, and performs either the
+     Function, for Just, or Supplier for nothing.
+
+     #+BEGIN_SRC java
+       final String value = Maybe.maybe(getValue())
+                                 .matchValue(
+                                             just -> Integer.toString(just),
+                                             () -> "nothing"
+                                 );
      #+END_SRC
 
 
@@ -907,6 +932,25 @@
      #+END_SRC
 
 
+**** =static <B> TreeBuilder<B> builder(final Class<B> type)=
+
+     Create a new TreeBuilder starting with an empty tree.
+
+     #+BEGIN_SRC java
+       final TreeBuilder<Integer> builder = Tree.builder(Integer.class);
+     #+END_SRC
+
+
+**** =static <B> TreeBuilder<B> builder(final Tree<B> tree)=
+
+     Create a new TreeBuilder for the given tree.
+
+     #+BEGIN_SRC java
+       final Tree<Integer> tree = ...;
+       final TreeBuilder<Integer> builder = Tree.builder(tree);
+     #+END_SRC
+
+
 *** Instance Methods
 
 **** =<R> Tree<R> map(Function<T, R> f)=
@@ -920,13 +964,13 @@
      #+END_SRC
 
 
-**** =Optional<T> item()=
+**** =Maybe<T> item()=
 
-     Returns the contents of the Tree node within an Optional.
+     Returns the contents of the Tree node within a Maybe.
 
      #+BEGIN_SRC java
        final Tree<Item> tree = ...;
-       final Optional<Item> result = tree.item();
+       final Maybe<Item> result = tree.item();
      #+END_SRC
 
 
@@ -948,6 +992,82 @@
      #+BEGIN_SRC java
        final Tree<Item> tree = ...;
        final List<Tree<Item>> result = tree.subTrees();
+     #+END_SRC
+
+
+** TreeBuilder
+
+   A mutable builder for a Tree. Each TreeBuilder allows modification of a
+   single Tree node. You can use the =select(childItem)= method to get a
+   TreeBuilder for the subtree that has the given child item.
+
+   #+BEGIN_SRC java
+     final TreeBuilder<Integer> builder = Tree.builder();
+     builder.set(12).addChildren(Arrays.asList(1, 3, 5, 7));
+     final TreeBuilder<Integer> builderFor3 = builder.select(3);
+     builderFor3.addChildren(Arrays.asList(2, 4));
+     final Tree<Integer> tree = builder.build();
+   #+END_SRC
+
+   Will produce a tree like:
+
+   [[file:images/treebuilder-example.svg]]
+
+
+*** Static Constructors
+
+    None. The TreeBuilder is instantiated by =Tree.builder()=.
+
+*** Instance Methods
+
+**** =Tree<T> build()=
+
+     Create the immutable Tree.
+
+     #+BEGIN_SRC java
+       final TreeBuilder<Integer> builder = Tree.builder();
+       final Tree<Integer> tree = builder.build();
+     #+END_SRC
+
+
+**** =TreeBuilder<T> item(T item)=
+
+     Set the current Tree's item and return the TreeBuilder.
+
+     #+BEGIN_SRC java
+     #+END_SRC
+
+
+**** =TreeBuilder<T> add(Tree<T> subtree)=
+
+     Adds the subtree to the current tree.
+
+     #+BEGIN_SRC java
+     #+END_SRC
+
+
+**** =TreeBuilder<T> addChild(T childItem)=
+
+     Add the Child item as a sub-Tree.
+
+     #+BEGIN_SRC java
+     #+END_SRC
+
+
+**** =TreeBuilder<T> addChildren(List<T> children)=
+
+     Add all the child items as subTrees.
+
+     #+BEGIN_SRC java
+     #+END_SRC
+
+
+**** =Maybe<TreeBuilder<T>> select(T childItem)=
+
+     Create a TreeBuilder for the subTree of the current Tree that has the
+     childItem.
+
+     #+BEGIN_SRC java
      #+END_SRC
 
 

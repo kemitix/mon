@@ -21,62 +21,35 @@
 
 package net.kemitix.mon.tree;
 
-import lombok.EqualsAndHashCode;
-import net.kemitix.mon.maybe.Maybe;
-
-import java.util.*;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
- * A generic tree of trees and objects.
- *
- * <p>Each node may contain between 0 and n objects.</p>
+ * Maps a list of Trees.
  *
  * @param <T> the type of the objects help in the tree
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@EqualsAndHashCode
-class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
-
-    private final T item;
-    private final List<Tree<T>> subTrees;
+interface TreeMapper<T> {
 
     /**
-     * Creates a new tree.
+     * Map the Trees.
      *
-     * @param item the item of this node
-     * @param subTrees the sub-trees under this node
+     * @param f the mapping function
+     * @param trees the trees to map
+     * @param <R> the type of the resulting Trees
+     *
+     * @return a List of mapped sub-trees
      */
-    GeneralisedTree(final T item, final Collection<Tree<T>> subTrees) {
-        this.item = item;
-        this.subTrees = Collections.unmodifiableList(new ArrayList<>(subTrees));
+    public default <R> List<Tree<R>> mapTrees(
+            final Function<T, R> f,
+            final List<Tree<T>> trees
+    ) {
+        return trees.stream()
+                .map(subTree -> subTree.map(f))
+                .collect(Collectors.toList());
     }
 
-    /**
-     * Maps the tree using the function onto a new tree.
-     *
-     * @param f   the function to apply
-     * @param <R> the type of object held in the resulting tree
-     * @return a tree
-     */
-    @Override
-    public <R> Tree<R> map(final Function<T, R> f) {
-        return Tree.of(f.apply(item), mapTrees(f, subTrees()));
-    }
-
-    @Override
-    public Maybe<T> item() {
-        return Maybe.maybe(item);
-    }
-
-    /**
-     * Returns a list of subtrees.
-     *
-     * @return a List of trees
-     */
-    @Override
-    public List<Tree<T>> subTrees() {
-        return subTrees;
-    }
 }

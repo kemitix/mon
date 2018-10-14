@@ -21,62 +21,71 @@
 
 package net.kemitix.mon.tree;
 
-import lombok.EqualsAndHashCode;
 import net.kemitix.mon.maybe.Maybe;
 
-import java.util.*;
 import java.util.function.Function;
 
 /**
- * A generic tree of trees and objects.
+ * Builder for a {@link Tree}.
  *
- * <p>Each node may contain between 0 and n objects.</p>
- *
- * @param <T> the type of the objects help in the tree
+ * @param <T> the type of the tree
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@EqualsAndHashCode
-class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
+class MutableTreeBuilder<T> implements TreeBuilder<T> {
 
-    private final T item;
-    private final List<Tree<T>> subTrees;
+    private final MutableTree<T> root;
 
     /**
-     * Creates a new tree.
-     *
-     * @param item the item of this node
-     * @param subTrees the sub-trees under this node
+     * Create empty tree builder.
      */
-    GeneralisedTree(final T item, final Collection<Tree<T>> subTrees) {
-        this.item = item;
-        this.subTrees = Collections.unmodifiableList(new ArrayList<>(subTrees));
+    MutableTreeBuilder() {
+        root = MutableTree.create();
     }
 
     /**
-     * Maps the tree using the function onto a new tree.
+     * Create a tree builder to work with the given tree.
      *
-     * @param f   the function to apply
-     * @param <R> the type of object held in the resulting tree
-     * @return a tree
+     * @param tree the tree to build upon
      */
-    @Override
-    public <R> Tree<R> map(final Function<T, R> f) {
-        return Tree.of(f.apply(item), mapTrees(f, subTrees()));
+    MutableTreeBuilder(final MutableTree<T> tree) {
+        root = tree;
     }
 
     @Override
-    public Maybe<T> item() {
-        return Maybe.maybe(item);
+    public Tree<T> build() {
+        return root.map(Function.identity());
     }
 
-    /**
-     * Returns a list of subtrees.
-     *
-     * @return a List of trees
-     */
     @Override
-    public List<Tree<T>> subTrees() {
-        return subTrees;
+    public TreeBuilder<T> item(final T item) {
+        root.set(item);
+        return this;
     }
+
+    @Override
+    public TreeBuilder<T> add(final Tree<T> subtree) {
+        root.add(subtree);
+        return this;
+    }
+
+    @Override
+    public TreeBuilder<T> addChild(final T childItem) {
+        root.add(MutableTree.leaf(childItem));
+        return this;
+    }
+
+    @Override
+    public Maybe<TreeBuilder<T>> select(final T childItem) {
+        return Maybe.findFirst(
+                root.subTreesAsMutable()
+                        .stream()
+                        .filter((MutableTree<T> tree) -> matchesItem(childItem, tree))
+                        .map(Tree::builder));
+    }
+
+    private Boolean matchesItem(final T childItem, final MutableTree<T> tree) {
+        return tree.item().map(childItem::equals).orElse(false);
+    }
+
 }
