@@ -51,9 +51,10 @@
    if you try and use them together. e.g.:
 
    #+BEGIN_SRC haskell
-   type PhoneNumber = String
-   type Name = String
-   type PhoneBook = [(Name,PhoneNumber)]
+     newtype PhoneNumber = PhoneNumber String
+     newtype Name = Name String
+     newtype PhoneBookEntry = PhoneBookEntry (Name, PhoneNumber)
+     newtype PhoneBook = PhoneBook [PhoneBookEntry]
    #+END_SRC
 
    In Java we don't have the ability to have that true alias, so TypeAlias is
