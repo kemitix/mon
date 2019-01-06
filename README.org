@@ -1,35 +1,33 @@
 * Mon
+* TypeAlias, Maybe and Result for Java.
 
-** TypeAlias, Maybe and Result for Java.
+  [[https://oss.sonatype.org/content/repositories/releases/net/kemitix/mon][file:https://img.shields.io/nexus/r/https/oss.sonatype.org/net.kemitix/mon.svg?style=for-the-badge]]
+  [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][file:https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge]]
 
-   [[https://oss.sonatype.org/content/repositories/releases/net/kemitix/mon][file:https://img.shields.io/nexus/r/https/oss.sonatype.org/net.kemitix/mon.svg?style=for-the-badge]]
-   [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][file:https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/coverage.svg?style=for-the-badge#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/tech_debt.svg?style=for-the-badge#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=sqale_rating#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=alert_status#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=reliability_rating#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=security_rating#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=sqale_index#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=vulnerabilities#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=bugs#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=code_smells#.svg]]
+  [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=ncloc#.svg]]
 
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/coverage.svg?style=for-the-badge#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://img.shields.io/sonar/https/sonarcloud.io/net.kemitix%3Amon/tech_debt.svg?style=for-the-badge#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=sqale_rating#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=alert_status#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=reliability_rating#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=security_rating#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=sqale_index#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=vulnerabilities#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=bugs#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=code_smells#.svg]]
-   [[https://sonarcloud.io/dashboard?id=net.kemitix%3Amon][file:https://sonarcloud.io/api/project_badges/measure?project=net.kemitix%3Amon&metric=ncloc#.svg]]
+  [[https://app.codacy.com/project/kemitix/mon/dashboard][file:https://img.shields.io/codacy/grade/d57096b0639d496aba9a7e43e7cf5b4c.svg?style=for-the-badge]]
+  [[http://i.jpeek.org/net.kemitix/mon/index.html][file:http://i.jpeek.org/net.kemitix/mon/badge.svg]]
 
-   [[https://app.codacy.com/project/kemitix/mon/dashboard][file:https://img.shields.io/codacy/grade/d57096b0639d496aba9a7e43e7cf5b4c.svg?style=for-the-badge]]
-   [[http://i.jpeek.org/net.kemitix/mon/index.html][file:http://i.jpeek.org/net.kemitix/mon/badge.svg]]
+  - [Maven Usage]
+  - [TypeAlias]
+  - [Maybe]
+  - [Result]
+  - [Tree]
+  - [Lazy]
+  - [Either]
 
-   - [Maven Usage]
-   - [TypeAlias]
-   - [Maybe]
-   - [Result]
-   - [Tree]
-   - [Lazy]
-   - [Either]
-
-
-** Maven Usage
+* Maven Usage
 
 #+BEGIN_SRC xml
     <dependency>
@@ -42,1167 +40,1160 @@
     The latest version should be shown above with the nexus and maven-central
     badges or can be found on [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][Maven Central]].
 
+* TypeAlias
 
-** TypeAlias
+  In Haskell it is possible to create an alias for a Type, and to then use
+  that alias with the same behaviour as the original, except that the compiler
+  doesn't treat the alias as the same Type and will generate compiler errors
+  if you try and use them together. e.g.:
 
-   In Haskell it is possible to create an alias for a Type, and to then use
-   that alias with the same behaviour as the original, except that the compiler
-   doesn't treat the alias as the same Type and will generate compiler errors
-   if you try and use them together. e.g.:
+  #+BEGIN_SRC haskell
+  type PhoneNumber = String
+  type Name = String
+  type PhoneBook = [(Name,PhoneNumber)]
+  #+END_SRC
 
-   #+BEGIN_SRC haskell
-   type PhoneNumber = String
-   type Name = String
-   type PhoneBook = [(Name,PhoneNumber)]
-   #+END_SRC
+  In Java we don't have the ability to have that true alias, so TypeAlias is
+  more of a type-wrapper. It's as close as I could get to a Haskell type alias
+  in Java.
 
-   In Java we don't have the ability to have that true alias, so TypeAlias is
-   more of a type-wrapper. It's as close as I could get to a Haskell type alias
-   in Java.
+  The benefits of using TypeAlias are:
 
-   The benefits of using TypeAlias are:
+  - encapsulation of the wrapped type when passing references through code
+    that doesn't need to access the actual value, but only to pass it on
+  - type-safe parameters where you would otherwise be passing Strings,
+    Integers, Lists, or other general classes
+  - equality and hashcode
+  - less verbose than implementing your own
 
-   - encapsulation of the wrapped type when passing references through code
-     that doesn't need to access the actual value, but only to pass it on
-   - type-safe parameters where you would otherwise be passing Strings,
-     Integers, Lists, or other general classes
-   - equality and hashcode
-   - less verbose than implementing your own
+  *TypeAlias Example:*
 
-   *TypeAlias Example:*
+  #+BEGIN_SRC java
+  class PhoneNumber extends TypeAlias<String> {
+      private PhoneNumber(final String value) {
+          super(value);
+      }
+      public static PhoneNumber of(final String phoneNumber) {
+          return new PhoneNumber(phoneNumber);
+      }
+  }
+  #+END_SRC
+
+  *Roll your own:*
+
+  #+BEGIN_SRC java
+  class PhoneNumber {
+      private final String value;
+      private PhoneNumber(final String value) {
+          this.value = value;
+      }
+      public static PhoneNumber of(final String phoneNumber) {
+          return new PhoneNumber(phoneNumber);
+      }
+      @Override
+      public boolean equals(Object o) {
+          if (this == o) return true;
+          if (o == null || getClass() != o.getClass()) return false;
+          PhoneNumber that = (PhoneNumber) o;
+          return Objects.equals(value, that.value);
+      }
+      @Override
+      public int hashCode() {
+          return Objects.hash(value);
+      }
+      public String getValue() {
+          return value;
+      }
+  }
+  #+END_SRC
+
+  *Lombok:*
+
+  Although, if you are using Lombok, that can be equally terse, both it and
+  TypeAlias<String> coming in at 8 lines each, compared to 24 for rolling your
+  own:
+
+  #+BEGIN_SRC java
+  @Value
+  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+  class PhoneNumber {
+      private final String value;
+      public static PhoneNumber of(final String phoneNumber) {
+          return new PhoneNumber(phoneNumber);
+      }
+  }
+  #+END_SRC
+
+** =TypeAlias= *can* be a Monad
 
    #+BEGIN_SRC java
-   class PhoneNumber extends TypeAlias<String> {
-       private PhoneNumber(final String value) {
-           super(value);
+   package net.kemitix.mon;
+
+   import org.assertj.core.api.WithAssertions;
+   import org.junit.Test;
+
+   import java.util.function.Function;
+
+   public class TypeAliasMonadTest implements WithAssertions {
+
+       private final int v = 1;
+       private final Function<Integer, AnAlias<Integer>> f = i -> a(i * 2);
+       private final Function<Integer, AnAlias<Integer>> g = i -> a(i + 6);
+
+       private static AnAlias<Integer> a(Integer v) {
+           return AnAlias.of(v);
        }
-       public static PhoneNumber of(final String phoneNumber) {
-           return new PhoneNumber(phoneNumber);
+
+       @Test
+       public void leftIdentity() {
+           assertThat(
+               a(v).flatMap(f)
+           ).isEqualTo(
+               f.apply(v)
+           );
+       }
+
+       @Test
+       public void rightIdentity_inline() {
+           // java isn't able to properly infer the correct types when used in-line
+           assertThat(
+               a(v).<Integer, AnAlias<Integer>>flatMap(x -> a(x))
+           ).isEqualTo(
+               a(v)
+           );
+       }
+
+       @Test
+       public void rightIdentity_explicitValue() {
+           final AnAlias<Integer> integerAnAlias = a(v).flatMap(x -> a(x));
+           assertThat(
+               integerAnAlias
+           ).isEqualTo(
+               a(v)
+           );
+       }
+
+       @Test
+       public void associativity() {
+           assertThat(
+               a(v).flatMap(f).flatMap(g)
+           ).isEqualTo(
+               a(v).flatMap(x -> f.apply(x).flatMap(g))
+           );
+       }
+
+       static class AnAlias<T> extends TypeAlias<T> {
+           private AnAlias(T value) {
+               super(value);
+           }
+
+           static <T> AnAlias<T> of(T value) {
+               return new AnAlias<>(value);
+           }
        }
    }
    #+END_SRC
 
-   *Roll your own:*
 
-   #+BEGIN_SRC java
-   class PhoneNumber {
-       private final String value;
-       private PhoneNumber(final String value) {
-           this.value = value;
-       }
-       public static PhoneNumber of(final String phoneNumber) {
-           return new PhoneNumber(phoneNumber);
-       }
-       @Override
-       public boolean equals(Object o) {
-           if (this == o) return true;
-           if (o == null || getClass() != o.getClass()) return false;
-           PhoneNumber that = (PhoneNumber) o;
-           return Objects.equals(value, that.value);
-       }
-       @Override
-       public int hashCode() {
-           return Objects.hash(value);
-       }
-       public String getValue() {
-           return value;
-       }
-   }
-   #+END_SRC
+** Instance Methods
 
-   *Lombok:*
+*** =final <R> R map(final Function<T, R> f)=
 
-   Although, if you are using Lombok, that can be equally terse, both it and
-   TypeAlias<String> coming in at 8 lines each, compared to 24 for rolling your
-   own:
-
-   #+BEGIN_SRC java
-   @Value
-   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-   class PhoneNumber {
-       private final String value;
-       public static PhoneNumber of(final String phoneNumber) {
-           return new PhoneNumber(phoneNumber);
-       }
-   }
-   #+END_SRC
-
-*** =TypeAlias= *can* be a Monad
+    Map the TypeAlias into another value.
 
     #+BEGIN_SRC java
-    package net.kemitix.mon;
+    final StudentId studentId = StudentId.of(123);
+    final String idString = studentId.map(id -> String.valueOf(id));
 
-    import org.assertj.core.api.WithAssertions;
-    import org.junit.Test;
-
-    import java.util.function.Function;
-
-    public class TypeAliasMonadTest implements WithAssertions {
-
-        private final int v = 1;
-        private final Function<Integer, AnAlias<Integer>> f = i -> a(i * 2);
-        private final Function<Integer, AnAlias<Integer>> g = i -> a(i + 6);
-
-        private static AnAlias<Integer> a(Integer v) {
-            return AnAlias.of(v);
+    class StudentId extends TypeAlias<Integer> {
+        private StudentId(Integer value) {
+            super(value);
         }
-
-        @Test
-        public void leftIdentity() {
-            assertThat(
-                a(v).flatMap(f)
-            ).isEqualTo(
-                f.apply(v)
-            );
-        }
-
-        @Test
-        public void rightIdentity_inline() {
-            // java isn't able to properly infer the correct types when used in-line
-            assertThat(
-                a(v).<Integer, AnAlias<Integer>>flatMap(x -> a(x))
-            ).isEqualTo(
-                a(v)
-            );
-        }
-
-        @Test
-        public void rightIdentity_explicitValue() {
-            final AnAlias<Integer> integerAnAlias = a(v).flatMap(x -> a(x));
-            assertThat(
-                integerAnAlias
-            ).isEqualTo(
-                a(v)
-            );
-        }
-
-        @Test
-        public void associativity() {
-            assertThat(
-                a(v).flatMap(f).flatMap(g)
-            ).isEqualTo(
-                a(v).flatMap(x -> f.apply(x).flatMap(g))
-            );
-        }
-
-        static class AnAlias<T> extends TypeAlias<T> {
-            private AnAlias(T value) {
-                super(value);
-            }
-
-            static <T> AnAlias<T> of(T value) {
-                return new AnAlias<>(value);
-            }
+        static StudentId of(Integer id) {
+            return new StudentId(id);
         }
     }
     #+END_SRC
 
 
-*** Instance Methods
+*** =final <R, U extends TypeAlias<R>> U flatMap(final Function<T, U> f)=
 
-**** =final <R> R map(final Function<T, R> f)=
+    Map the TypeAlias into another TypeAlias.
 
-     Map the TypeAlias into another value.
+    #+BEGIN_SRC java
+    final StudentId studentId = StudentId.of(123);
+    final StudentName studentName = studentId.flatMap(id -> getStudentName(id));
 
-     #+BEGIN_SRC java
-     final StudentId studentId = StudentId.of(123);
-     final String idString = studentId.map(id -> String.valueOf(id));
-
-     class StudentId extends TypeAlias<Integer> {
-         private StudentId(Integer value) {
-             super(value);
-         }
-         static StudentId of(Integer id) {
-             return new StudentId(id);
-         }
-     }
-     #+END_SRC
+    class StudentName extends TypeAlias<String> {
+        private StudentName(String value) {
+            super(value);
+        }
+        static StudentName of(final String name) {
+            return new StudentName(name);
+        }
+    }
+    #+END_SRC
 
 
-**** =final <R, U extends TypeAlias<R>> U flatMap(final Function<T, U> f)=
+*** =T getValue()=
 
-     Map the TypeAlias into another TypeAlias.
+    Get the value of the TypeAlias.
 
-     #+BEGIN_SRC java
-     final StudentId studentId = StudentId.of(123);
-     final StudentName studentName = studentId.flatMap(id -> getStudentName(id));
+    #+BEGIN_SRC java
+    final String name = studentName.getValue();
+    #+END_SRC
 
-     class StudentName extends TypeAlias<String> {
-         private StudentName(String value) {
-             super(value);
-         }
-         static StudentName of(final String name) {
-             return new StudentName(name);
-         }
-     }
-     #+END_SRC
+* Maybe
 
+  Allows specifying that a value may or may not be present. Similar to
+  =Optional=. =Maybe= provides additional methods that =Optional= doesn't:
+  =isNothing()=, =stream()=, =ifNothing()= and =match()=. =Maybe= does not
+  have a =get()= method.
 
-**** =T getValue()=
-
-     Get the value of the TypeAlias.
-
-     #+BEGIN_SRC java
-     final String name = studentName.getValue();
-     #+END_SRC
-
-
-** Maybe
-
-   Allows specifying that a value may or may not be present. Similar to
-   =Optional=. =Maybe= provides additional methods that =Optional= doesn't:
-   =isNothing()=, =stream()=, =ifNothing()= and =match()=. =Maybe= does not
-   have a =get()= method.
-
-   Unlike =Optional=, when a =map()= results in a =null=, the =Maybe= will
-   continue to be a =Just=. =Optional= would switch to being empty. [[http://blog.vavr.io/the-agonizing-death-of-an-astronaut/][vavr.io
-   follows the same behaviour as =Maybe=]].
-
-   #+BEGIN_SRC java
-   import net.kemitix.mon.maybe.Maybe;
-
-   import java.util.function.Function;
-   import java.util.function.Predicate;
-
-   class MaybeExample {
-
-       public static void main(String[] args) {
-           Maybe.just(countArgs(args))
-                .filter(isEven())
-                .map(validMessage())
-                .match(
-                    just -> System.out.println(just),
-                    () -> System.out.println("Not an valid value")
-                );
-       }
-
-       private static Function<Integer, String> validMessage() {
-           return v -> String.format("Value %d is even", v);
-       }
-
-       private static Predicate<Integer> isEven() {
-           return v -> v % 2 == 0;
-       }
-
-       private static Integer countArgs(String[] args) {
-           return args.length;
-       }
-   }
-   #+END_SRC
-
-   In the above example, the number of command line arguments are counted, if
-   there are an even number of them then a message is created and printed by
-   the Consumer parameter in the =match= call. If there is an odd number of
-   arguments, then the filter will return =Maybe.nothing()=, meaning that the
-   =nothing= drops straight through the map and triggers the Runnable parameter
-   in the =match= call.
-
-*** =Maybe= is a Monad:
+  Unlike =Optional=, when a =map()= results in a =null=, the =Maybe= will
+  continue to be a =Just=. =Optional= would switch to being empty. [[http://blog.vavr.io/the-agonizing-death-of-an-astronaut/][vavr.io
+  follows the same behaviour as =Maybe=]].
 
   #+BEGIN_SRC java
-  package net.kemitix.mon;
-
   import net.kemitix.mon.maybe.Maybe;
-  import org.assertj.core.api.WithAssertions;
-  import org.junit.Test;
 
   import java.util.function.Function;
+  import java.util.function.Predicate;
 
-  public class MaybeMonadTest implements WithAssertions {
+  class MaybeExample {
 
-      private final int v = 1;
-      private final Function<Integer, Maybe<Integer>> f = i -> m(i * 2);
-      private final Function<Integer, Maybe<Integer>> g = i -> m(i + 6);
-
-      private static Maybe<Integer> m(int value) {
-          return Maybe.maybe(value);
+      public static void main(String[] args) {
+          Maybe.just(countArgs(args))
+               .filter(isEven())
+               .map(validMessage())
+               .match(
+                   just -> System.out.println(just),
+                   () -> System.out.println("Not an valid value")
+               );
       }
 
-      @Test
-      public void leftIdentity() {
-          assertThat(
-                  m(v).flatMap(f)
-          ).isEqualTo(
-                  f.apply(v)
-          );
+      private static Function<Integer, String> validMessage() {
+          return v -> String.format("Value %d is even", v);
       }
 
-      @Test
-      public void rightIdentity() {
-          assertThat(
-                  m(v).flatMap(x -> m(x))
-          ).isEqualTo(
-                  m(v)
-          );
+      private static Predicate<Integer> isEven() {
+          return v -> v % 2 == 0;
       }
 
-      @Test
-      public void associativity() {
-          assertThat(
-                  m(v).flatMap(f).flatMap(g)
-          ).isEqualTo(
-                  m(v).flatMap(x -> f.apply(x).flatMap(g))
-          );
+      private static Integer countArgs(String[] args) {
+          return args.length;
+      }
+  }
+  #+END_SRC
+
+  In the above example, the number of command line arguments are counted, if
+  there are an even number of them then a message is created and printed by
+  the Consumer parameter in the =match= call. If there is an odd number of
+  arguments, then the filter will return =Maybe.nothing()=, meaning that the
+  =nothing= drops straight through the map and triggers the Runnable parameter
+  in the =match= call.
+
+** =Maybe= is a Monad:
+
+ #+BEGIN_SRC java
+ package net.kemitix.mon;
+
+ import net.kemitix.mon.maybe.Maybe;
+ import org.assertj.core.api.WithAssertions;
+ import org.junit.Test;
+
+ import java.util.function.Function;
+
+ public class MaybeMonadTest implements WithAssertions {
+
+     private final int v = 1;
+     private final Function<Integer, Maybe<Integer>> f = i -> m(i * 2);
+     private final Function<Integer, Maybe<Integer>> g = i -> m(i + 6);
+
+     private static Maybe<Integer> m(int value) {
+         return Maybe.maybe(value);
+     }
+
+     @Test
+     public void leftIdentity() {
+         assertThat(
+                 m(v).flatMap(f)
+         ).isEqualTo(
+                 f.apply(v)
+         );
+     }
+
+     @Test
+     public void rightIdentity() {
+         assertThat(
+                 m(v).flatMap(x -> m(x))
+         ).isEqualTo(
+                 m(v)
+         );
+     }
+
+     @Test
+     public void associativity() {
+         assertThat(
+                 m(v).flatMap(f).flatMap(g)
+         ).isEqualTo(
+                 m(v).flatMap(x -> f.apply(x).flatMap(g))
+         );
+     }
+
+ }
+ #+END_SRC
+
+
+** Static Constructors
+
+*** =static <T> Maybe<T> maybe(T value)=
+
+    Create a Maybe for the value that may or may not be present.
+
+    Where the value is =null=, that is taken as not being present.
+
+    #+BEGIN_SRC java
+    final Maybe<Integer> just = Maybe.maybe(1);
+    final Maybe<Integer> nothing = Maybe.maybe(null);
+    #+END_SRC
+
+
+*** =static <T> Maybe<T> just(T value)=
+
+    Create a Maybe for the value that is present.
+
+    The =value= must not be =null= or a =NullPointerException= will be thrown.
+    If you can't prove that the value won't be =null= you should use
+    =Maybe.maybe(value)= instead.
+
+    #+BEGIN_SRC java
+    final Maybe<Integer> just = Maybe.just(1);
+    #+END_SRC
+
+
+*** =static <T> Maybe<T> nothing()=
+
+    Create a Maybe for a lack of a value.
+
+    #+BEGIN_SRC java
+    final Maybe<Integer> nothing = Maybe.nothing();
+    #+END_SRC
+
+
+*** =static <T> Maybe<T> findFirst(Stream<T> stream)=
+
+    Creates a Maybe from the first item in the stream, or nothing if the stream is empty.
+
+    #+BEGIN_SRC java
+      final Maybe<Integer> just3 = Maybe.findFirst(Stream.of(3, 4, 2, 4));
+      final Maybe<Integer> nothing = Maybe.findFirst(Stream.empty());
+    #+END_SRC
+
+
+** Instance Methods
+
+*** =Maybe<T> filter(Predicate<T> predicate)=
+
+    Filter a Maybe by the predicate, replacing with Nothing when it fails.
+
+    #+BEGIN_SRC java
+    final Maybe<Integer> maybe = Maybe.maybe(getValue())
+                                      .filter(v -> v % 2 == 0);
+    #+END_SRC
+
+
+*** =<R> Maybe<R> map(Function<T,R> f)=
+
+    Applies the function to the value within the Maybe, returning the result within another Maybe.
+
+    #+BEGIN_SRC java
+    final Maybe<Integer> maybe = Maybe.maybe(getValue())
+                                      .map(v -> v * 100);
+    #+END_SRC
+
+
+*** =<R> Maybe<R> flatMap(Function<T,Maybe<R>> f)=
+
+    Applies the function to the value within the =Maybe=, resulting in another =Maybe=, then flattens the resulting =Maybe<Maybe<T>>= into =Maybe<T>=.
+
+    Monad binder maps the Maybe into another Maybe using the binder method f
+
+    #+BEGIN_SRC java
+    final Maybe<Integer> maybe = Maybe.maybe(getValue())
+                                      .flatMap(v -> Maybe.maybe(getValueFor(v)));
+    #+END_SRC
+
+
+*** =void match(Consumer<T> just, Runnable nothing)=
+
+    Matches the Maybe, either just or nothing, and performs either the
+    Consumer, for Just, or Runnable for nothing.
+
+    #+BEGIN_SRC java
+    Maybe.maybe(getValue())
+         .match(
+             just -> workWithValue(just),
+               () -> nothingToWorkWith()
+         );
+    #+END_SRC
+
+
+*** =<R> R matchValue(Function<T, R> justMatcher, Supplier<R> nothingMatcher)=
+
+    Matches the Maybe, either just or nothing, and performs either the
+    Function, for Just, or Supplier for nothing.
+
+    #+BEGIN_SRC java
+      final String value = Maybe.maybe(getValue())
+                                .matchValue(
+                                            just -> Integer.toString(just),
+                                            () -> "nothing"
+                                );
+    #+END_SRC
+
+
+*** =T orElse(T otherValue)=
+
+    A value to use when Maybe is Nothing.
+
+    #+BEGIN_SRC java
+    final Integer value = Maybe.maybe(getValue())
+                               .orElse(1);
+    #+END_SRC
+
+
+*** =T orElseGet(Supplier<T> otherValueSupplier)=
+
+    Provide a value to use when Maybe is Nothing.
+
+    #+BEGIN_SRC java
+    final Integer value = Maybe.maybe(getValue())
+                               .orElseGet(() -> getDefaultValue());
+    #+END_SRC
+
+
+*** =T or(Supplier<Maybe<T> alternative)=
+
+    Provide an alternative Maybe to use when Maybe is Nothing.
+
+    #+BEGIN_SRC java
+    final Maybe<Integer> value = Maybe.maybe(getValue())
+                                      .or(() -> Maybe.just(defaultValue));
+    #+END_SRC
+
+
+*** =void orElseThrow(Supplier<Exception> error)=
+
+    Throw the exception if the Maybe is a Nothing.
+
+    #+BEGIN_SRC java
+    final Integer value = Maybe.maybe(getValue())
+                               .orElseThrow(() -> new RuntimeException("error"));
+    #+END_SRC
+
+
+*** =Maybe<T> peek(Consumer<T> consumer)=
+
+    Provide the value within the Maybe, if it exists, to the Consumer, and returns this Maybe. Conceptually equivalent to the idea of =ifPresent(...)=.
+
+    #+BEGIN_SRC java
+    final Maybe<Integer> maybe = Maybe.maybe(getValue())
+                                      .peek(v -> v.foo());
+    #+END_SRC
+
+
+*** =void ifNothing(Runnable runnable)=
+
+    Run the runnable if the Maybe is a Nothing, otherwise do nothing.
+
+    #+BEGIN_SRC java
+    Maybe.maybe(getValue())
+         .ifNothing(() -> doSomething());
+    #+END_SRC
+
+
+*** =Stream<T> stream()=
+
+    Converts the Maybe into either a single value stream or an empty stream.
+
+    #+BEGIN_SRC java
+    final Stream<Integer> stream = Maybe.maybe(getValue())
+                                        .stream();
+    #+END_SRC
+
+
+*** =boolean isJust()=
+
+    Checks if the Maybe is a Just.
+
+    #+BEGIN_SRC java
+    final boolean isJust = Maybe.maybe(getValue())
+                                .isJust();
+    #+END_SRC
+
+
+*** =boolean isNothing()=
+
+    Checks if the Maybe is Nothing.
+
+    #+BEGIN_SRC java
+    final boolean isNothing = Maybe.maybe(getValue())
+                                   .isNothing();
+    #+END_SRC
+
+
+*** =Optional<T> toOptional()=
+
+    Convert the Maybe to an Optional.
+
+    #+BEGIN_SRC java
+    final Optional<Integer> optional = Maybe.maybe(getValue())
+                                            .toOptional();
+    #+END_SRC
+
+* Result
+
+  Allows handling error conditions without the need to catch exceptions.
+
+  When a =Result= is returned from a method it will contain one of two values.
+  Either the actual result, or an error in the form of an =Exception=. The
+  exception is returned within the =Result= and is not thrown.
+
+  #+BEGIN_SRC java
+  import net.kemitix.mon.result.Result;
+
+  import java.io.IOException;
+
+  class ResultExample implements Runnable {
+
+      public static void main(final String[] args) {
+          new ResultExample().run();
+      }
+
+      @Override
+      public void run() {
+          Result.of(() -> callRiskyMethod())
+                .flatMap(state -> doSomething(state))
+                .match(
+                    success -> System.out.println(success),
+                    error -> error.printStackTrace()
+                );
+      }
+
+      private String callRiskyMethod() throws IOException {
+          return "I'm fine";
+      }
+
+      private Result<String> doSomething(final String state) {
+          return Result.of(() -> state + ", it's all good.");
       }
 
   }
   #+END_SRC
 
-
-*** Static Constructors
-
-**** =static <T> Maybe<T> maybe(T value)=
-
-     Create a Maybe for the value that may or may not be present.
-
-     Where the value is =null=, that is taken as not being present.
-
-     #+BEGIN_SRC java
-     final Maybe<Integer> just = Maybe.maybe(1);
-     final Maybe<Integer> nothing = Maybe.maybe(null);
-     #+END_SRC
-
-
-**** =static <T> Maybe<T> just(T value)=
-
-     Create a Maybe for the value that is present.
-
-     The =value= must not be =null= or a =NullPointerException= will be thrown.
-     If you can't prove that the value won't be =null= you should use
-     =Maybe.maybe(value)= instead.
-
-     #+BEGIN_SRC java
-     final Maybe<Integer> just = Maybe.just(1);
-     #+END_SRC
-
-
-**** =static <T> Maybe<T> nothing()=
-
-     Create a Maybe for a lack of a value.
-
-     #+BEGIN_SRC java
-     final Maybe<Integer> nothing = Maybe.nothing();
-     #+END_SRC
-
-
-**** =static <T> Maybe<T> findFirst(Stream<T> stream)=
-
-     Creates a Maybe from the first item in the stream, or nothing if the stream is empty.
-
-     #+BEGIN_SRC java
-       final Maybe<Integer> just3 = Maybe.findFirst(Stream.of(3, 4, 2, 4));
-       final Maybe<Integer> nothing = Maybe.findFirst(Stream.empty());
-     #+END_SRC
-
-
-*** Instance Methods
-
-**** =Maybe<T> filter(Predicate<T> predicate)=
-
-     Filter a Maybe by the predicate, replacing with Nothing when it fails.
-
-     #+BEGIN_SRC java
-     final Maybe<Integer> maybe = Maybe.maybe(getValue())
-                                       .filter(v -> v % 2 == 0);
-     #+END_SRC
-
-
-**** =<R> Maybe<R> map(Function<T,R> f)=
-
-     Applies the function to the value within the Maybe, returning the result within another Maybe.
-
-     #+BEGIN_SRC java
-     final Maybe<Integer> maybe = Maybe.maybe(getValue())
-                                       .map(v -> v * 100);
-     #+END_SRC
-
-
-**** =<R> Maybe<R> flatMap(Function<T,Maybe<R>> f)=
-
-     Applies the function to the value within the =Maybe=, resulting in another =Maybe=, then flattens the resulting =Maybe<Maybe<T>>= into =Maybe<T>=.
-
-     Monad binder maps the Maybe into another Maybe using the binder method f
-
-     #+BEGIN_SRC java
-     final Maybe<Integer> maybe = Maybe.maybe(getValue())
-                                       .flatMap(v -> Maybe.maybe(getValueFor(v)));
-     #+END_SRC
-
-
-**** =void match(Consumer<T> just, Runnable nothing)=
-
-     Matches the Maybe, either just or nothing, and performs either the
-     Consumer, for Just, or Runnable for nothing.
-
-     #+BEGIN_SRC java
-     Maybe.maybe(getValue())
-          .match(
-              just -> workWithValue(just),
-                () -> nothingToWorkWith()
-          );
-     #+END_SRC
-
-
-**** =<R> R matchValue(Function<T, R> justMatcher, Supplier<R> nothingMatcher)=
-
-     Matches the Maybe, either just or nothing, and performs either the
-     Function, for Just, or Supplier for nothing.
-
-     #+BEGIN_SRC java
-       final String value = Maybe.maybe(getValue())
-                                 .matchValue(
-                                             just -> Integer.toString(just),
-                                             () -> "nothing"
-                                 );
-     #+END_SRC
-
-
-**** =T orElse(T otherValue)=
-
-     A value to use when Maybe is Nothing.
-
-     #+BEGIN_SRC java
-     final Integer value = Maybe.maybe(getValue())
-                                .orElse(1);
-     #+END_SRC
-
-
-**** =T orElseGet(Supplier<T> otherValueSupplier)=
-
-     Provide a value to use when Maybe is Nothing.
-
-     #+BEGIN_SRC java
-     final Integer value = Maybe.maybe(getValue())
-                                .orElseGet(() -> getDefaultValue());
-     #+END_SRC
-
-
-**** =T or(Supplier<Maybe<T> alternative)=
-
-     Provide an alternative Maybe to use when Maybe is Nothing.
-
-     #+BEGIN_SRC java
-     final Maybe<Integer> value = Maybe.maybe(getValue())
-                                       .or(() -> Maybe.just(defaultValue));
-     #+END_SRC
-
-
-**** =void orElseThrow(Supplier<Exception> error)=
-
-     Throw the exception if the Maybe is a Nothing.
-
-     #+BEGIN_SRC java
-     final Integer value = Maybe.maybe(getValue())
-                                .orElseThrow(() -> new RuntimeException("error"));
-     #+END_SRC
-
-
-**** =Maybe<T> peek(Consumer<T> consumer)=
-
-     Provide the value within the Maybe, if it exists, to the Consumer, and returns this Maybe. Conceptually equivalent to the idea of =ifPresent(...)=.
-
-     #+BEGIN_SRC java
-     final Maybe<Integer> maybe = Maybe.maybe(getValue())
-                                       .peek(v -> v.foo());
-     #+END_SRC
-
-
-**** =void ifNothing(Runnable runnable)=
-
-     Run the runnable if the Maybe is a Nothing, otherwise do nothing.
-
-     #+BEGIN_SRC java
-     Maybe.maybe(getValue())
-          .ifNothing(() -> doSomething());
-     #+END_SRC
-
-
-**** =Stream<T> stream()=
-
-     Converts the Maybe into either a single value stream or an empty stream.
-
-     #+BEGIN_SRC java
-     final Stream<Integer> stream = Maybe.maybe(getValue())
-                                         .stream();
-     #+END_SRC
-
-
-**** =boolean isJust()=
-
-     Checks if the Maybe is a Just.
-
-     #+BEGIN_SRC java
-     final boolean isJust = Maybe.maybe(getValue())
-                                 .isJust();
-     #+END_SRC
-
-
-**** =boolean isNothing()=
-
-     Checks if the Maybe is Nothing.
-
-     #+BEGIN_SRC java
-     final boolean isNothing = Maybe.maybe(getValue())
-                                    .isNothing();
-     #+END_SRC
-
-
-**** =Optional<T> toOptional()=
-
-     Convert the Maybe to an Optional.
-
-     #+BEGIN_SRC java
-     final Optional<Integer> optional = Maybe.maybe(getValue())
-                                             .toOptional();
-     #+END_SRC
-
-
-** Result
-
-   Allows handling error conditions without the need to catch exceptions.
-
-   When a =Result= is returned from a method it will contain one of two values.
-   Either the actual result, or an error in the form of an =Exception=. The
-   exception is returned within the =Result= and is not thrown.
+  In the above example the string ="I'm fine"= is returned by
+  =callRiskyMethod()= within a successful =Result=. The =.flatMap()= call,
+  unwraps that =Result= and, as it is a success, passes the contents to
+  =doSomething()=, which in turn returns a =Result= that the =.flatMap()= call
+  returns. =match()= is called on the =Result= and, being a success, will call
+  the success =Consumer=.
+
+  Had =callRiskyMethod()= thrown an exception it would have been caught by the
+  =Result.of()= method which would have then been an error =Result=. An error
+  Result would have ignored the =flatMap= and skipped to the =match()= when it
+  would have called the error =Consumer=.
+
+** =Result= is a Monad
 
    #+BEGIN_SRC java
+   package net.kemitix.mon;
+
    import net.kemitix.mon.result.Result;
+   import org.assertj.core.api.WithAssertions;
+   import org.junit.Test;
 
-   import java.io.IOException;
+   import java.util.function.Function;
 
-   class ResultExample implements Runnable {
+   public class ResultMonadTest implements WithAssertions {
 
-       public static void main(final String[] args) {
-           new ResultExample().run();
+       private final int v = 1;
+       private final Function<Integer, Result<Integer>> f = i -> r(i * 2);
+       private final Function<Integer, Result<Integer>> g = i -> r(i + 6);
+
+       private static Result<Integer> r(int v) {
+           return Result.ok(v);
        }
 
-       @Override
-       public void run() {
-           Result.of(() -> callRiskyMethod())
-                 .flatMap(state -> doSomething(state))
-                 .match(
-                     success -> System.out.println(success),
-                     error -> error.printStackTrace()
-                 );
+       @Test
+       public void leftIdentity() {
+           assertThat(
+                   r(v).flatMap(f)
+           ).isEqualTo(
+                   f.apply(v)
+           );
        }
 
-       private String callRiskyMethod() throws IOException {
-           return "I'm fine";
+       @Test
+       public void rightIdentity() {
+           assertThat(
+                   r(v).flatMap(x -> r(x))
+           ).isEqualTo(
+                   r(v)
+           );
        }
 
-       private Result<String> doSomething(final String state) {
-           return Result.of(() -> state + ", it's all good.");
+       @Test
+       public void associativity() {
+           assertThat(
+                   r(v).flatMap(f).flatMap(g)
+           ).isEqualTo(
+                   r(v).flatMap(x -> f.apply(x).flatMap(g))
+           );
        }
 
    }
    #+END_SRC
 
-   In the above example the string ="I'm fine"= is returned by
-   =callRiskyMethod()= within a successful =Result=. The =.flatMap()= call,
-   unwraps that =Result= and, as it is a success, passes the contents to
-   =doSomething()=, which in turn returns a =Result= that the =.flatMap()= call
-   returns. =match()= is called on the =Result= and, being a success, will call
-   the success =Consumer=.
 
-   Had =callRiskyMethod()= thrown an exception it would have been caught by the
-   =Result.of()= method which would have then been an error =Result=. An error
-   Result would have ignored the =flatMap= and skipped to the =match()= when it
-   would have called the error =Consumer=.
+** Static Constructors
 
-*** =Result= is a Monad
+*** =static <T> Result<T> of(Callable<T> callable)=
+
+    Create a Result for a output of the Callable.
+
+    If the Callable throws and Exception, then the Result will be an error and
+    will contain that exception.
+
+    This will be the main starting point for most Results where the callable
+    could throw an =Exception=.
 
     #+BEGIN_SRC java
-    package net.kemitix.mon;
-
-    import net.kemitix.mon.result.Result;
-    import org.assertj.core.api.WithAssertions;
-    import org.junit.Test;
-
-    import java.util.function.Function;
-
-    public class ResultMonadTest implements WithAssertions {
-
-        private final int v = 1;
-        private final Function<Integer, Result<Integer>> f = i -> r(i * 2);
-        private final Function<Integer, Result<Integer>> g = i -> r(i + 6);
-
-        private static Result<Integer> r(int v) {
-            return Result.ok(v);
-        }
-
-        @Test
-        public void leftIdentity() {
-            assertThat(
-                    r(v).flatMap(f)
-            ).isEqualTo(
-                    f.apply(v)
-            );
-        }
-
-        @Test
-        public void rightIdentity() {
-            assertThat(
-                    r(v).flatMap(x -> r(x))
-            ).isEqualTo(
-                    r(v)
-            );
-        }
-
-        @Test
-        public void associativity() {
-            assertThat(
-                    r(v).flatMap(f).flatMap(g)
-            ).isEqualTo(
-                    r(v).flatMap(x -> f.apply(x).flatMap(g))
-            );
-        }
-
-    }
+    final Result<Integer> okay = Result.of(() -> 1);
+    final Result<Integer> error = Result.of(() -> {throw new RuntimeException();});
     #+END_SRC
 
 
-*** Static Constructors
+*** =static <T> Result<T> ok(T value)=
 
-**** =static <T> Result<T> of(Callable<T> callable)=
+    Create a Result for a success.
 
-     Create a Result for a output of the Callable.
+    Use this where you have a value that you want to place into the Result context.
 
-     If the Callable throws and Exception, then the Result will be an error and
-     will contain that exception.
-
-     This will be the main starting point for most Results where the callable
-     could throw an =Exception=.
-
-     #+BEGIN_SRC java
-     final Result<Integer> okay = Result.of(() -> 1);
-     final Result<Integer> error = Result.of(() -> {throw new RuntimeException();});
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Result<Integer> okay = Result.ok(1);
+    #+END_SRC
 
 
-**** =static <T> Result<T> ok(T value)=
+*** =static <T> Result<T> error(Throwable error)=
 
-     Create a Result for a success.
+    Create a Result for an error.
 
-     Use this where you have a value that you want to place into the Result context.
-
-     #+BEGIN_SRC java
-     final Result<Integer> okay = Result.ok(1);
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Result<Integer> error = Result.error(new RuntimeException());
+    #+END_SRC
 
 
-**** =static <T> Result<T> error(Throwable error)=
+** Static Methods
 
-     Create a Result for an error.
+   These static methods provide integration with the =Maybe= class.
 
-     #+BEGIN_SRC java
-     final Result<Integer> error = Result.error(new RuntimeException());
-     #+END_SRC
+    #+BEGIN_SRC java
+    #+END_SRC
 
+*** =static <T> Maybe<T> toMaybe(Result<T> result)=
 
-*** Static Methods
+    Creates a =Maybe= from the =Result=, where the =Result= is a success, then
+    the =Maybe= will contain the value. However, if the =Result= is an error
+    then the =Maybe= will be nothing.
 
-    These static methods provide integration with the =Maybe= class.
-
-     #+BEGIN_SRC java
-     #+END_SRC
-
-**** =static <T> Maybe<T> toMaybe(Result<T> result)=
-
-     Creates a =Maybe= from the =Result=, where the =Result= is a success, then
-     the =Maybe= will contain the value. However, if the =Result= is an error
-     then the =Maybe= will be nothing.
-
-     #+BEGIN_SRC java
-     final Result<Integer> result = Result.of(() -> getValue());
-     final Maybe<Integer> maybe = Result.toMaybe(result);
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Result<Integer> result = Result.of(() -> getValue());
+    final Maybe<Integer> maybe = Result.toMaybe(result);
+    #+END_SRC
 
 
-**** =static <T> Result<T> fromMaybe(Maybe<T> maybe, Supplier<Throwable> error)=
+*** =static <T> Result<T> fromMaybe(Maybe<T> maybe, Supplier<Throwable> error)=
 
-     Creates a =Result= from the =Maybe=, where the =Result= will be an error
-     if the =Maybe= is nothing. Where the =Maybe= is nothing, then the
-     =Supplier<Throwable>= will provide the error for the =Result=.
+    Creates a =Result= from the =Maybe=, where the =Result= will be an error
+    if the =Maybe= is nothing. Where the =Maybe= is nothing, then the
+    =Supplier<Throwable>= will provide the error for the =Result=.
 
-     #+BEGIN_SRC java
-     final Maybe<Integer> maybe = Maybe.maybe(getValue());
-     final Result<Integer> result = Result.fromMaybe(maybe, () -> new NoSuchFileException("filename"));
-     #+END_SRC
-
-
-**** =static <T> Result<Maybe<T>> invert(Maybe<Result<T>> maybeResult)=
-
-     Swaps the =Result= within a =Maybe=, so that =Result= contains a =Maybe=.
-
-     #+BEGIN_SRC java
-     final Maybe<Result<Integer>> maybe = Maybe.maybe(Result.of(() -> getValue()));
-     final Result<Maybe<Integer>> result = Result.invert(maybe);
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Maybe<Integer> maybe = Maybe.maybe(getValue());
+    final Result<Integer> result = Result.fromMaybe(maybe, () -> new NoSuchFileException("filename"));
+    #+END_SRC
 
 
-**** =static <T,R> Result<Maybe<R>> flatMapMaybe(Result<Maybe<T>> maybeResult, Function<Maybe<T>,Result<Maybe<R>>> f)=
+*** =static <T> Result<Maybe<T>> invert(Maybe<Result<T>> maybeResult)=
 
-     Applies the function to the contents of a Maybe within the Result.
+    Swaps the =Result= within a =Maybe=, so that =Result= contains a =Maybe=.
 
-     #+BEGIN_SRC java
-     final Result<Maybe<Integer>> result = Result.of(() -> Maybe.maybe(getValue()));
-     final Result<Maybe<Integer>> maybeResult = Result.flatMapMaybe(result, maybe -> Result.of(() -> maybe.map(v -> v * 2)));
-     #+END_SRC
-
-
-*** Instance Methods
-
-**** =<R> Result<R> map(Function<T,R> f)=
-
-     Applies the function to the value within the Functor, returning the result
-     within a Functor.
-
-     #+BEGIN_SRC java
-     final Result<String> result = Result.of(() -> getValue())
-                                         .map(v -> String.valueOf(v));
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Maybe<Result<Integer>> maybe = Maybe.maybe(Result.of(() -> getValue()));
+    final Result<Maybe<Integer>> result = Result.invert(maybe);
+    #+END_SRC
 
 
-**** =<R> Result<R> flatMap(Function<T,Result<R>> f)=
+*** =static <T,R> Result<Maybe<R>> flatMapMaybe(Result<Maybe<T>> maybeResult, Function<Maybe<T>,Result<Maybe<R>>> f)=
 
-     Returns a new Result consisting of the result of applying the function to
-     the contents of the Result.
+    Applies the function to the contents of a Maybe within the Result.
 
-     #+BEGIN_SRC java
-     final Result<String> result = Result.of(() -> getValue())
-                                         .flatMap(v -> Result.of(() -> String.valueOf(v)));
-     #+END_SRC
-
-
-**** =<R> Result<R> andThen(Function<T,Callable<R>> f)=
-
-     Maps a Success Result to another Result using a Callable that is able to
-     throw a checked exception.
-
-     #+BEGIN_SRC java
-     final Result<String> result = Result.of(() -> getValue())
-                                         .andThen(v -> () -> {throw new IOException();});
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Result<Maybe<Integer>> result = Result.of(() -> Maybe.maybe(getValue()));
+    final Result<Maybe<Integer>> maybeResult = Result.flatMapMaybe(result, maybe -> Result.of(() -> maybe.map(v -> v * 2)));
+    #+END_SRC
 
 
-**** =void	match(Consumer<T> onSuccess, Consumer<Throwable> onError)=
+** Instance Methods
 
-     Matches the Result, either success or error, and supplies the appropriate
-     Consumer with the value or error.
+*** =<R> Result<R> map(Function<T,R> f)=
 
-     #+BEGIN_SRC java
-     Result.of(() -> getValue())
-           .match(
-               success -> System.out.println(success),
-               error -> System.err.println("error")
-           );
-     #+END_SRC
+    Applies the function to the value within the Functor, returning the result
+    within a Functor.
+
+    #+BEGIN_SRC java
+    final Result<String> result = Result.of(() -> getValue())
+                                        .map(v -> String.valueOf(v));
+    #+END_SRC
 
 
-**** =Result<T> recover(Function<Throwable,Result<T>> f)=
+*** =<R> Result<R> flatMap(Function<T,Result<R>> f)=
 
-     Provide a way to attempt to recover from an error state.
+    Returns a new Result consisting of the result of applying the function to
+    the contents of the Result.
 
-     #+BEGIN_SRC java
+    #+BEGIN_SRC java
+    final Result<String> result = Result.of(() -> getValue())
+                                        .flatMap(v -> Result.of(() -> String.valueOf(v)));
+    #+END_SRC
+
+
+*** =<R> Result<R> andThen(Function<T,Callable<R>> f)=
+
+    Maps a Success Result to another Result using a Callable that is able to
+    throw a checked exception.
+
+    #+BEGIN_SRC java
+    final Result<String> result = Result.of(() -> getValue())
+                                        .andThen(v -> () -> {throw new IOException();});
+    #+END_SRC
+
+
+*** =void	match(Consumer<T> onSuccess, Consumer<Throwable> onError)=
+
+    Matches the Result, either success or error, and supplies the appropriate
+    Consumer with the value or error.
+
+    #+BEGIN_SRC java
+    Result.of(() -> getValue())
+          .match(
+              success -> System.out.println(success),
+              error -> System.err.println("error")
+          );
+    #+END_SRC
+
+
+*** =Result<T> recover(Function<Throwable,Result<T>> f)=
+
+    Provide a way to attempt to recover from an error state.
+
+    #+BEGIN_SRC java
+    final Result<Integer> result = Result.of(() -> getValue())
+                                         .recover(e -> Result.of(() -> getSafeValue(e)));
+    #+END_SRC
+
+
+*** =Result<T> peek(Consumer<T> consumer)=
+
+    Provide the value within the Result, if it is a success, to the Consumer,
+    and returns this Result.
+
+    #+BEGIN_SRC java
+    final Result<Integer> result = Result.of(() -> getValue())
+                                         .peek(v -> System.out.println(v));
+    #+END_SRC
+
+
+*** =Result<T> thenWith(Function<T,WithResultContinuation<T>> f)=
+
+    Perform the continuation with the current Result value then return the
+    current Result, assuming there was no error in the continuation.
+
+    #+BEGIN_SRC java
      final Result<Integer> result = Result.of(() -> getValue())
-                                          .recover(e -> Result.of(() -> getSafeValue(e)));
-     #+END_SRC
+                                          .thenWith(v -> () -> System.out.println(v))
+                                          .thenWith(v -> () -> {throw new IOException();});
+    #+END_SRC
 
 
-**** =Result<T> peek(Consumer<T> consumer)=
+*** =Result<Maybe<T>> maybe(Predicate<T> predicate)=
 
-     Provide the value within the Result, if it is a success, to the Consumer,
-     and returns this Result.
+    Wraps the value within the Result in a Maybe, either a Just if the
+    predicate is true, or Nothing.
 
-     #+BEGIN_SRC java
-     final Result<Integer> result = Result.of(() -> getValue())
-                                          .peek(v -> System.out.println(v));
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Result<Maybe<Integer>> result = Result.of(() -> getValue())
+                                                .maybe(v -> v % 2 == 0);
+    #+END_SRC
 
 
-**** =Result<T> thenWith(Function<T,WithResultContinuation<T>> f)=
+*** =T orElseThrow()=
 
-     Perform the continuation with the current Result value then return the
-     current Result, assuming there was no error in the continuation.
+    Extracts the successful value from the result, or throws the error
+    within a =CheckedErrorResultException=.
 
-     #+BEGIN_SRC java
-      final Result<Integer> result = Result.of(() -> getValue())
-                                           .thenWith(v -> () -> System.out.println(v))
-                                           .thenWith(v -> () -> {throw new IOException();});
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Integer result = Result.of(() -> getValue())
+                                 .orElseThrow();
+    #+END_SRC
 
 
-**** =Result<Maybe<T>> maybe(Predicate<T> predicate)=
+*** =<E extends Exception> T orElseThrow(Class<E> type) throws E=
 
-     Wraps the value within the Result in a Maybe, either a Just if the
-     predicate is true, or Nothing.
+    Extracts the successful value from the result, or throws the error when it
+    is of the given type. Any other errors will be thrown inside an
+    =UnexpectedErrorResultException=.
 
-     #+BEGIN_SRC java
-     final Result<Maybe<Integer>> result = Result.of(() -> getValue())
-                                                 .maybe(v -> v % 2 == 0);
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Integer result = Result.of(() -> getValue())
+                                 .orElseThrow(IOException.class);
+    #+END_SRC
 
 
-**** =T orElseThrow()=
+*** =T orElseThrowUnchecked()=
 
-     Extracts the successful value from the result, or throws the error
-     within a =CheckedErrorResultException=.
+    Extracts the successful value from the result, or throws the error within
+    an =ErrorResultException=.
 
-     #+BEGIN_SRC java
-     final Integer result = Result.of(() -> getValue())
-                                  .orElseThrow();
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Integer result = Result.of(() -> getValue())
+                                 .orElseThrowUnchecked();
+    #+END_SRC
 
 
-**** =<E extends Exception> T orElseThrow(Class<E> type) throws E=
+*** =void onError(Consumer<Throwable> errorConsumer)=
 
-     Extracts the successful value from the result, or throws the error when it
-     is of the given type. Any other errors will be thrown inside an
-     =UnexpectedErrorResultException=.
+    A handler for error states.
 
-     #+BEGIN_SRC java
-     final Integer result = Result.of(() -> getValue())
-                                  .orElseThrow(IOException.class);
-     #+END_SRC
+    #+BEGIN_SRC java
+    Result.of(() -> getValue())
+          .onError(e -> handleError(e));
+    #+END_SRC
 
 
-**** =T orElseThrowUnchecked()=
+*** =boolean isOkay()=
 
-     Extracts the successful value from the result, or throws the error within
-     an =ErrorResultException=.
+    Checks if the Result is a success.
 
-     #+BEGIN_SRC java
-     final Integer result = Result.of(() -> getValue())
-                                  .orElseThrowUnchecked();
-     #+END_SRC
+    #+BEGIN_SRC java
+    final boolean isOkay = Result.of(() -> getValue())
+                                 .isOkay();
+    #+END_SRC
 
 
-**** =void onError(Consumer<Throwable> errorConsumer)=
+*** =boolean isError()=
 
-     A handler for error states.
+      Checks if the Result is an error.
 
-     #+BEGIN_SRC java
-     Result.of(() -> getValue())
-           .onError(e -> handleError(e));
-     #+END_SRC
+    #+BEGIN_SRC java
+    final boolean isError = Result.of(() -> getValue())
+                                  .isError();
+    #+END_SRC
 
+* Tree
 
-**** =boolean isOkay()=
+  A Generalised tree, where each node may or may not have an item, and may have
+  any number of sub-trees. Leaf nodes are Trees with zero sub-trees.
 
-     Checks if the Result is a success.
+** Static Constructors
 
-     #+BEGIN_SRC java
-     final boolean isOkay = Result.of(() -> getValue())
-                                  .isOkay();
-     #+END_SRC
+*** =static <R> Tree<R> leaf(R item)=
 
+    Create a leaf containing the item. The leaf has no sub-trees.
 
-**** =boolean isError()=
+    #+BEGIN_SRC java
+      final Tree<String> tree = Tree.leaf("item");
+    #+END_SRC
 
-       Checks if the Result is an error.
 
-     #+BEGIN_SRC java
-     final boolean isError = Result.of(() -> getValue())
-                                   .isError();
-     #+END_SRC
+*** =static<R> Tree<R> of(R item, Collection<Tree<R>> subtrees)=
 
+    Create a tree containing the item and sub-trees.
 
-** Tree
+    #+BEGIN_SRC java
+      final Tree<String> tree = Tree.of("item", Collections.singletonList(Tree.leaf("leaf"));
+    #+END_SRC
 
-   A Generalised tree, where each node may or may not have an item, and may have
-   any number of sub-trees. Leaf nodes are Trees with zero sub-trees.
 
-*** Static Constructors
+*** =static <B> TreeBuilder<B> builder(final Class<B> type)=
 
-**** =static <R> Tree<R> leaf(R item)=
+    Create a new TreeBuilder starting with an empty tree.
 
-     Create a leaf containing the item. The leaf has no sub-trees.
+    #+BEGIN_SRC java
+      final TreeBuilder<Integer> builder = Tree.builder(Integer.class);
+    #+END_SRC
 
-     #+BEGIN_SRC java
-       final Tree<String> tree = Tree.leaf("item");
-     #+END_SRC
 
+*** =static <B> TreeBuilder<B> builder(final Tree<B> tree)=
 
-**** =static<R> Tree<R> of(R item, Collection<Tree<R>> subtrees)=
+    Create a new TreeBuilder for the given tree.
 
-     Create a tree containing the item and sub-trees.
+    #+BEGIN_SRC java
+      final Tree<Integer> tree = ...;
+      final TreeBuilder<Integer> builder = Tree.builder(tree);
+    #+END_SRC
 
-     #+BEGIN_SRC java
-       final Tree<String> tree = Tree.of("item", Collections.singletonList(Tree.leaf("leaf"));
-     #+END_SRC
 
+** Instance Methods
 
-**** =static <B> TreeBuilder<B> builder(final Class<B> type)=
+*** =<R> Tree<R> map(Function<T, R> f)=
 
-     Create a new TreeBuilder starting with an empty tree.
+    Applies the function to the item within the Tree and to all sub-trees,
+    returning a new Tree.
 
-     #+BEGIN_SRC java
-       final TreeBuilder<Integer> builder = Tree.builder(Integer.class);
-     #+END_SRC
+    #+BEGIN_SRC java
+      final Tree<UUID> tree = ...;
+      final Tree<String> result = tree.map(UUID::toString);
+    #+END_SRC
 
 
-**** =static <B> TreeBuilder<B> builder(final Tree<B> tree)=
+*** =Maybe<T> item()=
 
-     Create a new TreeBuilder for the given tree.
+    Returns the contents of the Tree node within a Maybe.
 
-     #+BEGIN_SRC java
-       final Tree<Integer> tree = ...;
-       final TreeBuilder<Integer> builder = Tree.builder(tree);
-     #+END_SRC
+    #+BEGIN_SRC java
+      final Tree<Item> tree = ...;
+      final Maybe<Item> result = tree.item();
+    #+END_SRC
 
 
-*** Instance Methods
+*** =int count()=
 
-**** =<R> Tree<R> map(Function<T, R> f)=
+    Returns the total number of items in the tree, including sub-trees. Null
+    items don't count.
 
-     Applies the function to the item within the Tree and to all sub-trees,
-     returning a new Tree.
+    #+BEGIN_SRC java
+      final Tree<Item> tree = ...;
+      final int result = tree.count();
+    #+END_SRC
 
-     #+BEGIN_SRC java
-       final Tree<UUID> tree = ...;
-       final Tree<String> result = tree.map(UUID::toString);
-     #+END_SRC
 
+*** =List<Tree<T> subTrees()=
 
-**** =Maybe<T> item()=
+    Returns a list of sub-trees within the tree.
 
-     Returns the contents of the Tree node within a Maybe.
+    #+BEGIN_SRC java
+      final Tree<Item> tree = ...;
+      final List<Tree<Item>> result = tree.subTrees();
+    #+END_SRC
 
-     #+BEGIN_SRC java
-       final Tree<Item> tree = ...;
-       final Maybe<Item> result = tree.item();
-     #+END_SRC
+* TreeBuilder
 
+  A mutable builder for a Tree. Each TreeBuilder allows modification of a
+  single Tree node. You can use the =select(childItem)= method to get a
+  TreeBuilder for the subtree that has the given child item.
 
-**** =int count()=
+  #+BEGIN_SRC java
+    final TreeBuilder<Integer> builder = Tree.builder();
+    builder.set(12).addChildren(Arrays.asList(1, 3, 5, 7));
+    final TreeBuilder<Integer> builderFor3 = builder.select(3);
+    builderFor3.addChildren(Arrays.asList(2, 4));
+    final Tree<Integer> tree = builder.build();
+  #+END_SRC
 
-     Returns the total number of items in the tree, including sub-trees. Null
-     items don't count.
+  Will produce a tree like:
 
-     #+BEGIN_SRC java
-       final Tree<Item> tree = ...;
-       final int result = tree.count();
-     #+END_SRC
+  [[file:images/treebuilder-example.svg]]
 
 
-**** =List<Tree<T> subTrees()=
+** Static Constructors
 
-     Returns a list of sub-trees within the tree.
+   None. The TreeBuilder is instantiated by =Tree.builder()=.
 
-     #+BEGIN_SRC java
-       final Tree<Item> tree = ...;
-       final List<Tree<Item>> result = tree.subTrees();
-     #+END_SRC
+** Instance Methods
 
+*** =Tree<T> build()=
 
-** TreeBuilder
+    Create the immutable Tree.
 
-   A mutable builder for a Tree. Each TreeBuilder allows modification of a
-   single Tree node. You can use the =select(childItem)= method to get a
-   TreeBuilder for the subtree that has the given child item.
+    #+BEGIN_SRC java
+      final TreeBuilder<Integer> builder = Tree.builder();
+      final Tree<Integer> tree = builder.build();
+    #+END_SRC
 
-   #+BEGIN_SRC java
-     final TreeBuilder<Integer> builder = Tree.builder();
-     builder.set(12).addChildren(Arrays.asList(1, 3, 5, 7));
-     final TreeBuilder<Integer> builderFor3 = builder.select(3);
-     builderFor3.addChildren(Arrays.asList(2, 4));
-     final Tree<Integer> tree = builder.build();
-   #+END_SRC
 
-   Will produce a tree like:
+*** =TreeBuilder<T> item(T item)=
 
-   [[file:images/treebuilder-example.svg]]
+    Set the current Tree's item and return the TreeBuilder.
 
+    #+BEGIN_SRC java
+    #+END_SRC
 
-*** Static Constructors
 
-    None. The TreeBuilder is instantiated by =Tree.builder()=.
+*** =TreeBuilder<T> add(Tree<T> subtree)=
 
-*** Instance Methods
+    Adds the subtree to the current tree.
 
-**** =Tree<T> build()=
+    #+BEGIN_SRC java
+    #+END_SRC
 
-     Create the immutable Tree.
 
-     #+BEGIN_SRC java
-       final TreeBuilder<Integer> builder = Tree.builder();
-       final Tree<Integer> tree = builder.build();
-     #+END_SRC
+*** =TreeBuilder<T> addChild(T childItem)=
 
+    Add the Child item as a sub-Tree.
 
-**** =TreeBuilder<T> item(T item)=
+    #+BEGIN_SRC java
+    #+END_SRC
 
-     Set the current Tree's item and return the TreeBuilder.
 
-     #+BEGIN_SRC java
-     #+END_SRC
+*** =TreeBuilder<T> addChildren(List<T> children)=
 
+    Add all the child items as subTrees.
 
-**** =TreeBuilder<T> add(Tree<T> subtree)=
+    #+BEGIN_SRC java
+    #+END_SRC
 
-     Adds the subtree to the current tree.
 
-     #+BEGIN_SRC java
-     #+END_SRC
+*** =Maybe<TreeBuilder<T>> select(T childItem)=
 
+    Create a TreeBuilder for the subTree of the current Tree that has the
+    childItem.
 
-**** =TreeBuilder<T> addChild(T childItem)=
+    #+BEGIN_SRC java
+    #+END_SRC
 
-     Add the Child item as a sub-Tree.
+* Lazy
 
-     #+BEGIN_SRC java
-     #+END_SRC
+  A Lazy evaluated expression. Using a Supplier to provide the value, only
+  evaluates the value when required, and never more than once.
 
+** Static Constructors
 
-**** =TreeBuilder<T> addChildren(List<T> children)=
+*** =static <R> Lazy<R> of(Supplier<R> supplier)=
 
-     Add all the child items as subTrees.
+    Create a new Lazy value from the supplier.
 
-     #+BEGIN_SRC java
-     #+END_SRC
+    #+BEGIN_SRC java
+      final Suppler<UUID> supplier = ...;
+      final Lazy<UUID> lazy = Lazy.of(supplier);
+    #+END_SRC
 
+** Instance Methods
 
-**** =Maybe<TreeBuilder<T>> select(T childItem)=
+*** =boolean isEvaluated()=
 
-     Create a TreeBuilder for the subTree of the current Tree that has the
-     childItem.
+    Checks if the value has been evaluated.
 
-     #+BEGIN_SRC java
-     #+END_SRC
+    #+BEGIN_SRC java
+      final Lazy<UUID> lazy = ...;
+      final boolean isEvaluated = lazy.isEvaluated();
+    #+END_SRC
 
+*** =T value()=
 
-** Lazy
+    The value, evaluating it if necessary.
 
-   A Lazy evaluated expression. Using a Supplier to provide the value, only
-   evaluates the value when required, and never more than once.
+    #+BEGIN_SRC java
+      final Lazy<UUID> lazy = ...;
+      final UUID value = lazy.value();
+    #+END_SRC
 
-*** Static Constructors
+*** =<R> Lazy<R> map(Function<T, R> f)=
 
-**** =static <R> Lazy<R> of(Supplier<R> supplier)=
+    Maps the Lazy instance into a new Lazy instance using the function.
 
-     Create a new Lazy value from the supplier.
+    #+BEGIN_SRC java
+      final Lazy<UUID> uuidLazy = ...;
+      final Lazy<String> stringLazy = uuidLazy.map(v -> v.toString());
+    #+END_SRC
 
-     #+BEGIN_SRC java
-       final Suppler<UUID> supplier = ...;
-       final Lazy<UUID> lazy = Lazy.of(supplier);
-     #+END_SRC
+* Either
 
-*** Instance Methods
+  Allows handling a value that can be one of two types, a left value/type or a
+  right value/type.
 
-**** =boolean isEvaluated()=
+  When an =Either= is returned from a method it will contain either a left or a
+  right.
 
-     Checks if the value has been evaluated.
+  Where the =Either= is used to represent success/failure, the left case is, by
+  convention, used to indicate the error, and right the success. An alternative
+  is to use the =Result= which more clearly distinguishes success from failure.
 
-     #+BEGIN_SRC java
-       final Lazy<UUID> lazy = ...;
-       final boolean isEvaluated = lazy.isEvaluated();
-     #+END_SRC
+** =Either= *is not* a Monad.
 
-**** =T value()=
+** Static Constructors
 
-     The value, evaluating it if necessary.
+*** =static <L, R> Either<L, R> left(final L l)=
 
-     #+BEGIN_SRC java
-       final Lazy<UUID> lazy = ...;
-       final UUID value = lazy.value();
-     #+END_SRC
+    Create a new Either holding a left value.
 
-**** =<R> Lazy<R> map(Function<T, R> f)=
+    #+BEGIN_SRC java
+    final Either<Integer, String> left = Either.left(getIntegerValue());
+    #+END_SRC
 
-     Maps the Lazy instance into a new Lazy instance using the function.
 
-     #+BEGIN_SRC java
-       final Lazy<UUID> uuidLazy = ...;
-       final Lazy<String> stringLazy = uuidLazy.map(v -> v.toString());
-     #+END_SRC
+*** =static <L, R> Either<L, R> right(final R r)=
 
+    Create a new Either holding a right value.
 
-** Either
+    #+BEGIN_SRC java
+    final Either<Integer, String> right = Either.right(getStringValue());
+    #+END_SRC
 
-   Allows handling a value that can be one of two types, a left value/type or a
-   right value/type.
 
-   When an =Either= is returned from a method it will contain either a left or a
-   right.
+** Instance Methods
 
-   Where the =Either= is used to represent success/failure, the left case is, by
-   convention, used to indicate the error, and right the success. An alternative
-   is to use the =Result= which more clearly distinguishes success from failure.
+*** =boolean isLeft()=
 
-*** =Either= *is not* a Monad.
+    Checks if the Either holds a left value.
 
-*** Static Constructors
+    #+BEGIN_SRC java
+    final boolean leftIsLeft = Either.<Integer, String>left(getIntegerValue()).isLeft();
+    final boolean rightIsLeft = Either.<Integer, String>right(getStringValue()).isLeft();
+    #+END_SRC
 
-**** =static <L, R> Either<L, R> left(final L l)=
 
-     Create a new Either holding a left value.
+*** =boolean isRight()=
 
-     #+BEGIN_SRC java
-     final Either<Integer, String> left = Either.left(getIntegerValue());
-     #+END_SRC
+    Checks if the Either holds a right value.
 
+    #+BEGIN_SRC java
+    final boolean leftIsRight = Either.<Integer, String>left(getIntegerValue()).isRight();
+    final boolean rightIsRight = Either.<Integer, String>right(getStringValue()).isRight();
+    #+END_SRC
 
-**** =static <L, R> Either<L, R> right(final R r)=
 
-     Create a new Either holding a right value.
+*** =void match(Consumer<L> onLeft, Consumer<R> onRight)=
 
-     #+BEGIN_SRC java
-     final Either<Integer, String> right = Either.right(getStringValue());
-     #+END_SRC
+    Matches the Either, invoking the correct Consumer.
 
+    #+BEGIN_SRC java
+    Either.<Integer, String>left(getIntegerValue())
+          .match(
+              left -> handleIntegerValue(left),
+              right -> handleStringValue(right)
+          );
+    #+END_SRC
 
-*** Instance Methods
 
-**** =boolean isLeft()=
+*** =<T> Either<T, R> mapLeft(Function<L, T> f)=
 
-     Checks if the Either holds a left value.
+    Map the function across the left value.
 
-     #+BEGIN_SRC java
-     final boolean leftIsLeft = Either.<Integer, String>left(getIntegerValue()).isLeft();
-     final boolean rightIsLeft = Either.<Integer, String>right(getStringValue()).isLeft();
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Either<Double, String> either = Either.<Integer, String>left(getIntegerValue())
+                                                .mapLeft(i -> i.doubleValue());
+    #+END_SRC
 
 
-**** =boolean isRight()=
+*** =<T> Either<L, T> mapRight(Function<R, T> f)=
 
-     Checks if the Either holds a right value.
+    Map the function across the right value.
 
-     #+BEGIN_SRC java
-     final boolean leftIsRight = Either.<Integer, String>left(getIntegerValue()).isRight();
-     final boolean rightIsRight = Either.<Integer, String>right(getStringValue()).isRight();
-     #+END_SRC
-
-
-**** =void match(Consumer<L> onLeft, Consumer<R> onRight)=
-
-     Matches the Either, invoking the correct Consumer.
-
-     #+BEGIN_SRC java
-     Either.<Integer, String>left(getIntegerValue())
-           .match(
-               left -> handleIntegerValue(left),
-               right -> handleStringValue(right)
-           );
-     #+END_SRC
-
-
-**** =<T> Either<T, R> mapLeft(Function<L, T> f)=
-
-     Map the function across the left value.
-
-     #+BEGIN_SRC java
-     final Either<Double, String> either = Either.<Integer, String>left(getIntegerValue())
-                                                 .mapLeft(i -> i.doubleValue());
-     #+END_SRC
-
-
-**** =<T> Either<L, T> mapRight(Function<R, T> f)=
-
-     Map the function across the right value.
-
-     #+BEGIN_SRC java
-     final Either<Integer, String> either = Either.<Integer, String>left(getIntegerValue())
-                                                  .mapRight(s -> s + "x");
-     #+END_SRC
+    #+BEGIN_SRC java
+    final Either<Integer, String> either = Either.<Integer, String>left(getIntegerValue())
+                                                 .mapRight(s -> s + "x");
+    #+END_SRC
 
 
