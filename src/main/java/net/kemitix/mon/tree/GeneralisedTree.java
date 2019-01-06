@@ -50,7 +50,7 @@ class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
      */
     GeneralisedTree(final T item, final Collection<Tree<T>> subTrees) {
         this.item = item;
-        this.subTrees = Collections.unmodifiableList(new ArrayList<>(subTrees));
+        this.subTrees = new ArrayList<>(subTrees);
     }
 
     /**
@@ -77,6 +77,6 @@ class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
      */
     @Override
     public List<Tree<T>> subTrees() {
-        return subTrees;
+        return new ArrayList<>(subTrees);
     }
 }

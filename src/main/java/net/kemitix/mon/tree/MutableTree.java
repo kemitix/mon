@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A mutable {@link Tree}.
@@ -126,12 +125,8 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Tree<T>> subTrees() {
-        final Stream<MutableTree<T>> mutableTreeStream = mySubTrees.stream();
-        final Stream<Tree<T>> treeStream = mutableTreeStream.map(Tree.class::cast);
-        final List<Tree<T>> treeList = treeStream.collect(Collectors.toList());
-        return treeList;
+        return new ArrayList<>(mySubTrees);
     }
 
     /**
