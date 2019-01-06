@@ -1,0 +1,129 @@
+* CHANGELOG
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]], and this project adheres to
+[[https://semver.org/spec/v2.0.0.html][Semantic Versioning]].
+
+* 2.0.1
+
+** Dependencies
+
+   - Bump pitest-junit5-plugin from 0.7 to 0.8 (#58)
+   - Bump lombok from 1.18.2 to 1.18.4 (#59)
+   - Bump mockito-junit-jupiter from 2.23.0 to 2.23.4 (#60)
+   - Bump junit-bom from 5.3.1 to 5.3.2 (#61)
+
+* 2.0.0
+
+  - [BREAKING] [tree] Tree.item() now returns a Maybe
+  - [tree] Add TreeBuilder
+  - [maybe] Add static Maybe.findFirst(Stream)
+  - [maybe] Add matchValue(Function, Supplier)
+  - Bump kemitix-parent from 5.1.1 to 5.2.0 (#55)
+  - Bump junit from 4.12 to 5.3.1 [#56)
+
+* 1.2.0
+
+  - [result] orElseThrow() throws error within a CheckedErrorResultException
+
+* 1.1.0
+
+  - [result] add orElseThrow(Class) and orElseThrowUnchecked()
+
+* 1.0.0
+
+  - [lazy] Add a lazy evaluator
+  - [tree] Add a generalised tree
+  - Bump kemitix-checkstyle-ruleset from 4.1.1 to 5.0.0
+  - Bump kemitix-maven-tiles from 0.8.1 to 1.2.0
+
+* 0.12.0
+
+  - Add Maybe.or(Supplier<Maybe>)
+  - Add Result.reduce(Result,BinaryOperator)
+  - Rename Result.invert() as Result.swap()
+  - [admin] pom: update urls to github
+  - [admin] travis: don't use maven wrapper
+  - [admin] Remove maven wrapper
+  - Bump lombok from 1.18.0 to 1.18.2
+  - Bump assertj-core from 3.10.0 to 3.11.0
+  - Bump tiles-maven-plugin from 2.11 to 2.12
+
+* 0.11.0
+
+  - Rename `Result.maybeThen()` as `Result.flatMapMaybe()`
+  - Add `Maybe.match(Consumer,Runnable)`
+  - Add `Maybe.isJust()`
+  - Add `Maybe.isNothing()`
+  - BUG: `Maybe.orElseThrow()` now returns value when a Just
+  - Rewrite README
+  - Add `Either` (experimental)
+  - Add `flatMap` to `TypeAlias`
+
+* 0.10.0
+
+  - Add `Result.andThen(Function)`
+  - Add `Result.thenWith(Function)`
+  - Add `Result.maybeThen(Result<Maybe<T>>, Function)`
+
+* 0.9.0
+
+  - Add `Maybe.ifNothing(Runnable)`
+  - Add `Result.recover(Function)`
+  - Add `Result.onError(Consumer)`
+
+* 0.8.0
+
+  - Add `Result.of(Callable)`
+
+* 0.7.0
+
+  - Remove `Identity`
+  - Add `Result`
+  - Moved `Maybe` to `net.kemitix.mon.maybe.Maybe`
+  - `Maybe` is now a Monad
+  - Add `Maybe.stream()`
+
+* 0.6.0
+
+  - Java 9 compatible
+  - Upgrade `assertj` to 3.9.1
+  - jenkins: add Coverage stage
+  - jenkins: split Reporting stage into Test Results and Archiving
+  - jenkins: remove java 9 testing from `develop` branch
+
+* 0.5.1
+
+  - Fix accidental merge with SNAPSHOT version in to master
+
+* 0.5.0
+
+  - Add `Before`, `After` and `Around` combinators
+  - Use `kemitix-maven-tiles`
+  - Add `BeanBuilder` experiment
+  - Upgrade `lombok` to 1.16.20
+  - Upgrade assertj to 3.9.1
+
+* 0.4.0
+
+  - Restore public access for `TypeAlias.getValue()`
+  - Add `Maybe`, `Just`, `Nothing`
+
+* 0.3.0
+
+  - `TypeAlias.getValue()` removed in favour of using `map()`
+
+* 0.2.0
+
+  - `TypeAlias.getValue()` is not `final`
+  - Added `TypeAlias.map()`
+  - `Mon.map()` and `Mon.flatMap()` are `final`
+  - Codacy Quality clean up
+
+* 0.1.0
+
+  - Add `TypeAlias<T>`
+  - Add `Functor<T>`
+  - Add `Identity<T>`
+  - Add `Mon<T>`
