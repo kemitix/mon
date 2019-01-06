@@ -125,11 +125,8 @@ class MutableTree<T> implements Tree<T>, TreeMapper<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Tree<T>> subTrees() {
-        return mySubTrees.stream()
-                .<Tree<T>>map(Tree.class::cast)
-                .collect(Collectors.toList());
+        return new ArrayList<>(mySubTrees);
     }
 
     /**
