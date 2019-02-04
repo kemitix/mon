@@ -13,6 +13,7 @@ The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]
    - Bump lombok from 1.18.2 to 1.18.4 (#59)
    - Bump mockito-junit-jupiter from 2.23.0 to 2.23.4 (#60)
    - Bump junit-bom from 5.3.1 to 5.3.2 (#61)
+   - Bump pitest-maven from 1.4.3 to 1.4.5 (#65)
 
 * 2.0.0
 
