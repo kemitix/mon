@@ -41,7 +41,7 @@
         <kemitix-maven-tiles.version>1.2.0</kemitix-maven-tiles.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
         <kemitix-checkstyle.version>5.0.0</kemitix-checkstyle.version>
-        <pitest-maven-plugin.version>1.4.5</pitest-maven-plugin.version>
+        <pitest-maven-plugin.version>1.4.6</pitest-maven-plugin.version>
         <pitest-junit5-plugin.version>0.8</pitest-junit5-plugin.version>
     </properties>
 
