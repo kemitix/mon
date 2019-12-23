@@ -42,7 +42,7 @@
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
         <kemitix-checkstyle.version>5.0.0</kemitix-checkstyle.version>
         <pitest-maven-plugin.version>1.4.10</pitest-maven-plugin.version>
-        <pitest-junit5-plugin.version>0.9</pitest-junit5-plugin.version>
+        <pitest-junit5-plugin.version>0.11</pitest-junit5-plugin.version>
     </properties>
 
     <dependencies>
