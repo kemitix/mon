@@ -69,7 +69,7 @@ class LazySupplier<T> implements Lazy<T> {
 
     @Override
     public <R> Lazy<R> map(final Function<T, R> f) {
-        return Lazy.of(() -> f.apply(value()));
+        return new LazySupplier<R>(() -> f.apply(value()));
     }
 
 }
