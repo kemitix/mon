@@ -54,7 +54,7 @@ class Success<T> implements Result<T> {
 
     @Override
     public <R> Result<R> map(final Function<T, R> f) {
-        return Result.ok(f.apply(value));
+        return success(f.apply(value));
     }
 
     @Override
@@ -65,9 +65,9 @@ class Success<T> implements Result<T> {
     @Override
     public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
         if (predicate.test(value)) {
-            return Result.ok(Maybe.just(value));
+            return success(Maybe.just(value));
         }
-        return Result.ok(Maybe.nothing());
+        return success(Maybe.nothing());
     }
 
     @Override
@@ -103,7 +103,7 @@ class Success<T> implements Result<T> {
 
     @Override
     public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return Result.of(f.apply(value));
+        return result(f.apply(value));
     }
 
     @Override
@@ -113,7 +113,7 @@ class Success<T> implements Result<T> {
 
     @Override
     public Result<T> reduce(final Result<T> identity, final BinaryOperator<T> operator) {
-        return flatMap(a -> identity.flatMap(b -> Result.of(() -> operator.apply(a, b))));
+        return flatMap(a -> identity.flatMap(b -> result(() -> operator.apply(a, b))));
     }
 
     @Override
