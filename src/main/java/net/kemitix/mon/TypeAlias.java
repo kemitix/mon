@@ -64,11 +64,10 @@ public abstract class TypeAlias<T> {
      * Map the TypeAlias into another TypeAlias.
      *
      * @param f   the function to create the new value
-     * @param <R> the type of the new value within a TypeAlias
      * @param <U> the type of the TypeAlias superclass containing the new value
      * @return a TypeAlias
      */
-    public final <R, U extends TypeAlias<R>> U flatMap(final Function<T, U> f) {
+    public final <U extends TypeAlias<?>> U flatMap(final Function<T, U> f) {
         return f.apply(value);
     }
 
