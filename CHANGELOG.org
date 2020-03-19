@@ -7,6 +7,10 @@ The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]
 
 * 2.1.0
 
+** Added
+
+ * Add github actions config (#113)
+
 ** Dependencies
 
  * Bump assertj-core from 3.13.2 to 3.15.0 (#106)
@@ -17,7 +21,6 @@ The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]
  * Bump pitest-maven from 1.4.10 to 1.5.0 (#109)
  * Bump mockito-junit-jupiter from 3.1.0 to 3.3.3 (#111)
  * Bump kemitix-parent from 5.2.0 to 5.3.0 (#112)
- * Add github actions config (#113)
  * Bump mockito-junit-jupiter from 3.0.0 to 3.1.0 (#97)
  * Bump assertj-core from 3.12.2 to 3.13.2 (#93)
  * Bump lombok from 1.18.8 to 1.18.10 (#96)
