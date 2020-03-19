@@ -98,7 +98,7 @@ final class Just<T> implements Maybe<T> {
     }
 
     @Override
-    public <X extends Throwable> T orElseThrow(final Supplier<? extends X> e) throws X {
+    public <X extends Throwable> T orElseThrow(final Supplier<? extends X> e) {
         return value;
     }
 
