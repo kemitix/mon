@@ -91,7 +91,7 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     public static <T> Maybe<T> findFirst(Stream<T> stream) {
         return stream.findFirst()
                 .map(Maybe::just)
-                .orElse(nothing());
+                .orElseGet(Maybe::nothing);
     }
 
     /**
