@@ -21,6 +21,7 @@
 
 package net.kemitix.mon.tree;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.kemitix.mon.maybe.Maybe;
 
 import java.util.function.Function;
@@ -84,8 +85,14 @@ class MutableTreeBuilder<T> implements TreeBuilder<T> {
                         .map(Tree::builder));
     }
 
-    private Boolean matchesItem(final T childItem, final MutableTree<T> tree) {
-        return tree.item().map(childItem::equals).orElse(false);
+    @SuppressFBWarnings("NAB_NEEDLESS_BOOLEAN_CONSTANT_CONVERSION")
+    private boolean matchesItem(
+            final T childItem,
+            final MutableTree<T> tree
+    ) {
+        return tree.item()
+                .map(childItem::equals)
+                .orElse( false);
     }
 
 }

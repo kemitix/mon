@@ -43,6 +43,7 @@
         <kemitix-checkstyle.version>5.0.0</kemitix-checkstyle.version>
         <pitest-maven-plugin.version>1.5.0</pitest-maven-plugin.version>
         <pitest-junit5-plugin.version>0.12</pitest-junit5-plugin.version>
+        <spotbugs.version>4.0.1</spotbugs.version>
     </properties>
 
     <dependencies>
@@ -74,6 +75,12 @@
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>${spotbugs.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
