@@ -5,15 +5,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]], and this project adheres to
 [[https://semver.org/spec/v2.0.0.html][Semantic Versioning]].
 
-* 2.0.1
+* 2.1.0
+
+** Added
+
+ * Add github actions config (#113)
 
 ** Dependencies
 
-   - Bump pitest-junit5-plugin from 0.7 to 0.8 (#58)
-   - Bump lombok from 1.18.2 to 1.18.4 (#59)
-   - Bump mockito-junit-jupiter from 2.23.0 to 2.23.4 (#60)
-   - Bump junit-bom from 5.3.1 to 5.3.2 (#61)
-   - Bump pitest-maven from 1.4.3 to 1.4.5 (#65)
+ * Bump assertj-core from 3.13.2 to 3.15.0 (#106)
+ * Bump junit-bom from 5.5.2 to 5.6.0 (#105)
+ * Bump tiles-maven-plugin from 2.15 to 2.16 (#101)
+ * Bump lombok from 1.18.10 to 1.18.12 (#108)
+ * Bump pitest-junit5-plugin from 0.9 to 0.12 (#107)
+ * Bump pitest-maven from 1.4.10 to 1.5.0 (#109)
+ * Bump mockito-junit-jupiter from 3.1.0 to 3.3.3 (#111)
+ * Bump kemitix-parent from 5.2.0 to 5.3.0 (#112)
+ * Bump mockito-junit-jupiter from 3.0.0 to 3.1.0 (#97)
+ * Bump assertj-core from 3.12.2 to 3.13.2 (#93)
+ * Bump lombok from 1.18.8 to 1.18.10 (#96)
+ * Bump junit-bom from 5.5.1 to 5.5.2 (#95)
+ * Bump pitest-maven from 1.4.9 to 1.4.10 (#94)
+ * Bump junit-bom from 5.5.0 to 5.5.1 (#90)
+ * Bump mockito-junit-jupiter from 2.28.2 to 3.0.0 (#89)
+ * Bump junit-bom from 5.4.2 to 5.5.0 (#88)
+ * Bump tiles-maven-plugin from 2.14 to 2.15 (#86)
+ * Bump pitest-maven from 1.4.8 to 1.4.9 (#87)
+ * Bump pitest-junit5-plugin from 0.8 to 0.9 (#85)
+ * Bump mockito-junit-jupiter from 2.27.0 to 2.28.2 (#84)
+ * Bump pitest-maven from 1.4.7 to 1.4.8 (#82)
+ * Bump lombok from 1.18.6 to 1.18.8 (#81)
+ * Bump tiles-maven-plugin from 2.13 to 2.14 (#80)
+ * Bump mockito-junit-jupiter from 2.26.0 to 2.27.0 (#79)
+ * Bump junit-bom from 5.4.1 to 5.4.2 (#77)
+ * Bump mockito-junit-jupiter from 2.25.1 to 2.26.0 (#78)
+ * Bump pitest-maven from 1.4.6 to 1.4.7 (#76)
+ * Bump junit-bom from 5.4.0 to 5.4.1 (#75)
+ * Bump mockito-junit-jupiter from 2.25.0 to 2.25.1 (#74)
+ * Bump assertj-core from 3.12.1 to 3.12.2 (#73)
+ * Bump pitest-maven from 1.4.5 to 1.4.6 (#72)
+ * Bump mockito-junit-jupiter from 2.23.4 to 2.25.0 (#71)
+ * Bump junit-bom from 5.3.2 to 5.4.0 (#70)
+ * Bump assertj-core from 3.11.1 to 3.12.1 (#69)
+ * Bump lombok from 1.18.4 to 1.18.6 (#68)
+ * Bump tiles-maven-plugin from 2.12 to 2.13 (#66)
+ * Bump pitest-maven from 1.4.3 to 1.4.5 (#65)
+ * Bump junit-bom from 5.3.1 to 5.3.2 (#61)
+ * Bump mockito-junit-jupiter from 2.23.0 to 2.23.4 (#60)
+ * Bump lombok from 1.18.2 to 1.18.4 (#59)
+ * Bump pitest-junit5-plugin from 0.7 to 0.8 (#58)
 
 * 2.0.0
 
