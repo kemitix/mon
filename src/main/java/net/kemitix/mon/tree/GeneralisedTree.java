@@ -62,7 +62,7 @@ class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
      */
     @Override
     public <R> Tree<R> map(final Function<T, R> f) {
-        return Tree.of(f.apply(item), mapTrees(f, subTrees()));
+        return new GeneralisedTree<>(f.apply(item), mapTrees(f, subTrees()));
     }
 
     @Override
