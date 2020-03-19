@@ -1,6 +1,7 @@
 package net.kemitix.mon;
 
 import org.assertj.core.util.Strings;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -114,6 +115,17 @@ class TypeAliasTest {
         final String value = anAlias.map(Strings::quote);
         //then
         assertThat(value).isEqualTo("'text'");
+    }
+
+    @Test
+    @DisplayName("equals other is null then not equals")
+    void whenOtherNullEqualsIsFalse() {
+        //given
+        final AnAlias anAlias = AnAlias.of("text");
+        //then
+        boolean result = anAlias.equals(null);
+        //then
+        assertThat(result).isFalse();
     }
 
     private static class AnAlias extends TypeAlias<String> {

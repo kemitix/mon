@@ -85,7 +85,7 @@ public abstract class TypeAlias<T> {
             return otherValueClass.equals(getValue().getClass())
                     && other.value.equals(getValue());
         }
-        return map(o::equals);
+        return o != null && map(o::equals);
     }
 
     @Override
