@@ -21,6 +21,7 @@
 
 package net.kemitix.mon.tree;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.kemitix.mon.Functor;
 import net.kemitix.mon.maybe.Maybe;
 
@@ -70,6 +71,8 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
      *
      * @return a TreeBuilder
      */
+    @SuppressFBWarnings(value = "UP_UNUSED_PARAMETER",
+            justification = "Use the type parameter to fingerprint the return type")
     public static <B> TreeBuilder<B> builder(final Class<B> type) {
         return new MutableTreeBuilder<>();
     }
