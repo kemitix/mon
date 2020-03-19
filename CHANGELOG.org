@@ -10,9 +10,11 @@ The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]
 ** Added
 
  * Add github actions config (#113)
+ * Add JDK 13 compatibility (#116)
 
 ** Dependencies
 
+ * Bump kemitix-maven-tiles from 1.2.0 to 2.4.1 (#116)
  * Bump assertj-core from 3.13.2 to 3.15.0 (#106)
  * Bump junit-bom from 5.5.2 to 5.6.0 (#105)
  * Bump tiles-maven-plugin from 2.15 to 2.16 (#101)
