@@ -92,7 +92,7 @@ class MutableTreeBuilder<T> implements TreeBuilder<T> {
     ) {
         return tree.item()
                 .map(childItem::equals)
-                .orElse( false);
+                .orElse(false);
     }
 
 }
