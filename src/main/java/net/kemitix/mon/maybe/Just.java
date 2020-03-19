@@ -85,11 +85,12 @@ final class Just<T> implements Maybe<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Maybe<T> filter(final Predicate<T> predicate) {
         if (predicate.test(value)) {
             return this;
         }
-        return Maybe.nothing();
+        return (Maybe<T>) Nothing.INSTANCE;
     }
 
     @Override
