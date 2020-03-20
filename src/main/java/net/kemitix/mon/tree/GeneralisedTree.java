@@ -21,6 +21,7 @@
 
 package net.kemitix.mon.tree;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.EqualsAndHashCode;
 import net.kemitix.mon.maybe.Maybe;
 
@@ -36,6 +37,7 @@ import java.util.function.Function;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@SuppressFBWarnings("USBR_UNNECESSARY_STORE_BEFORE_RETURN")
 @EqualsAndHashCode
 class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
 
@@ -62,7 +64,7 @@ class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
      */
     @Override
     public <R> Tree<R> map(final Function<T, R> f) {
-        return Tree.of(f.apply(item), mapTrees(f, subTrees()));
+        return new GeneralisedTree<>(f.apply(item), mapTrees(f, subTrees()));
     }
 
     @Override

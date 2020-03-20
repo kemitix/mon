@@ -54,12 +54,12 @@ class Err<T> implements Result<T> {
 
     @Override
     public <R> Result<R> flatMap(final Function<T, Result<R>> f) {
-        return Result.error(error);
+        return err(error);
     }
 
     @Override
     public <R> Result<R> map(final Function<T, R> f) {
-        return Result.error(error);
+        return err(error);
     }
 
     @Override
@@ -69,7 +69,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
-        return Result.error(error);
+        return err(error);
     }
 
     @Override
@@ -108,7 +108,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return Result.error(error);
+        return err(error);
     }
 
     @Override
@@ -118,7 +118,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public Result<T> reduce(final Result<T> identify, final BinaryOperator<T> operator) {
-        return Result.error(error);
+        return this;
     }
 
     @Override

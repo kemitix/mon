@@ -56,8 +56,35 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <T>   the type had the result been a success
      * @return an error Result
      */
+    public default <T> Result<T> err(final Throwable error) {
+        return new Err<>(error);
+    }
+
+    /**
+     * Create a Result for an error.
+     *
+     * @param error the error (Throwable)
+     * @param <T>   the type had the result been a success
+     * @return an error Result
+     */
     public static <T> Result<T> error(final Throwable error) {
         return new Err<>(error);
+    }
+
+    /**
+     * Create a Result for a output of the Callable.
+     *
+     * @param callable the callable to produce the result
+     * @param <T>      the type of the value
+     * @return a Result
+     */
+    @SuppressWarnings("illegalcatch")
+    public default <T> Result<T> result(final Callable<T> callable) {
+        try {
+            return Result.ok(callable.call());
+        } catch (final Exception e) {
+            return Result.error(e);
+        }
     }
 
     /**
@@ -74,6 +101,17 @@ public interface Result<T> extends Functor<T, Result<?>> {
         } catch (final Exception e) {
             return Result.error(e);
         }
+    }
+
+    /**
+     * Create a Result for a success.
+     *
+     * @param value the value
+     * @param <T>   the type of the value
+     * @return a successful Result
+     */
+    public default <T> Result<T> success(final T value) {
+        return new Success<>(value);
     }
 
     /**

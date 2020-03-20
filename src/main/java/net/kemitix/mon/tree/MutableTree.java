@@ -21,6 +21,7 @@
 
 package net.kemitix.mon.tree;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.EqualsAndHashCode;
 import net.kemitix.mon.maybe.Maybe;
 
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@SuppressFBWarnings("USBR_UNNECESSARY_STORE_BEFORE_RETURN")
 @EqualsAndHashCode
 @SuppressWarnings("methodcount")
 class MutableTree<T> implements Tree<T>, TreeMapper<T> {

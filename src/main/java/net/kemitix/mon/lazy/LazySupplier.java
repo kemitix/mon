@@ -38,6 +38,7 @@ class LazySupplier<T> implements Lazy<T> {
     private final Supplier<T> supplier;
     private final AtomicBoolean evaluated = new AtomicBoolean(false);
     private final AtomicReference<T> value = new AtomicReference<>();
+    private final Object lock = new Object();
 
     /**
      * Creates a new Lazy wrapper for the Supplier.
@@ -58,7 +59,7 @@ class LazySupplier<T> implements Lazy<T> {
         if (evaluated.get()) {
             return value.get();
         }
-        synchronized (value) {
+        synchronized (lock) {
             if (!evaluated.get()) {
                 value.set(supplier.get());
                 evaluated.set(true);
@@ -69,7 +70,7 @@ class LazySupplier<T> implements Lazy<T> {
 
     @Override
     public <R> Lazy<R> map(final Function<T, R> f) {
-        return Lazy.of(() -> f.apply(value()));
+        return new LazySupplier<R>(() -> f.apply(value()));
     }
 
 }
