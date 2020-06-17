@@ -65,7 +65,7 @@ class TreeBuilderTest {
         final Tree<Node> result = rootBuilder.build();
         //then
         assertThat(result.count()).isEqualTo(3);
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(
+        assertThat(result).usingRecursiveComparison().isEqualTo(
                 MutableTree.of(rootNode, Collections.singleton(
                         MutableTree.of(childNode, Collections.singleton(
                                 MutableTree.leaf(grandchildNode))))));
@@ -86,7 +86,7 @@ class TreeBuilderTest {
                         .build();
         //then
         assertThat(result.count()).isEqualTo(4);
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(
+        assertThat(result).usingRecursiveComparison().isEqualTo(
                 MutableTree.of(rootNode, asList(
                         MutableTree.leaf(child1Node),
                         MutableTree.leaf(child2Node),

@@ -86,7 +86,7 @@ class MutableTreeTest implements WithAssertions {
                 asList(
                         MutableTree.leaf(sid2),
                         MutableTree.leaf(sid3)));
-        assertThat(result).isEqualToComparingFieldByFieldRecursively(expectedTree);
+        assertThat(result).usingRecursiveComparison().isEqualTo(expectedTree);
     }
 
     @Test
