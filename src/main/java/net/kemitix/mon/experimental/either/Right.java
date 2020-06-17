@@ -62,4 +62,16 @@ class Right<L, R> implements Either<L, R> {
     public <T> Either<L, T> mapRight(final Function<R, T> f) {
         return new Right<>(f.apply(value));
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Either<T, R> flatMapLeft(final Function<L, Either<T, R>> f) {
+        return (Either<T, R>) this;
+    }
+
+    @Override
+    public <T> Either<L, T> flatMapRight(final Function<R, Either<L, T>> f) {
+        return f.apply(value);
+    }
+
 }

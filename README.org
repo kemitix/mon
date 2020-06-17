@@ -1184,3 +1184,24 @@
     #+END_SRC
 
 
+*** =<T> Either<T, R> flatMapLeft(Function<L, Either<T, R>> f)=
+
+    FlatMap the function across the left value.
+
+    #+being_src java
+    Either<Integer, String> either = Either.left(2);
+    Either<Integer, String> resultLeft = either.flatMapLeft(l -> Either.left(l * 2));
+    Either<Integer, String> resultRight = either.flatMapLeft(l -> Either.right(l * 2));
+    #+end_src
+
+
+*** =<T> Either<T, R> flatMapRight(Function<L, Either<T, R>> f)=
+
+    FlatMap the function across the right value.
+
+    #+being_src java
+    Either<Integer, String> either = Either.right("2");
+    Either<Integer, String> resultLeft = either.flatMapRight(l -> Either.left(l * 2));
+    Either<Integer, String> resultRight = either.flatMapRight(l -> Either.right(l * 2));
+    #+end_src
+
