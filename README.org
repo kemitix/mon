@@ -1205,3 +1205,23 @@
     Either<Integer, String> resultRight = either.flatMapRight(l -> Either.right(l * 2));
     #+end_src
 
+
+*** =Optional<L> getLeft()=
+
+    Returns an Optional containing the left value, if is a left, otherwise returns an empty Optional.
+
+    #+being_src java
+    Either<Integer, String> either = Either.right("2");
+    Optional<Integer> left = either.getLeft();
+    #+end_src
+
+
+*** =Optional<R> getRight()=
+
+    Returns an Optional containing the right value, if is a right, otherwise returns an empty Optional.
+
+    #+being_src java
+    Either<Integer, String> either = Either.right("2");
+    Optional<String> right = either.getRight();
+    #+end_src
+

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 class EitherTest implements WithAssertions {
@@ -206,4 +207,191 @@ class EitherTest implements WithAssertions {
             );
         }
     }
+    @Nested @DisplayName("getLeft") public class GetLeft {
+        @Test
+        @DisplayName("")
+        public void whenLeft_thenGetValue() {
+            //given
+            Either<String, Integer> either = Either.left("value");
+            //when
+            Optional<String> left = either.getLeft();
+            //then
+            assertThat(left).contains("value");
+        }
+
+        @Test
+        @DisplayName("")
+        public void whenRight_thenGetEmpty() {
+            //given
+            Either<Integer, String> either = Either.right("value");
+            //when
+            Optional<Integer> left = either.getLeft();
+            //then
+            assertThat(left).isEmpty();
+        }
+    }
+    @Nested @DisplayName("getRight") public class GetRight {
+        @Test
+        @DisplayName("")
+        public void whenLeft_thenGetEmpty() {
+            //given
+            Either<String, Integer> either = Either.left("value");
+            //when
+            Optional<Integer> left = either.getRight();
+            //then
+            assertThat(left).isEmpty();
+        }
+
+        @Test
+        @DisplayName("")
+        public void whenRight_thenGetValue() {
+            //given
+            Either<Integer, String> either = Either.right("value");
+            //when
+            Optional<String> left = either.getRight();
+            //then
+            assertThat(left).contains("value");
+        }
+    }
+//    @Nested
+//    @DisplayName("compose()")
+//    public class Compose {
+//
+//        BiFunction<String, String, Either<String, Integer>> leftToLeftComposer =
+//                (la, lb) -> Either.left(la + lb);
+//
+//        BiFunction<String, String, Either<String, Integer>> leftToRightComposer =
+//                (la, lb) -> Either.right(Integer.parseInt(la) + Integer.parseInt(lb));
+//
+//        BiFunction<Integer, Integer, Either<String, Integer>> rightToLeftComposer =
+//                (la, lb) -> Either.left("" + la + lb);
+//
+//        BiFunction<Integer, Integer, Either<String, Integer>> rightToRightComposer =
+//                (la, lb) -> Either.right(la + lb);
+//
+//        @Test
+//        public void givenRightAndRight_whenComposeRight_then() {
+//            //given
+//            Either<String, Integer> ea = Either.right(3);
+//            Either<String, Integer> eb = Either.right(7);
+//            //when
+//            Either<String, Integer> result = ea.compose(eb,
+//                    leftToRightComposer,
+//                    rightToRightComposer);
+//            //then
+//            result.match(
+//                    left -> fail("Not a left"),
+//                    right -> assertThat(right).isEqualTo(10)
+//            );
+//        }
+//
+//        @Test
+//        public void givenRightAndRight_whenComposeLeft_then() {
+//            //given
+//            Either<String, Integer> ea = Either.right(3);
+//            Either<String, Integer> eb = Either.right(7);
+//            //when
+//            Either<String, Integer> result = ea.compose(eb,
+//                    leftToLeftComposer,
+//                    rightToLeftComposer);
+//            //then
+//            result.match(
+//                    left ->  assertThat(left).isEqualTo("a+b"),
+//                    right -> fail("Not a right")
+//            );
+//        }
+//        // compose left with left
+//        @Test
+//        public void givenLeftAndLeft_whenComposeRight_then() {
+//            //given
+//            Either<String, Integer> ea = Either.left("3");
+//            Either<String, Integer> eb = Either.left("7");
+//            //when
+//            Either<String, Integer> result = ea.compose(eb,
+//                    leftToRightComposer,
+//                    rightToRightComposer);
+//            //then
+//            result.match(
+//                    left -> fail("Not a left"),
+//                    right -> assertThat(right).isEqualTo(10)
+//            );
+//        }
+//        @Test
+//        public void givenLeftAndLeft_whenComposeLeft_then() {
+//            //given
+//            Either<String, Integer> ea = Either.left("3");
+//            Either<String, Integer> eb = Either.left("7");
+//            //when
+//            Either<String, Integer> result = ea.compose(eb,
+//                    leftToLeftComposer,
+//                    rightToLeftComposer);
+//            //then
+//            result.match(
+//                    left -> fail("Not a left"),
+//                    right -> assertThat(right).isEqualTo(10)
+//            );
+//        }
+//        // compose left with right
+//        @Test
+//        public void givenLeftAndRight_whenComposeRight_then() {
+//            //given
+//            Either<String, Integer> ea = Either.left("3");
+//            Either<String, Integer> eb = Either.right(7);
+//            //when
+//            Either<String, Integer> result = ea.compose(eb,
+//                    leftToRightComposer,
+//                    rightToRightComposer);
+//            //then
+//            result.match(
+//                    left -> fail("Not a left"),
+//                    right -> assertThat(right).isEqualTo(10)
+//            );
+//        }
+//        @Test
+//        public void givenLeftAndRight_whenComposeLeft_then() {
+//            //given
+//            Either<String, Integer> ea = Either.left("3");
+//            Either<String, Integer> eb = Either.right(7);
+//            //when
+//            Either<String, Integer> result = ea.compose(eb,
+//                    leftToLeftComposer,
+//                    rightToLeftComposer);
+//            //then
+//            result.match(
+//                    left -> fail("Not a left"),
+//                    right -> assertThat(right).isEqualTo(10)
+//            );
+//        }
+//        // compose right with left
+//        @Test
+//        public void givenRightAndLeft_whenComposeRight_then() {
+//            //given
+//            Either<String, Integer> ea = Either.right(3);
+//            Either<String, Integer> eb = Either.left("7");
+//            //when
+//            Either<String, Integer> result = ea.compose(eb,
+//                    leftToRightComposer,
+//                    rightToRightComposer);
+//            //then
+//            result.match(
+//                    left -> fail("Not a left"),
+//                    right -> assertThat(right).isEqualTo(10)
+//            );
+//        }
+//        @Test
+//        public void givenRightAndLeft_whenComposeLeft_then() {
+//            //given
+//            Either<String, Integer> ea = Either.right(3);
+//            Either<String, Integer> eb = Either.left("7");
+//            //when
+//            Either<String, Integer> result = ea.compose(eb,
+//                    leftToLeftComposer,
+//                    rightToLeftComposer);
+//            //then
+//            result.match(
+//                    left -> fail("Not a left"),
+//                    right -> assertThat(right).isEqualTo(10)
+//            );
+//        }
+//    }
 }
