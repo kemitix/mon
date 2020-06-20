@@ -87,8 +87,13 @@ public abstract class TypeAlias<T> {
         return o != null && map(o::equals);
     }
 
+    /**
+     * Returns a string representation of the TypeAlias.
+     *
+     * <p>This implementation delegates to the aliased value unmodified.</p>
+     */
     @Override
-    public final String toString() {
+    public String toString() {
         return value.toString();
     }
 
