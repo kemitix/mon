@@ -21,6 +21,7 @@
 
 package net.kemitix.mon.experimental.either;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -31,6 +32,7 @@ import java.util.function.Function;
  * @param <R> the type of the Either for right value
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@SuppressWarnings("methodcount")
 public interface Either<L, R> {
 
     /**
@@ -96,4 +98,38 @@ public interface Either<L, R> {
      * @return a new Either
      */
     public abstract <T> Either<L, T> mapRight(Function<R, T> f);
+
+    /**
+     * FlatMap the function across the left value.
+     *
+     * @param f   the function to apply to any left value
+     * @param <T> the type to change the left value to
+     * @return a new Either if is a Left, else this
+     */
+    public abstract <T> Either<T, R> flatMapLeft(Function<L, Either<T, R>> f);
+
+    /**
+     * FlatMap the function across the right value.
+     *
+     * @param f   the function to apply to any right value
+     * @param <T> the type to change the right value to
+     * @return a new Either if is a Right, else this
+     */
+    public abstract <T> Either<L, T> flatMapRight(Function<R, Either<L, T>> f);
+
+    /**
+     * Returns an Optional containing the left value, if is a left, otherwise
+     * returns an empty Optional.
+     *
+     * @return An Optional containing any left value
+     */
+    public abstract Optional<L> getLeft();
+
+    /**
+     * Returns an Optional containing the right value, if is a right, otherwise
+     * returns an empty Optional.
+     *
+     * @return An Optional containing any right value
+     */
+    public abstract Optional<R> getRight();
 }
