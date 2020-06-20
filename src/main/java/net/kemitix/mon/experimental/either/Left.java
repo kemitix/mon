@@ -23,6 +23,7 @@ package net.kemitix.mon.experimental.either;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -61,5 +62,26 @@ class Left<L, R> implements Either<L, R> {
     @Override
     public <T> Either<L, T> mapRight(final Function<R, T> f) {
         return new Left<>(value);
+    }
+
+    @Override
+    public <T> Either<T, R> flatMapLeft(final Function<L, Either<T, R>> f) {
+        return f.apply(value);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Either<L, T> flatMapRight(final Function<R, Either<L, T>> f) {
+        return (Either<L, T>) this;
+    }
+
+    @Override
+    public Optional<L> getLeft() {
+        return Optional.ofNullable(value);
+    }
+
+    @Override
+    public Optional<R> getRight() {
+        return Optional.empty();
     }
 }
