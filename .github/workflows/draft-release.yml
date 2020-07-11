@@ -1,4 +1,4 @@
-name: Release Drafter
+name: draft-release
 
 on:
   push:
@@ -6,9 +6,9 @@ on:
       - master
 
 jobs:
-  update_release_draft:
+  update_draft_release:
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v5.11.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
