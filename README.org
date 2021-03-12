@@ -27,7 +27,10 @@
     The latest version should be shown above with the nexus and maven-central
     badges or can be found on [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][Maven Central]].
 
-* Alias
+* Wrapper
+
+  A simple FunctionalInterface that contains a value. Can be used to implement
+  a form of type-alias in Java.
 
   In Haskell it is possible to create an alias for a Type, and to then use
   that alias with the same behaviour as the original, except that the compiler
@@ -41,23 +44,22 @@
     newtype PhoneBook = PhoneBook [PhoneBookEntry]
   #+END_SRC
 
-  In Java we don't have the ability to have that true alias, so TypeAlias is
-  more of a type-wrapper. It's as close as I could get to a Haskell type alias
-  in Java.
+  In Java we don't have the ability to have that true alias, so Wrapper simply
+  wraps the value within a new type. It's as close as I could get to a Haskell
+  type alias in Java.
 
-  The benefits of using TypeAlias are:
+  The benefits of using Wrapper are:
 
   - encapsulation of the wrapped type when passing references through code
     that doesn't need to access the actual value, but only to pass it on
   - type-safe parameters where you would otherwise be passing Strings,
     Integers, Lists, or other general classes
-  - equality and hashcode
   - less verbose than implementing your own
 
-  *Alias Example:*
+  *Wrapper Example:*
 
   #+BEGIN_SRC java
-  interface PhoneNumber extends Alias<String> {}
+  interface PhoneNumber extends Wrapper<String> {}
 
   PhoneNumber pn = () -> "01234 567890";
   String v = pn.value();
@@ -68,24 +70,10 @@
   #+BEGIN_SRC java
   class PhoneNumber {
       private final String value;
-      private PhoneNumber(final String value) {
+      public PhoneNumber(final String value) {
           this.value = value;
       }
-      public static PhoneNumber of(final String phoneNumber) {
-          return new PhoneNumber(phoneNumber);
-      }
-      @Override
-      public boolean equals(Object o) {
-          if (this == o) return true;
-          if (o == null || getClass() != o.getClass()) return false;
-          PhoneNumber that = (PhoneNumber) o;
-          return Objects.equals(value, that.value);
-      }
-      @Override
-      public int hashCode() {
-          return Objects.hash(value);
-      }
-      public String getValue() {
+      public String value() {
           return value;
       }
   }
@@ -107,16 +95,9 @@
   }
   #+END_SRC
 
-  *Non-Monadic:*
-
-  Alias is not a monad. It does have a map function, but there is not flatMap
-  and because two Alias instances with the same value are not considered equal
-  they fail any monadic testing. If you do need a Monadic version of Alias, use
-  TypeAlias, below.
-
 * TypeAlias
 
-  Note: this is a precursor to `Alias` and should be considered deprecated.
+  Note: this is a precursor to `Wrapper` and should be considered deprecated.
 
   *TypeAlias Example:*
 

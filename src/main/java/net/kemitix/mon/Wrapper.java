@@ -21,33 +21,22 @@
 
 package net.kemitix.mon;
 
-import java.util.function.Function;
-
 /**
- * Type Alias for other types.
+ * A wrapper for other types.
  *
- * @param <T> the type of the alias
+ * <p>Can be used as a form of type-alias, where the value is held in the wrapper.</p>
+ *
+ * @param <T> the type of the wrapper's value
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @FunctionalInterface
-public interface Alias<T> {
+public interface Wrapper<T> {
 
     /**
-     * The aliased value.
+     * The wrapped value.
      *
      * @return the value
      */
     public abstract T value();
-
-    /**
-     * Map the TypeAlias into another value.
-     *
-     * @param f   the function to create the new value
-     * @param <R> the type of the new value
-     * @return the result of the function
-     */
-    public default <R> R map(final Function<T, R> f) {
-        return f.apply(value());
-    }
 
 }
