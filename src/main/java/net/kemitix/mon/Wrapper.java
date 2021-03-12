@@ -19,10 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package net.kemitix.mon;
+
 /**
- * Deferred evaluation.
+ * A wrapper for other types.
  *
+ * <p>Can be used as a form of type-alias, where the value is held in the wrapper.</p>
+ *
+ * @param <T> the type of the wrapper's value
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
+@FunctionalInterface
+public interface Wrapper<T> {
 
-package net.kemitix.mon.lazy;
+    /**
+     * The wrapped value.
+     *
+     * @return the value
+     */
+    public abstract T value();
+
+}
