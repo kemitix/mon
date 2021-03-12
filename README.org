@@ -1,11 +1,12 @@
 * Mon
-* TypeAlias, Maybe and Result for Java.
+* Alias, TypeAlias, Maybe and Result for Java.
 
   [[https://oss.sonatype.org/content/repositories/releases/net/kemitix/mon][file:https://img.shields.io/nexus/r/https/oss.sonatype.org/net.kemitix/mon.svg?style=for-the-badge]]
   [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][file:https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge]]
   [[http://i.jpeek.org/net.kemitix/mon/index.html][file:http://i.jpeek.org/net.kemitix/mon/badge.svg]]
 
   - [Maven Usage]
+  - [Alias]
   - [TypeAlias]
   - [Maybe]
   - [Result]
@@ -26,7 +27,7 @@
     The latest version should be shown above with the nexus and maven-central
     badges or can be found on [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][Maven Central]].
 
-* TypeAlias
+* Alias
 
   In Haskell it is possible to create an alias for a Type, and to then use
   that alias with the same behaviour as the original, except that the compiler
@@ -39,7 +40,7 @@
     newtype PhoneBookEntry = PhoneBookEntry (Name, PhoneNumber)
     newtype PhoneBook = PhoneBook [PhoneBookEntry]
   #+END_SRC
-   
+
   In Java we don't have the ability to have that true alias, so TypeAlias is
   more of a type-wrapper. It's as close as I could get to a Haskell type alias
   in Java.
@@ -53,17 +54,13 @@
   - equality and hashcode
   - less verbose than implementing your own
 
-  *TypeAlias Example:*
+  *Alias Example:*
 
   #+BEGIN_SRC java
-  class PhoneNumber extends TypeAlias<String> {
-      private PhoneNumber(final String value) {
-          super(value);
-      }
-      public static PhoneNumber of(final String phoneNumber) {
-          return new PhoneNumber(phoneNumber);
-      }
-  }
+  interface PhoneNumber extends Alias<String> {}
+
+  PhoneNumber pn = () -> "01234 567890";
+  String v = pn.value();
   #+END_SRC
 
   *Roll your own:*
@@ -96,15 +93,38 @@
 
   *Lombok:*
 
-  Although, if you are using Lombok, that can be equally terse, both it and
-  TypeAlias<String> coming in at 8 lines each, compared to 24 for rolling your
-  own:
+  Using Lombok we can achieve it in 8 lines, compared to 24 for rolling your
+  own, or 1 for Alias:
 
   #+BEGIN_SRC java
   @Value
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
   class PhoneNumber {
       private final String value;
+      public static PhoneNumber of(final String phoneNumber) {
+          return new PhoneNumber(phoneNumber);
+      }
+  }
+  #+END_SRC
+
+  *Non-Monadic:*
+
+  Alias is not a monad. It does have a map function, but there is not flatMap
+  and because two Alias instances with the same value are not considered equal
+  they fail any monadic testing. If you do need a Monadic version of Alias, use
+  TypeAlias, below.
+
+* TypeAlias
+
+  Note: this is a precursor to `Alias` and should be considered deprecated.
+
+  *TypeAlias Example:*
+
+  #+BEGIN_SRC java
+  class PhoneNumber extends TypeAlias<String> {
+      private PhoneNumber(final String value) {
+          super(value);
+      }
       public static PhoneNumber of(final String phoneNumber) {
           return new PhoneNumber(phoneNumber);
       }
