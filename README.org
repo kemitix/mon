@@ -1,5 +1,5 @@
 * Mon
-* Alias, TypeAlias, Maybe and Result for Java.
+* Wrapper, TypeAlias, Maybe and Result for Java.
 
   [[https://oss.sonatype.org/content/repositories/releases/net/kemitix/mon][file:https://img.shields.io/nexus/r/https/oss.sonatype.org/net.kemitix/mon.svg?style=for-the-badge]]
   [[https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.kemitix%22%20AND%20a%3A%22mon%22][file:https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge]]
