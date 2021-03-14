@@ -47,7 +47,7 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
      *
      * @return a empty generalised tree
      */
-    public static <R> Tree<R> leaf(final R item) {
+    static <R> Tree<R> leaf(final R item) {
         return new GeneralisedTree<>(item, Collections.emptyList());
     }
 
@@ -59,7 +59,7 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
      * @param <R> the type of the item
      * @return a leaf node of a generalised tree
      */
-    public static <R> Tree<R> of(final R item, final Collection<Tree<R>> subtrees) {
+    static <R> Tree<R> of(final R item, final Collection<Tree<R>> subtrees) {
         return new GeneralisedTree<>(item, subtrees);
     }
 
@@ -73,7 +73,7 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
      */
     @SuppressFBWarnings(value = "UP_UNUSED_PARAMETER",
             justification = "Use the type parameter to fingerprint the return type")
-    public static <B> TreeBuilder<B> builder(final Class<B> type) {
+    static <B> TreeBuilder<B> builder(final Class<B> type) {
         return new MutableTreeBuilder<>();
     }
 
@@ -85,26 +85,26 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
      *
      * @return a TreeBuilder
      */
-    public static <B> TreeBuilder<B> builder(final Tree<B> tree) {
+    static <B> TreeBuilder<B> builder(final Tree<B> tree) {
         return new MutableTreeBuilder<>(MutableTree.of(tree));
     }
 
     @Override
-    public abstract <R> Tree<R> map(Function<T, R> f);
+    <R> Tree<R> map(Function<T, R> f);
 
     /**
      * Return the item within the node of the tree, if present.
      *
      * @return a Maybe containing the item
      */
-    public abstract Maybe<T> item();
+    Maybe<T> item();
 
     /**
      * Count the number of item in the tree, including subtrees.
      *
      * @return the sum of the subtrees, plus 1 if there is an item in this node
      */
-    public default int count() {
+    default int count() {
         return item().matchValue(x -> 1, () -> 0)
                 + subTrees().stream().mapToInt(Tree::count).sum();
     }
@@ -114,5 +114,5 @@ public interface Tree<T> extends Functor<T, Tree<?>> {
      *
      * @return a list of Trees
      */
-    public abstract List<Tree<T>> subTrees();
+    List<Tree<T>> subTrees();
 }

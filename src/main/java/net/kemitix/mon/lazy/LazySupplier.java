@@ -35,10 +35,10 @@ import java.util.function.Supplier;
  */
 class LazySupplier<T> implements Lazy<T> {
 
-    private final Supplier<T> supplier;
+    private transient final Supplier<T> supplier;
     private final AtomicBoolean evaluated = new AtomicBoolean(false);
-    private final AtomicReference<T> value = new AtomicReference<>();
-    private final Object lock = new Object();
+    private transient final AtomicReference<T> value = new AtomicReference<>();
+    private transient final Object lock = new Object();
 
     /**
      * Creates a new Lazy wrapper for the Supplier.

@@ -54,7 +54,7 @@ class Success<T> implements Result<T> {
 
     @Override
     public <R> Result<R> map(final Function<T, R> f) {
-        return success(f.apply(value));
+        return success(f.apply(this.value));
     }
 
     @Override

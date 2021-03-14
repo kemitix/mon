@@ -32,7 +32,7 @@ import java.util.function.Function;
  * @param <T> the type of the alias
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@SuppressWarnings("abstractclassname")
+@SuppressWarnings({"abstractclassname", "PMD.AbstractClassWithoutAbstractMethod"})
 public abstract class TypeAlias<T> {
 
     /**

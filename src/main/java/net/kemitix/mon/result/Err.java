@@ -37,7 +37,7 @@ import java.util.function.Predicate;
  * @param <T> the type of the value in the Result if it has been a success
  */
 @RequiredArgsConstructor
-@SuppressWarnings("methodcount")
+@SuppressWarnings({"methodcount", "PMD.CyclomaticComplexity"})
 class Err<T> implements Result<T> {
 
     private final Throwable error;
