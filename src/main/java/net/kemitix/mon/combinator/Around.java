@@ -54,10 +54,10 @@ public interface Around<T, R> extends
      *
      * @return a partially applied Function that will take an argument, and the result of applying it to function
      */
-    public static <T, R> Function<T, R> decorate(
+    static <T, R> Function<T, R> decorate(
             final Function<T, R> function,
             final BiConsumer<Executable<R>, T> around
-                                         ) {
+    ) {
         return Around.<T, R>create().apply(function)
                 .apply(around);
     }
@@ -71,7 +71,7 @@ public interface Around<T, R> extends
      * @return a curried function that will execute the around function, passing an executable and the invocations
      * argument. The around function must {@code execute()} the executable and may capture the result.
      */
-    public static <T, R> Around<T, R> create() {
+    static <T, R> Around<T, R> create() {
         return function -> around -> argument -> {
             final AtomicReference<R> result = new AtomicReference<>();
             final Executable<R> callback = () -> {
@@ -89,13 +89,13 @@ public interface Around<T, R> extends
      * @param <R> the return type of the function
      */
     @FunctionalInterface
-    public static interface Executable<R> {
+    interface Executable<R> {
 
         /**
          * Executes the function.
          *
          * @return the result of applying the function
          */
-        public abstract R execute();
+        R execute();
     }
 }

@@ -30,6 +30,8 @@ package net.kemitix.mon.result;
  */
 public final class ErrorResultException extends RuntimeException {
 
+    private static final long serialVersionUID = -949688489831104844L;
+
     private ErrorResultException(final Throwable cause) {
         super(cause);
     }

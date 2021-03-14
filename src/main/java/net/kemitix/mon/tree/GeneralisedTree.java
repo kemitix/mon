@@ -41,8 +41,8 @@ import java.util.function.Function;
 @EqualsAndHashCode
 class GeneralisedTree<T> implements Tree<T>, TreeMapper<T> {
 
-    private final T item;
-    private final List<Tree<T>> subTrees;
+    private transient final T item;
+    private transient final List<Tree<T>> subTrees;
 
     /**
      * Creates a new tree.

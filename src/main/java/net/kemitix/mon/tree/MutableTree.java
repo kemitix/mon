@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
 @SuppressWarnings("methodcount")
 class MutableTree<T> implements Tree<T>, TreeMapper<T> {
 
-    private final List<MutableTree<T>> mySubTrees = new ArrayList<>();
+    private transient final List<MutableTree<T>> mySubTrees = new ArrayList<>();
 
-    private T item;
+    private transient T item;
 
     /**
      * Create a new {@link MutableTree}.
