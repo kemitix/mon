@@ -1,6 +1,6 @@
 # Mon
 
-Wrapper, TypeAlias, Result, Lazy, Maybe and combinators for Java.
+Wrapper, TypeAlias, Maybe, Result, Tree, Lazy, Either and Combinators for Java.
 
 ![GitHub release (latest by date)](
 https://img.shields.io/github/v/release/kemitix/mon?style=for-the-badge)
@@ -15,11 +15,14 @@ https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge)]
 https://search.maven.org/artifact/net.kemitix/mon)
 
 - [Maven Usage](#Maven-Usage)
-- [Wrapper](#Wrapper)
-- [TypeAlias](#TypeAlias)
-- [Maybe](#Maybe)
-- [Result](#Result)
-- [Tree](#Tree)
+- [Wrapper](#Wrapper) - light-weight type-alias-like
+- [TypeAlias](#TypeAlias) - type-alias-like monadic wrapper
+- [Maybe](#Maybe) - Maybe, Just or Nothing
+- [Result](#Result) - Result, Success or Err
+- [Tree](#Tree) - generic trees
+- [Lazy](#Lazy) - lazy evaluation
+- [Either](#Either) - Either, Left of Right
+- [Combinators](#Combinators) - Before, After or Around
 
 ---
 ## Maven Usage
