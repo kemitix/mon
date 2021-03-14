@@ -39,7 +39,7 @@ public interface TreeBuilder<T> {
      *
      * @return a {@link Tree}
      */
-    public abstract Tree<T> build();
+    Tree<T> build();
 
     /**
      * Set the current {@link Tree}'s item.
@@ -48,7 +48,7 @@ public interface TreeBuilder<T> {
      *
      * @return the TreeBuilder
      */
-    public abstract TreeBuilder<T> item(T item);
+    TreeBuilder<T> item(T item);
 
     /**
      * Adds the subtree to the current tree.
@@ -57,7 +57,7 @@ public interface TreeBuilder<T> {
      *
      * @return the TreeBuilder
      */
-    public abstract TreeBuilder<T> add(Tree<T> subtree);
+    TreeBuilder<T> add(Tree<T> subtree);
 
     /**
      * Add the Child item as a subTree.
@@ -65,7 +65,7 @@ public interface TreeBuilder<T> {
      * @param childItem the item to add as a subtree
      * @return the TreeBuilder
      */
-    public abstract TreeBuilder<T> addChild(T childItem);
+    TreeBuilder<T> addChild(T childItem);
 
     /**
      * Add all the child items as subTrees.
@@ -73,7 +73,7 @@ public interface TreeBuilder<T> {
      * @param children the items to add as a subtree
      * @return the TreeBuilder
      */
-    public default TreeBuilder<T> addChildren(List<T> children) {
+    default TreeBuilder<T> addChildren(List<T> children) {
         children.forEach(this::addChild);
         return this;
     }
@@ -84,5 +84,5 @@ public interface TreeBuilder<T> {
      * @param childItem the item of search the subtrees for
      * @return a Maybe containing the TreeBuilder for the subtree, or Nothing if there child item is not found
      */
-    public abstract Maybe<TreeBuilder<T>> select(T childItem);
+    Maybe<TreeBuilder<T>> select(T childItem);
 }

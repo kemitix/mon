@@ -42,7 +42,7 @@ public interface Lazy<T> extends Functor<T, Lazy<?>> {
      * @param <R> the type of the value
      * @return a Lazy wrapper of the Supplier
      */
-    public static <R> Lazy<R> of(final Supplier<R> supplier) {
+    static <R> Lazy<R> of(final Supplier<R> supplier) {
         return new LazySupplier<>(supplier);
     }
 
@@ -51,7 +51,7 @@ public interface Lazy<T> extends Functor<T, Lazy<?>> {
      *
      * @return true if the value has been evaluated.
      */
-    public abstract boolean isEvaluated();
+    boolean isEvaluated();
 
     /**
      * The value, evaluating it if necessary.
@@ -60,8 +60,8 @@ public interface Lazy<T> extends Functor<T, Lazy<?>> {
      *
      * @return the evaluated value
      */
-    public abstract T value();
+    T value();
 
     @Override
-    public abstract <R> Lazy<R> map(Function<T, R> f);
+    <R> Lazy<R> map(Function<T, R> f);
 }

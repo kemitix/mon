@@ -144,7 +144,7 @@ class ResultTest implements WithAssertions {
     }
 
     @Test
-    void okay_whenMap_isOkay() {
+    void okay_whenMapToOkay_isOkay() {
         //given
         final Result<Integer> okResult = Result.ok(1);
         //when
@@ -154,6 +154,22 @@ class ResultTest implements WithAssertions {
         result.match(
                 success -> assertThat(success).isEqualTo("1"),
                 error -> fail("not an error")
+        );
+    }
+
+    @Test
+    void okay_whenMapToError_isError() {
+        //given
+        final Result<Integer> okResult = Result.ok(1);
+        //when
+        final Result<String> result = okResult.map(value -> {
+            throw new RuntimeException("map error");
+        });
+        //then
+        assertThat(result.isError()).isTrue();
+        result.match(
+                success -> fail("not an success"),
+                error -> assertThat(error).hasMessage("map error")
         );
     }
 

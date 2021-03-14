@@ -43,7 +43,7 @@ public interface Either<L, R> {
      * @param <R> the type of the right value
      * @return a Either holding the left value
      */
-    public static <L, R> Either<L, R> left(final L l) {
+    static <L, R> Either<L, R> left(final L l) {
         return new Left<>(l);
     }
 
@@ -55,7 +55,7 @@ public interface Either<L, R> {
      * @param <R> the type of the right value
      * @return a Either holding the right value
      */
-    public static <L, R> Either<L, R> right(final R r) {
+    static <L, R> Either<L, R> right(final R r) {
         return new Right<>(r);
     }
 
@@ -64,14 +64,14 @@ public interface Either<L, R> {
      *
      * @return true if this Either is a left
      */
-    public abstract boolean isLeft();
+    boolean isLeft();
 
     /**
      * Checks if the Either holds a right value.
      *
      * @return true if this Either is a right
      */
-    public abstract boolean isRight();
+    boolean isRight();
 
     /**
      * Matches the Either, invoking the correct Consumer.
@@ -79,7 +79,7 @@ public interface Either<L, R> {
      * @param onLeft  the Consumer to invoke when the Either is a left
      * @param onRight the Consumer to invoke when the Either is a right
      */
-    public abstract void match(Consumer<L> onLeft, Consumer<R> onRight);
+    void match(Consumer<L> onLeft, Consumer<R> onRight);
 
     /**
      * Map the function across the left value.
@@ -88,7 +88,7 @@ public interface Either<L, R> {
      * @param <T> the type to change the left value to
      * @return a new Either
      */
-    public abstract <T> Either<T, R> mapLeft(Function<L, T> f);
+    <T> Either<T, R> mapLeft(Function<L, T> f);
 
     /**
      * Map the function across the right value.
@@ -97,7 +97,7 @@ public interface Either<L, R> {
      * @param <T> the type to change the right value to
      * @return a new Either
      */
-    public abstract <T> Either<L, T> mapRight(Function<R, T> f);
+    <T> Either<L, T> mapRight(Function<R, T> f);
 
     /**
      * FlatMap the function across the left value.
@@ -106,7 +106,7 @@ public interface Either<L, R> {
      * @param <T> the type to change the left value to
      * @return a new Either if is a Left, else this
      */
-    public abstract <T> Either<T, R> flatMapLeft(Function<L, Either<T, R>> f);
+    <T> Either<T, R> flatMapLeft(Function<L, Either<T, R>> f);
 
     /**
      * FlatMap the function across the right value.
@@ -115,7 +115,7 @@ public interface Either<L, R> {
      * @param <T> the type to change the right value to
      * @return a new Either if is a Right, else this
      */
-    public abstract <T> Either<L, T> flatMapRight(Function<R, Either<L, T>> f);
+    <T> Either<L, T> flatMapRight(Function<R, Either<L, T>> f);
 
     /**
      * Returns an Optional containing the left value, if is a left, otherwise
@@ -123,7 +123,7 @@ public interface Either<L, R> {
      *
      * @return An Optional containing any left value
      */
-    public abstract Optional<L> getLeft();
+    Optional<L> getLeft();
 
     /**
      * Returns an Optional containing the right value, if is a right, otherwise
@@ -131,5 +131,5 @@ public interface Either<L, R> {
      *
      * @return An Optional containing any right value
      */
-    public abstract Optional<R> getRight();
+    Optional<R> getRight();
 }
