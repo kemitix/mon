@@ -1,6 +1,6 @@
 # Mon
 
-Wrapper, TypeAlias, Result, Lazy, Maybe and combinators for Java.
+Wrapper, TypeAlias, Maybe, Result, Tree, Lazy, Either and Combinators for Java.
 
 ![GitHub release (latest by date)](
 https://img.shields.io/github/v/release/kemitix/mon?style=for-the-badge)
@@ -15,11 +15,14 @@ https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge)]
 https://search.maven.org/artifact/net.kemitix/mon)
 
 - [Maven Usage](#Maven-Usage)
-- [Wrapper](#Wrapper)
-- [TypeAlias](#TypeAlias)
-- [Maybe](#Maybe)
-- [Result](#Result)
-- [Tree](#Tree)
+- [Wrapper](#Wrapper) - light-weight type-alias-like
+- [TypeAlias](#TypeAlias) - type-alias-like monadic wrapper
+- [Maybe](#Maybe) - Maybe, Just or Nothing
+- [Result](#Result) - Result, Success or Err
+- [Tree](#Tree) - generic trees
+- [Lazy](#Lazy) - lazy evaluation
+- [Either](#Either) - Either, Left or Right
+- [Combinators](#Combinators) - Before, After or Around
 
 ---
 ## Maven Usage
@@ -605,7 +608,7 @@ Result<Integer> result =
               .thenWith(v -> () -> {throw new IOException();});
 ```
 ---
-#### `Result<Maybe<T>> maybe(Predicate<T> predicate)
+#### `Result<Maybe<T>> maybe(Predicate<T> predicate)`
 
 Wraps the value within the `Result` in a `Maybe`, either a `Just` if the
 predicate is true, or `Nothing`.
@@ -868,6 +871,7 @@ right.
 Where the `Either` is used to represent success/failure, the left case is, by
 convention, used to indicate the error, and right the success. An alternative
 is to use the `Result` which more clearly distinguishes success from failure.
+
 ---
 ### Static Constructors
 
@@ -981,14 +985,93 @@ Optional<String> right = either.getRight();
 
 ## Combinators
 
+Taken from [The Bounds of Java Newsletter #3](https://github.com/boundsofjava/boj-newsletter-003/tree/master/src/main/java/com/boundsofjava/newsletter/introducingcombinators), although the associated article isn't online anymore.
+
 ### After
 
-TODO
+Attach a `BiConsumer` to a `Function`, so that when the `Function` is called, 
+the `BiConsumer` is called afterwards, receiving the original argument to the
+`Function` plus the result.
 
+#### Example
+
+``` java
+BiConsumer<BigDecimal, String> after =
+    (amount, result) ->
+        System.out.println("Amount was " + amount + ", Result is " + result);
+
+var tax = BigDecimal.valueOf("1.22");
+Function<BigDecimal, String> addTax =
+    amount -> "$" + amount.multiply(tax);
+
+Function<BigDecimal, String> addTaxDecorated =
+        After.decorate(addTax, after);
+
+var amount = BigDecimal.valueOf("1000");
+String result = addTaxDecorated.apply(amount);
+```
+---
+#### `static <T, R> Function<T, R> After.decorate(Function<T, R> function, BiConsumer<T, R> after)`
+
+Creates a new decorated `Function`.
+
+---
 ### Before
 
-TODO
+Attach a `Consumer` to a `Function`, so that when the `Function` is called,
+the `Consumer` is called first, receiving the argument to the `Function`.
+
+#### Example
+
+``` java
+Consumer<BigDecimal> before =
+    amount -> System.out.println("Amount is " + amount);
+
+var tax = BigDecimal.valueOf("1.22");
+Function<BigDecimal, String> addTax =
+    amount -> "$" + amount.multiply(tax);
+    
+Function<BigDecimal, String> addTaxDecorated =
+    Before.decorate(before, addTax);
+
+var amount = BigDecimal.valueOf("1000");
+String result = addTaxDecorated.apply(amount);
+```
+
+#### `static <T, R> Function<T, R> decorate(Consumer<T> before, Function<T, R> function)`
+
+Creates a new decorated `Function`.
 
 ### Around
 
-TODO
+Attach a `BiConsumer` to a `Function`, so that when the `Function` is called,
+the `BiConsumer` is called with an `Around.Executable` that will invoke the `Function`.
+The `BiConsumer` is responsible for calling `execute()` on the `Around.Executable` in
+order to invoke the `Function`.
+The `BiConsumer` can perform actions before and after calling `execute()` on the 
+`Around.Executable`. 
+
+#### Example
+
+``` java
+BiConsumer<Around.Executable<String>, BigDecimal> around =
+    (function, amount) -> {
+        System.out.println("Amount is " + amount);
+        var result = function.execute(); // INVOKE THE FUNCTION
+        System.out.println("Result is " + result");
+    };
+
+var tax = BigDecimal.valueOf("1.22");
+Function<BigDecimal, String> addTax =
+    amount -> "$" + amount.multiply(tax);
+    
+Function<BigDecimal, String> addTaxDecorated =
+    Around.decorate(addTax, around);
+
+var amount = BigDecimal.valueOf("1000");
+String result = addTaxDecorated.apply(amount);
+```
+
+#### `static <T, R> Function<T, R> decorate(final Function<T, R> function, final BiConsumer<Executable<R>, T> around)`
+
+Creates a new decorated `Function`.
