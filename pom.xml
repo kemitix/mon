@@ -43,7 +43,7 @@
         <kemitix-checkstyle.version>5.5.0</kemitix-checkstyle.version>
         <pitest-maven-plugin.version>1.6.4</pitest-maven-plugin.version>
         <pitest-junit5-plugin.version>0.12</pitest-junit5-plugin.version>
-        <spotbugs.version>4.1.2</spotbugs.version>
+        <spotbugs.version>4.2.2</spotbugs.version>
     </properties>
 
     <dependencies>
