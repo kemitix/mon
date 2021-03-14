@@ -37,7 +37,7 @@ import java.util.function.Predicate;
  * @param <T> the type of the value in the Result
  */
 @RequiredArgsConstructor
-@SuppressWarnings("methodcount")
+@SuppressWarnings({"methodcount", "PMD.CyclomaticComplexity"})
 class Success<T> implements Result<T> {
 
     private final T value;
@@ -53,8 +53,13 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable"})
     public <R> Result<R> map(final Function<T, R> f) {
-        return success(f.apply(this.value));
+        try {
+            return success(f.apply(this.value));
+        } catch (Throwable e) {
+            return err(e);
+        }
     }
 
     @Override

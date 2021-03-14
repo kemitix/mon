@@ -78,11 +78,11 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <T>      the type of the value
      * @return a Result
      */
-    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingGenericException", "PMD.AvoidDuplicateLiterals"})
+    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable", "PMD.AvoidDuplicateLiterals"})
     default <T> Result<T> result(final Callable<T> callable) {
         try {
             return Result.ok(callable.call());
-        } catch (final Exception e) {
+        } catch (final Throwable e) {
             return Result.error(e);
         }
     }
@@ -94,11 +94,11 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <T>      the type of the value
      * @return a Result
      */
-    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingGenericException"})
+    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable"})
     static <T> Result<T> of(final Callable<T> callable) {
         try {
             return Result.ok(callable.call());
-        } catch (final Exception e) {
+        } catch (final Throwable e) {
             return Result.error(e);
         }
     }
