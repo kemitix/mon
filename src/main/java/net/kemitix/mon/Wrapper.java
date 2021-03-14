@@ -37,6 +37,6 @@ public interface Wrapper<T> {
      *
      * @return the value
      */
-    public abstract T value();
+    T value();
 
 }

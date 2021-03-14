@@ -35,10 +35,18 @@ public interface WithResultContinuation<T> {
      *
      * @throws Exception to replace the current Result with an error
      */
-    public abstract void run() throws Exception;
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    void run() throws Exception;
 
-    @SuppressWarnings({"illegalcatch", "javadocmethod"})
-    public default Result<T> call(final Result<T> currentResult) {
+    /**
+     * Internal. Called when the result of the previous {@link Result} is a
+     * {@link Success}.
+     *
+     * @param currentResult the previous result.
+     * @return the previous result if no exceptions thrown, or an {@link Err}
+     */
+    @SuppressWarnings({"illegalcatch", "javadocmethod", "PMD.AvoidCatchingThrowable"})
+    default Result<T> call(final Result<T> currentResult) {
         try {
             run();
         } catch (Throwable e) {

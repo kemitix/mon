@@ -14,7 +14,7 @@
     <version>2.3.0</version>
 
     <name>Mon</name>
-    <description>TypeAlias, Result and Maybe for Java</description>
+    <description>Wrapper, TypeAlias, Result, Lazy, Maybe and combinators for Java</description>
 
     <issueManagement>
         <url>https://github.com/kemitix/mon/issues</url>
@@ -38,9 +38,9 @@
         <assertj.version>3.19.0</assertj.version>
         <lombok.version>1.18.18</lombok.version>
         <tiles-maven-plugin.version>2.19</tiles-maven-plugin.version>
-        <kemitix-maven-tiles.version>2.4.1</kemitix-maven-tiles.version>
+        <kemitix-maven-tiles.version>3.0.1</kemitix-maven-tiles.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
-        <kemitix-checkstyle.version>5.0.0</kemitix-checkstyle.version>
+        <kemitix-checkstyle.version>5.5.0</kemitix-checkstyle.version>
         <pitest-maven-plugin.version>1.6.4</pitest-maven-plugin.version>
         <pitest-junit5-plugin.version>0.12</pitest-junit5-plugin.version>
         <spotbugs.version>4.1.2</spotbugs.version>
@@ -105,7 +105,14 @@
                 <extensions>true</extensions>
                 <configuration>
                     <tiles>
-                        <tile>net.kemitix.tiles:all:${kemitix-maven-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:maven-plugins:${kemitix-maven-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:compiler-jdk-lts:${kemitix-maven-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:pmd:${kemitix-maven-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:testing:${kemitix-maven-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:spotbugs:${kemitix-maven-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:coverage:${kemitix-maven-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:pitest:${kemitix-maven-tiles.version}</tile>
+                        <tile>net.kemitix.tiles:pmd-strict:${kemitix-maven-tiles.version}</tile>
                         <tile>net.kemitix.checkstyle:tile:${kemitix-checkstyle.version}</tile>
                     </tiles>
                 </configuration>

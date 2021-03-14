@@ -30,6 +30,8 @@ package net.kemitix.mon.result;
  */
 public final class CheckedErrorResultException extends Exception {
 
+    private static final long serialVersionUID = 6388860431020999870L;
+
     private CheckedErrorResultException(final Throwable cause) {
         super(cause);
     }

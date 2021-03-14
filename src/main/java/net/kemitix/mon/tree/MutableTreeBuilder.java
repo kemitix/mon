@@ -35,7 +35,7 @@ import java.util.function.Function;
  */
 class MutableTreeBuilder<T> implements TreeBuilder<T> {
 
-    private final MutableTree<T> root;
+    private transient final MutableTree<T> root;
 
     /**
      * Create empty tree builder.

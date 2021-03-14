@@ -43,7 +43,7 @@ interface TreeMapper<T> {
      *
      * @return a List of mapped sub-trees
      */
-    public default <R> List<Tree<R>> mapTrees(
+    default <R> List<Tree<R>> mapTrees(
             final Function<T, R> f,
             final List<Tree<T>> trees
     ) {

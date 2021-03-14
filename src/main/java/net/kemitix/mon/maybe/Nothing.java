@@ -50,7 +50,7 @@ final class Nothing<T> implements Maybe<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "PMD.AvoidDuplicateLiterals"})
     public <R> Maybe<R> flatMap(final Function<T, Maybe<R>> f) {
         return (Maybe<R>) INSTANCE;
     }
