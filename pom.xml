@@ -14,7 +14,8 @@
     <version>2.3.0</version>
 
     <name>Mon</name>
-    <description>Wrapper, TypeAlias, Result, Lazy, Maybe and combinators for Java</description>
+    <description>Wrapper, TypeAlias, Maybe, Result, Tree, Lazy, Either and Combinators for Java.
+</description>
 
     <issueManagement>
         <url>https://github.com/kemitix/mon/issues</url>
