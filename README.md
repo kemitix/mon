@@ -608,7 +608,7 @@ Result<Integer> result =
               .thenWith(v -> () -> {throw new IOException();});
 ```
 ---
-#### `Result<Maybe<T>> maybe(Predicate<T> predicate)
+#### `Result<Maybe<T>> maybe(Predicate<T> predicate)`
 
 Wraps the value within the `Result` in a `Maybe`, either a `Just` if the
 predicate is true, or `Nothing`.
