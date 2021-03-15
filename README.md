@@ -80,6 +80,17 @@ String v = pn.value();
 
 Returns the value in the `Wrapper`.
 
+### Skip the Mon import
+
+If the only thing you want is `Wrapper`, you can skip importing the `mon`
+dependency by declaring your tyoes like so:
+
+``` java
+interface PhoneNumber {String value();}
+```
+
+This is functionally identical to the example above using `Wrapper`.
+
 ---
 ## TypeAlias
 
