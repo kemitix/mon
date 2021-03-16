@@ -83,7 +83,7 @@ Returns the value in the `Wrapper`.
 ### Skip the Mon import
 
 If the only thing you want is `Wrapper`, you can skip importing the `mon`
-dependency by declaring your tyoes like so:
+dependency by declaring your types like so:
 
 ``` java
 interface PhoneNumber {String value();}
