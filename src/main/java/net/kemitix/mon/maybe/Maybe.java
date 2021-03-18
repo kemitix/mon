@@ -95,6 +95,18 @@ public interface Maybe<T> extends Functor<T, Maybe<?>> {
     }
 
     /**
+     * Creates a Maybe from an Optional.
+     *
+     * @param optional the Optional
+     * @param <T> the type of the value
+     * @return a Just if the Optional contains a value, otherwise a Nothing
+     */
+    static <T> Maybe<T> fromOptional(Optional<T> optional) {
+        return optional.map(Maybe::maybe)
+                .orElseGet(Maybe::nothing);
+    }
+
+    /**
      * Checks if the Maybe is a Just.
      *
      * @return true if the Maybe is a Just

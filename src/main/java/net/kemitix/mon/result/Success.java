@@ -56,7 +56,7 @@ class Success<T> implements Result<T> {
     @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable"})
     public <R> Result<R> map(final Function<T, R> f) {
         try {
-            return success(f.apply(this.value));
+            return success(f.apply(value));
         } catch (Throwable e) {
             return err(e);
         }
@@ -99,6 +99,11 @@ class Success<T> implements Result<T> {
     @Override
     public Result<T> recover(final Function<Throwable, Result<T>> f) {
         return this;
+    }
+
+    @Override
+    public void onSuccess(final Consumer<T> successConsumer) {
+        successConsumer.accept(value);
     }
 
     @Override

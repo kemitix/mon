@@ -22,10 +22,18 @@
 package net.kemitix.mon.result;
 
 import net.kemitix.mon.Functor;
+import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
 
 import java.util.concurrent.Callable;
-import java.util.function.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * An Either type for holding a result or an error (Throwable).
@@ -33,7 +41,7 @@ import java.util.function.*;
  * @param <T> the type of the result when a success
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@SuppressWarnings({"methodcount", "PMD.TooManyMethods"})
+@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount"})
 public interface Result<T> extends Functor<T, Result<?>> {
 
     /**
@@ -44,9 +52,24 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @param <T>   the type of the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
-    static <T> Result<T> fromMaybe(final Maybe<T> maybe, final Supplier<Throwable> error) {
+    static <T> Result<T> from(final Maybe<T> maybe, final Supplier<Throwable> error) {
         return maybe.map(Result::ok)
                 .orElseGet(() -> Result.error(error.get()));
+    }
+
+    /**
+     * Creates a Result from the Either, where the Result will be an error if
+     * the Either is a Left, and a success if it is a Right.
+     *
+     * @param either the either that could contain an error in left or a value in right
+     * @param <T>   the type of the right value
+     * @return a Result containing the right value of the Either when it is a
+     * Right, or the left error when it is a Left.
+     */
+    static <T> Result<T> from(Either<Throwable, T> either) {
+        return Result.from(
+                Maybe.fromOptional(either.getRight()),
+                () -> either.getLeft().get());
     }
 
     /**
@@ -104,6 +127,22 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
+     * Create a Result for calling a Callable that produces no output.
+     *
+     * @param callable the callable to call
+     * @return a Result with no value
+     */
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    static Result<Void> ofVoid(final Callable<Void> callable) {
+        try {
+            callable.call();
+            return Result.ok(null);
+        } catch (final Throwable e) {
+            return Result.error(e);
+        }
+    }
+
+    /**
      * Create a Result for a success.
      *
      * @param value the value
@@ -123,6 +162,15 @@ public interface Result<T> extends Functor<T, Result<?>> {
      */
     static <T> Result<T> ok(final T value) {
         return new Success<>(value);
+    }
+
+    /**
+     * Creates a Result with no value.
+     *
+     * @return a successful Result
+     */
+    static Result<Void> ok() {
+        return Result.ok(null);
     }
 
     /**
@@ -251,16 +299,29 @@ public interface Result<T> extends Functor<T, Result<?>> {
     /**
      * Provide a way to attempt to recover from an error state.
      *
+     * <p>When the Result is not an Err, this is a no-op.</p>
+     *
      * @param f the function to recover from the error
-     * @return a new Result, either a Success, or if recovery is not possible an other Err.
+     * @return if Result is an Err, a new Result, either a Success, or if recovery is not possible an other Err.
+     * If Result is a Success, then this results itself.
      */
     Result<T> recover(Function<Throwable, Result<T>> f);
 
     /**
+     * A handler to success states.
+     *
+     * <p>When this is a success then tne Consumer will be supplied with the
+     * success value. When this is an error, then nothing happens.</p>
+     *
+     * @param successConsumer the consumer to handle the success
+     */
+    void onSuccess(Consumer<T> successConsumer);
+
+    /**
      * A handler for error states.
      *
-     * <p>When this is an error then tne Consumer will be supplier with the error. When this is a success, then nothing
-     * happens.</p>
+     * <p>When this is an error then tne Consumer will be supplied with the
+     * error. When this is a success, then nothing happens.</p>
      *
      * @param errorConsumer the consumer to handle the error
      */
@@ -317,4 +378,64 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return a Result containing the combination of the two Results
      */
     Result<T> reduce(Result<T> identify, BinaryOperator<T> operator);
+
+    /**
+     * Applies a function to a stream of values, folding the results using the
+     * zero value and accumulator function.
+     *
+     * <p>If any value results in an error when applying the function, then
+     * processing stops and a Result containing that error is returned,</p>
+     *
+     * @param stream the values to apply the function to
+     * @param f the function to apply to the values
+     * @param zero the initial value to use with the accumulator
+     * @param accumulator the function to combine function outputs together
+     * @param <N> the type of the stream values
+     * @param <R> the type of the output value
+     * @return a Success Result of the accumulated function outputs if all
+     * values were transformed successfully by the function, or an Err Result
+     * for the first value that failed.
+     */
+    static <N, R> Result<R> applyOver(
+            Stream<N> stream,
+            Function<N, R> f,
+            R zero,
+            BiFunction<R, R, R> accumulator
+    ) {
+        var acc = new AtomicReference<>(Result.ok(zero));
+        stream.map(t -> Result.of(() -> f.apply(t)))
+                .peek(r ->
+                        r.onSuccess(vNew ->
+                                acc.getAndUpdate(rResult ->
+                                        rResult.map(vOld ->
+                                                accumulator.apply(vNew, vOld)))))
+                .dropWhile(Result::isOkay)
+                .limit(1)
+                .forEach(acc::set);
+        return acc.get();
+    }
+
+    /**
+     * Applies a consumer to a stream of values.
+     *
+     * <p>If any value results in an error when accepted by the consumer, then
+     * processing stops and a Result containing that error is returned,</p>
+     *
+     * @param stream the value to supply to the consumer
+     * @param consumer the consumer to receive the values
+     * @param <N> the type of the stream values
+     * @return a Success Result (with no value) if all values were transformed
+     * successfully by the function, or an Err Result for the first value that
+     * failed.
+     */
+    static <N> Result<Void> applyOver(
+            Stream<N> stream,
+            Consumer<N> consumer
+    ) {
+        return applyOver(stream, n -> {
+            consumer.accept(n);
+            return null;
+        }, null, (unused1, unused2) -> null);
+    }
+
 }

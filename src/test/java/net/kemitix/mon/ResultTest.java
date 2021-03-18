@@ -1,6 +1,7 @@
 package net.kemitix.mon;
 
 import lombok.RequiredArgsConstructor;
+import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
 import net.kemitix.mon.result.CheckedErrorResultException;
 import net.kemitix.mon.result.ErrorResultException;
@@ -12,10 +13,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assumptions.assumeThat;
 
@@ -51,6 +55,25 @@ class ResultTest implements WithAssertions {
             assumeThat(exception1.hashCode()).isNotEqualTo(exception2.hashCode());
             //then
             assertThat(Result.error(exception1).hashCode()).isNotEqualTo(Result.error(exception2).hashCode());
+        }
+
+        @Test
+        void whenOkVoid_isOkay() {
+            //when
+            var result = Result.ok();
+            //then
+            assertThat(result.isOkay()).isTrue();
+        }
+
+        @Test
+        void whenOkayVoid_match_isNull() {
+            //when
+            var result = Result.ok();
+            //then
+            result.match(
+                    success -> assertThat(success).isNull(),
+                    error -> fail("not an error")
+            );
         }
 
         @Test
@@ -323,7 +346,7 @@ class ResultTest implements WithAssertions {
                 //given
                 final Maybe<Integer> just = Maybe.just(1);
                 //when
-                final Result<Integer> result = Result.fromMaybe(just, () -> new RuntimeException());
+                final Result<Integer> result = Result.from(just, () -> new RuntimeException());
                 //then
                 assertThat(result.isOkay()).isTrue();
                 result.match(
@@ -338,7 +361,7 @@ class ResultTest implements WithAssertions {
                 final Maybe<Object> nothing = Maybe.nothing();
                 final RuntimeException exception = new RuntimeException();
                 //when
-                final Result<Object> result = Result.fromMaybe(nothing, () -> exception);
+                final Result<Object> result = Result.from(nothing, () -> exception);
                 //then
                 assertThat(result.isError()).isTrue();
                 result.match(
@@ -599,36 +622,63 @@ class ResultTest implements WithAssertions {
     }
 
     @Nested
-    @DisplayName("recover")
-    class RecoverTests {
+    @DisplayName("onSuccess")
+    class OnSuccessTests {
         @Test
-        void okay_whenRecover_thenNoChange() {
+        void error_whenOnSuccess_isIgnored() {
             //given
+            final RuntimeException exception = new RuntimeException();
+            final Result<Integer> error = Result.error(exception);
+            //when
+            error.onSuccess(e -> fail("not a success"));
+        }
+
+        @Test
+        void okay_whenOnError_isConsumed() {
+            //given
+            final AtomicReference<Integer> capture = new AtomicReference<>();
             final Result<Integer> ok = Result.ok(1);
             //when
-            final Result<Integer> recovered = ok.recover(e -> Result.ok(2));
+            ok.onSuccess(capture::set);
             //then
-            assertThat(recovered).isSameAs(ok);
+            assertThat(capture).hasValue(1);
         }
+    }
 
-        @Test
-        void error_whenRecover_isSuccess() {
-            //given
-            final Result<Integer> error = Result.error(new RuntimeException());
-            //when
-            final Result<Integer> recovered = error.recover(e -> Result.ok(2));
-            //then
-            recovered.peek(v -> assertThat(v).isEqualTo(2));
-        }
+    @Nested
+    @DisplayName("recover")
+    class RecoverTests {
+        @Nested @DisplayName("with recovery plan")
+        class RecoveryPlanTests {
+            @Test
+            void okay_whenRecover_thenNoChange() {
+                //given
+                final Result<Integer> ok = Result.ok(1);
+                //when
+                final Result<Integer> recovered = ok.recover(e -> Result.ok(2));
+                //then
+                assertThat(recovered).isSameAs(ok);
+            }
 
-        @Test
-        void error_whenRecover_whereError_isUpdatedError() {
-            //given
-            final Result<Integer> error = Result.error(new RuntimeException("original"));
-            //when
-            final Result<Integer> recovered = error.recover(e -> Result.error(new RuntimeException("updated")));
-            //then
-            recovered.onError(e -> assertThat(e).hasMessage("updated"));
+            @Test
+            void error_whenRecover_isSuccess() {
+                //given
+                final Result<Integer> error = Result.error(new RuntimeException());
+                //when
+                final Result<Integer> recovered = error.recover(e -> Result.ok(2));
+                //then
+                recovered.peek(v -> assertThat(v).isEqualTo(2));
+            }
+
+            @Test
+            void error_whenRecover_whereError_isUpdatedError() {
+                //given
+                final Result<Integer> error = Result.error(new RuntimeException("original"));
+                //when
+                final Result<Integer> recovered = error.recover(e -> Result.error(new RuntimeException("updated")));
+                //then
+                recovered.onError(e -> assertThat(e).hasMessage("updated"));
+            }
         }
     }
 
@@ -877,6 +927,202 @@ class ResultTest implements WithAssertions {
             );
         }
     }
+
+    @Nested
+    @DisplayName("applyOver - Result over a set")
+    class ApplyOverTests {
+
+        @Test
+        @DisplayName("Empty List is Okay")
+        void emptyListIsOkay() {
+            //given
+            var stream = Stream.empty();
+            Consumer<Object> doNothingWithoutError = x -> {};
+            //when
+            var result = Result.applyOver(stream, doNothingWithoutError);
+            //then
+            assertThat(result.isOkay()).isTrue();
+        }
+
+        @Test
+        @DisplayName("Single item list with valid result - is valid result")
+        void singleItemValidIsValid() {
+            //given
+            var stream = Stream.of("foo");
+            //when
+            var result = Result.applyOver(stream, String::length, 0, Integer::sum);
+            //then
+            result.match(
+                    success -> assertThat(success).isEqualTo(3),
+                    error -> fail("not an error")
+            );
+        }
+
+        @Test
+        @DisplayName("Two item list consumed without error - is valid result")
+        void twoItemsConsumedIsValid() {
+            //given
+            var acc = new AtomicInteger(0);
+            var stream = Stream.of(1, 2);
+            Consumer<Integer> accumulate = x -> acc.accumulateAndGet(x, Integer::sum);
+            //when
+            var result = Result.applyOver(stream, accumulate);
+            //then
+            assertThat(result.isOkay()).isTrue();
+            assertThat(acc).hasValue(3);
+        }
+
+        @Test
+        @DisplayName("Two item list with valid results - is valid result")
+        void twoItemsValidIsValid() {
+            //given
+            var stream = Stream.of("aaa", "bb");
+            //when
+            var result = Result.applyOver(stream, String::length, 0, Integer::sum);
+            //then
+            result.match(
+                    success -> assertThat(success).isEqualTo(5),
+                    error -> fail("not an error")
+            );
+        }
+
+        @Test
+        @DisplayName("Single item list with error is error")
+        void singleItemErrorIsError() {
+            //given
+            var stream = Stream.of("error");
+            var exception = new RuntimeException();
+            //when
+            var result = Result.applyOver(stream, s -> {
+                throw exception;
+            }, 0, Integer::sum);
+            //then
+            assertThat(result.isError()).isTrue();
+            result.match(
+                    success -> fail("not a success"),
+                    error -> assertThat(error).isSameAs(exception)
+            );
+        }
+
+        @Nested @DisplayName("Two item list with two errors")
+        class TwoErrorsTests {
+
+            Stream<String> stream = Stream.of("ccc", "ddd");
+            List<String> processed = new ArrayList<>();
+            Result<Integer> result = Result.applyOver(stream, s -> {
+                processed.add(s);
+                throw new RuntimeException(s);
+            }, 0, Integer::sum);
+
+            @Test @DisplayName("is first error")
+            void isFirstError() {
+                result.match(
+                        success -> fail("not a success"),
+                        error -> assertThat(error).hasMessage("ccc")
+                );
+                assertThat(processed).contains("ccc");
+            }
+
+            @Test @DisplayName("second item is not consumed")
+            void secondErrorNotConsumed() {
+                assertThat(processed).doesNotContain("ddd");
+            }
+        }
+
+        @Nested @DisplayName("Two item list with okay then error")
+        class TwoItemsOkayTheErrorTests {
+
+            Stream<String> stream = Stream.of("ccccc", "ddd");
+            List<String> processed = new ArrayList<>();
+            Result<Integer> result = Result.applyOver(stream, s -> {
+                processed.add(s);
+                if ("ddd".equals(s)) {
+                    throw new RuntimeException(s);
+                }
+                return s.length();
+            }, 0, Integer::sum);
+
+            @Test @DisplayName("is error")
+            void isError() {
+                result.match(
+                        success -> fail("not a success"),
+                        error -> assertThat(error).hasMessage("ddd")
+                );
+            }
+
+        }
+    }
+
+    @Nested
+    @DisplayName("fromEither")
+    class FromEitherTests {
+
+        @Test @DisplayName("left is error")
+        void leftIsError() {
+            //given
+            var exception = new RuntimeException();
+            var either = Either.<Throwable, String>left(exception);
+            //when
+            var result = Result.from(either);
+            //then
+            result.match(
+                    success -> fail("not a success"),
+                    error -> assertThat(error).isSameAs(exception)
+            );
+        }
+
+        @Test @DisplayName("right is success")
+        void rightIsSuccess() {
+            //given
+            var either = Either.<Throwable, String>right("foo");
+            //when
+            var result = Result.from(either);
+            //then
+            result.match(
+                    success -> assertThat(success).isEqualTo("foo"),
+                    error -> fail("not an error")
+            );
+        }
+
+    }
+
+    @Nested
+    @DisplayName("ofVoid")
+    class OfVoidTests {
+
+        @Test
+        @DisplayName("no error is Success")
+        void okayIsSuccess() {
+            //given
+            Callable<Void> voidCallable = () -> {
+                //do nothing
+                return null;
+            };
+            //when
+            var result = Result.ofVoid(voidCallable);
+            //then
+            result.match(
+                    success -> assertThat(success).isNull(),
+                    error -> fail("not an error")
+            );
+        }
+
+        @Test
+        @DisplayName("throws exception is an Error")
+        void exceptionIsError() {
+            //given
+            var exception = new RuntimeException();
+            Callable<Void> voidCallable = () -> {
+                throw exception;
+            };
+            //when
+            var result = Result.ofVoid(voidCallable);
+            //then
+            result.match(
+                    success -> fail("not a success"),
+                    error -> assertThat(error).isSameAs(exception)
+            );
+        }
 
     }
 

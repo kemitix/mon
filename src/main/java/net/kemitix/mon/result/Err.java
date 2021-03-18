@@ -102,6 +102,11 @@ class Err<T> implements Result<T> {
     }
 
     @Override
+    public void onSuccess(final Consumer<T> successConsumer) {
+        // do nothing
+    }
+
+    @Override
     public void onError(final Consumer<Throwable> errorConsumer) {
         errorConsumer.accept(error);
     }
