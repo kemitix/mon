@@ -62,7 +62,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * the Either is a Left, and a success if it is a Right.
      *
      * @param either the either that could contain an error in left or a value in right
-     * @param <T>   the type of the right value
+     * @param <T>    the type of the right value
      * @return a Result containing the right value of the Either when it is a
      * Right, or the left error when it is a Left.
      */
@@ -202,8 +202,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * Extracts the successful value from the result, or throws the error Throwable.
      *
      * @param type the type of checked exception that may be thrown
-     * @param <E> the type of the checked exception to throw
-     *
+     * @param <E>  the type of the checked exception to throw
      * @return the value if a success
      * @throws E if the result is an error
      */
@@ -386,12 +385,12 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * <p>If any value results in an error when applying the function, then
      * processing stops and a Result containing that error is returned,</p>
      *
-     * @param stream the values to apply the function to
-     * @param f the function to apply to the values
-     * @param zero the initial value to use with the accumulator
+     * @param stream      the values to apply the function to
+     * @param f           the function to apply to the values
+     * @param zero        the initial value to use with the accumulator
      * @param accumulator the function to combine function outputs together
-     * @param <N> the type of the stream values
-     * @param <R> the type of the output value
+     * @param <N>         the type of the stream values
+     * @param <R>         the type of the output value
      * @return a Success Result of the accumulated function outputs if all
      * values were transformed successfully by the function, or an Err Result
      * for the first value that failed.
@@ -421,9 +420,9 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * <p>If any value results in an error when accepted by the consumer, then
      * processing stops and a Result containing that error is returned,</p>
      *
-     * @param stream the value to supply to the consumer
+     * @param stream   the value to supply to the consumer
      * @param consumer the consumer to receive the values
-     * @param <N> the type of the stream values
+     * @param <N>      the type of the stream values
      * @return a Success Result (with no value) if all values were transformed
      * successfully by the function, or an Err Result for the first value that
      * failed.
@@ -436,6 +435,41 @@ public interface Result<T> extends Functor<T, Result<?>> {
             consumer.accept(n);
             return null;
         }, null, (unused1, unused2) -> null);
+    }
+
+    /**
+     * Applies a function to a stream of values, folding the results using the
+     * zero value and accumulator function.
+     *
+     * <p>If any value results in an error when applying the function, then
+     * processing stops and a Result containing that error is returned,</p>
+     *
+     * @param stream      the values to apply the function to
+     * @param f           the function to apply to the values
+     * @param zero        the initial value to use with the accumulator
+     * @param accumulator the function to combine function outputs together
+     * @param <T>         the type of the stream values
+     * @param <R>         the type of the output value
+     * @return a Success Result of the accumulated function outputs if all
+     * values were transformed successfully by the function, or an Err Result
+     * for the first value that failed.
+     */
+    static <T, R> Result<R> flatApplyOver(
+            Stream<T> stream,
+            Function<T, Result<R>> f,
+            R zero,
+            BiFunction<R, R, R> accumulator
+    ) {
+        var acc = new AtomicReference<>(Result.ok(zero));
+        stream.map(f)
+                .peek(r -> r.onSuccess(vNew ->
+                        acc.getAndUpdate(rResult ->
+                                rResult.map(vOld ->
+                                        accumulator.apply(vNew, vOld)))))
+                .dropWhile(Result::isOkay)
+                .limit(1)
+                .forEach(acc::set);
+        return acc.get();
     }
 
 }

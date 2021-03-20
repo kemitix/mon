@@ -19,6 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assumptions.assumeThat;
@@ -1041,6 +1042,109 @@ class ResultTest implements WithAssertions {
                 }
                 return s.length();
             }, 0, Integer::sum);
+
+            @Test @DisplayName("is error")
+            void isError() {
+                result.match(
+                        success -> fail("not a success"),
+                        error -> assertThat(error).hasMessage("ddd")
+                );
+            }
+
+        }
+    }
+
+    @Nested
+    @DisplayName("flatApplyOver")
+    class flatApplyOverTests {
+
+        @Test
+        @DisplayName("Single item list with valid result - is valid result")
+        void singleItemValidIsValid() {
+            //given
+            var stream = Stream.of("foo");
+            Function<String, Result<Integer>> f = s -> Result.ok(s.length());
+            //when
+            var result = Result.flatApplyOver(stream,
+                    f, 0, Integer::sum);
+            //then
+            result.match(
+                    success -> assertThat(success).isEqualTo(3),
+                    error -> fail("not an error")
+            );
+        }
+
+        @Test
+        @DisplayName("Two item list with valid results - is valid result")
+        void twoItemsValidIsValid() {
+            //given
+            var stream = Stream.of("aaa", "bb");
+            Function<String, Result<Integer>> f = s -> Result.ok(s.length());
+            //when
+            var result = Result.flatApplyOver(stream, f, 0, Integer::sum);
+            //then
+            result.match(
+                    success -> assertThat(success).isEqualTo(5),
+                    error -> fail("not an error")
+            );
+        }
+
+        @Test
+        @DisplayName("Single item list with error is error")
+        void singleItemErrorIsError() {
+            //given
+            var stream = Stream.of("error");
+            var exception = new RuntimeException();
+            Function<String, Result<Integer>> f = s -> Result.error(exception);
+            //when
+            var result = Result.flatApplyOver(stream, f, 0, Integer::sum);
+            //then
+            assertThat(result.isError()).isTrue();
+            result.match(
+                    success -> fail("not a success"),
+                    error -> assertThat(error).isSameAs(exception)
+            );
+        }
+
+        @Nested @DisplayName("Two item list with two errors")
+        class TwoErrorsTests {
+
+            Stream<String> stream = Stream.of("ccc", "ddd");
+            List<String> processed = new ArrayList<>();
+            Function<String, Result<Integer>> f = s -> Result.of(() -> {
+                processed.add(s);
+                throw new RuntimeException(s);
+            });
+            Result<Integer> result = Result.flatApplyOver(stream, f, 0, Integer::sum);
+
+            @Test @DisplayName("is first error")
+            void isFirstError() {
+                result.match(
+                        success -> fail("not a success"),
+                        error -> assertThat(error).hasMessage("ccc")
+                );
+                assertThat(processed).contains("ccc");
+            }
+
+            @Test @DisplayName("second item is not consumed")
+            void secondErrorNotConsumed() {
+                assertThat(processed).doesNotContain("ddd");
+            }
+        }
+
+        @Nested @DisplayName("Two item list with okay then error")
+        class TwoItemsOkayTheErrorTests {
+
+            Stream<String> stream = Stream.of("ccccc", "ddd");
+            List<String> processed = new ArrayList<>();
+            Function<String, Result<Integer>> f = s -> Result.of(() -> {
+                processed.add(s);
+                if ("ddd".equals(s)) {
+                    throw new RuntimeException(s);
+                }
+                return s.length();
+            });
+            Result<Integer> result = Result.flatApplyOver(stream, f, 0, Integer::sum);
 
             @Test @DisplayName("is error")
             void isError() {
