@@ -165,7 +165,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
-     * Creates a Result with no value.
+     * Creates a success Result with no value.
      *
      * @return a successful Result
      */

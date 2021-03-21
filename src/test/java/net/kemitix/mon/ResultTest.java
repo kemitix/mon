@@ -1031,7 +1031,7 @@ class ResultTest implements WithAssertions {
         }
 
         @Nested @DisplayName("Two item list with okay then error")
-        class TwoItemsOkayTheErrorTests {
+        class TwoItemsOkayThenErrorTests {
 
             Stream<String> stream = Stream.of("ccccc", "ddd");
             List<String> processed = new ArrayList<>();
