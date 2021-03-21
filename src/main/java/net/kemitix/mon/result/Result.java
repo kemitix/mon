@@ -127,13 +127,13 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
-     * Create a Result for calling a Callable that produces no output.
+     * Create a Result for calling a callable that produces no output.
      *
      * @param callable the callable to call
      * @return a Result with no value
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    static Result<Void> ofVoid(final Callable<Void> callable) {
+    static Result<Void> ofVoid(final VoidCallable callable) {
         try {
             callable.call();
             return Result.ok();

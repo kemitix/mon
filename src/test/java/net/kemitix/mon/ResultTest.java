@@ -5,6 +5,7 @@ import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
 import net.kemitix.mon.result.CheckedErrorResultException;
 import net.kemitix.mon.result.ErrorResultException;
+import net.kemitix.mon.result.VoidCallable;
 import net.kemitix.mon.result.Result;
 import net.kemitix.mon.result.UnexpectedErrorResultException;
 import org.assertj.core.api.WithAssertions;
@@ -1274,9 +1275,8 @@ class ResultTest implements WithAssertions {
         @DisplayName("no error is Success")
         void okayIsSuccess() {
             //given
-            Callable<Void> voidCallable = () -> {
+            VoidCallable voidCallable = () -> {
                 //do nothing
-                return null;
             };
             //when
             var result = Result.ofVoid(voidCallable);
@@ -1292,7 +1292,7 @@ class ResultTest implements WithAssertions {
         void exceptionIsError() {
             //given
             var exception = new RuntimeException();
-            Callable<Void> voidCallable = () -> {
+            VoidCallable voidCallable = () -> {
                 throw exception;
             };
             //when
