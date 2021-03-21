@@ -599,7 +599,7 @@ class ResultTest implements WithAssertions {
     }
 
     @Nested
-    @DisplayName("onError")
+    @DisplayName("onError - all error")
     class OnErrorTests {
         @Test
         void okay_whenOnError_isIgnored() {
@@ -619,6 +619,48 @@ class ResultTest implements WithAssertions {
             error.onError(capture::set);
             //then
             assertThat(capture).hasValue(exception);
+        }
+    }
+
+    @Nested
+    @DisplayName("onError - by type")
+    class OnErrorByTypeTests {
+
+        @Test
+        void okay_whenOnError_isIgnored() {
+            //given
+            final Result<Integer> ok = Result.ok(1);
+            //when
+            ok.onError(Throwable.class,
+                    e -> fail("not an error"));
+        }
+
+        @Test
+        @DisplayName("error with matching type is consumed")
+        void error_whenOnError_isConsumed() {
+            //given
+            final RuntimeException exception = new RuntimeException();
+            final Result<Integer> error = Result.error(exception);
+            final AtomicReference<Throwable> capture = new AtomicReference<>();
+            //when
+            error.onError(RuntimeException.class,
+                    capture::set);
+            //then
+            assertThat(capture).hasValue(exception);
+        }
+
+        @Test
+        @DisplayName("error with non-matching type is ignored")
+        void error_withNoMatch_whenOnError_isIgnored() {
+            //given
+            RuntimeException exception = new RuntimeException();
+            Result<Integer> error = Result.error(exception);
+            final AtomicReference<Throwable> capture = new AtomicReference<>();
+            //when
+            error.onError(Exception.class,
+                    capture::set);
+            //then
+            assertThat(capture).hasValue(null);
         }
     }
 

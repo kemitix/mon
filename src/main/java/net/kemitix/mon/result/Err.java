@@ -112,6 +112,19 @@ class Err<T> implements Result<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <E extends Throwable> Result<T> onError(
+            Class<E> errorClass,
+            Consumer<E> consumer
+    ) {
+        if (error.getClass().isAssignableFrom(errorClass)) {
+            consumer.accept((E) error);
+        }
+        return this;
+    }
+
+
+    @Override
     public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
         return err(error);
     }

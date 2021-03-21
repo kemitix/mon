@@ -340,6 +340,11 @@ public interface Result<T> extends Functor<T, Result<?>> {
      */
     void onError(Consumer<Throwable> errorConsumer);
 
+    <E extends Throwable> Result<T> onError(
+            Class<E> errorClass,
+            Consumer<E> consumer
+    );
+
     /**
      * Maps a Success Result to another Result using a Callable that is able to throw a checked exception.
      *

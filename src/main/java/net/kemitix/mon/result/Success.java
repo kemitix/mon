@@ -112,6 +112,14 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public <E extends Throwable> Result<T> onError(
+            Class<E> errorClass,
+            Consumer<E> consumer
+    ) {
+        return this;
+    }
+
+    @Override
     public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
         return result(f.apply(value));
     }
