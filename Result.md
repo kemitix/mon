@@ -517,3 +517,19 @@ class ResultIsErrorExample {
 }
 ```
 ---
+#### `Either<Throwable, T> toEither()`
+
+Converts the `Result` into an `Either`. A `Success` will become a `Right` and an
+`Error` will become a `Left`.
+
+```java
+import net.kemitix.mon.result.Result;
+
+class ResultToEitherExample {
+    Result<String> success = Result.ok("success");
+    Result<String> error = Result.error(new RuntimeException());
+
+    Either<Throwable, String> eitherRight = success.toEither();
+    Either<Throwable, String> eitherLeft = error.toEither();
+}
+```

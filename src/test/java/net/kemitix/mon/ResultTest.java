@@ -1158,7 +1158,41 @@ class ResultTest implements WithAssertions {
     }
 
     @Nested
-    @DisplayName("fromEither")
+    @DisplayName("toEither")
+    class ToEitherTests {
+
+        @Test
+        @DisplayName("Success becomes Right")
+        void successIsRight() {
+            //given
+            var result = Result.ok("success");
+            //when
+            var either = result.toEither();
+            //then
+            either.match(
+                    left -> fail("not a left"),
+                    right -> assertThat(right).isEqualTo("success")
+            );
+        }
+
+        @Test
+        @DisplayName("Error becomes Left")
+        void errorIsLeft() {
+            //given
+            var exception = new RuntimeException();
+            var result = Result.error(exception);
+            //when
+            var either = result.toEither();
+            //then
+            either.match(
+                    left -> assumeThat(left).isSameAs(exception),
+                    right -> fail("not a right")
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("from(Either)")
     class FromEitherTests {
 
         @Test @DisplayName("left is error")

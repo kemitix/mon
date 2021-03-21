@@ -191,6 +191,20 @@ public interface Result<T> extends Functor<T, Result<?>> {
     }
 
     /**
+     * Converts the `Result` into an `Either`.
+     *
+     * @return A `Right` for a success or a `Left` for an error.
+     */
+    default Either<Throwable, T> toEither() {
+        var either = new AtomicReference<Either<Throwable, T>>();
+        match(
+                success -> either.set(Either.right(success)),
+                error -> either.set(Either.left(error))
+        );
+        return either.get();
+    }
+
+    /**
      * Extracts the successful value from the result, or throws the error within a {@link CheckedErrorResultException}.
      *
      * @return the value if a success
