@@ -500,7 +500,7 @@ class ResultOnErrorExample {
 A handler for error state, when the error matches the errorClass. If the
 `Result` is an error and that error is an instance of the errorClass, then
 supply the error to the `Consumer`. Does nothing if the error is not an instance
-of the errorClass, ot is a success.
+of the errorClass, or is a success.
 
 Similar to the catch block in a try-catch.
 

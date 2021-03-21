@@ -136,7 +136,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
     static Result<Void> ofVoid(final Callable<Void> callable) {
         try {
             callable.call();
-            return Result.ok(null);
+            return Result.ok();
         } catch (final Throwable e) {
             return Result.error(e);
         }
@@ -340,6 +340,20 @@ public interface Result<T> extends Functor<T, Result<?>> {
      */
     void onError(Consumer<Throwable> errorConsumer);
 
+    /**
+     * A handler for error state, when the error matches the errorClass.
+     *
+     * <p>If the `Result` is an error and that error is an instance of the
+     * errorClass, then supply the error to the `Consumer`. Does nothing if the
+     * error is not an instance of the errorClass, or is a success.</p>
+     *
+     * <p>Similar to the catch block in a try-catch.</p>
+     *
+     * @param errorClass the class of Throwable to match
+     * @param consumer the consumer to call if it matches
+     * @param <E> the Type of the Throwable to match
+     * @return the original unmodified Result
+     */
     <E extends Throwable> Result<T> onError(
             Class<E> errorClass,
             Consumer<E> consumer

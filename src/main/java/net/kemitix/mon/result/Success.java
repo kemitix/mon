@@ -113,8 +113,8 @@ class Success<T> implements Result<T> {
 
     @Override
     public <E extends Throwable> Result<T> onError(
-            Class<E> errorClass,
-            Consumer<E> consumer
+            final Class<E> errorClass,
+            final Consumer<E> consumer
     ) {
         return this;
     }

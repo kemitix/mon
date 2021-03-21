@@ -78,7 +78,7 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "PMD.AvoidDuplicateLiterals"})
     public <E extends Exception> T orElseThrow(final Class<E> type) throws E {
         if (type.isInstance(error)) {
             throw (E) error;
@@ -114,8 +114,8 @@ class Err<T> implements Result<T> {
     @Override
     @SuppressWarnings("unchecked")
     public <E extends Throwable> Result<T> onError(
-            Class<E> errorClass,
-            Consumer<E> consumer
+            final Class<E> errorClass,
+            final Consumer<E> consumer
     ) {
         if (error.getClass().isAssignableFrom(errorClass)) {
             consumer.accept((E) error);
