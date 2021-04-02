@@ -36,7 +36,7 @@
         <junit.version>5.7.1</junit.version>
         <mockito.version>3.8.0</mockito.version>
         <assertj.version>3.19.0</assertj.version>
-        <lombok.version>1.18.18</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <tiles-maven-plugin.version>2.20</tiles-maven-plugin.version>
         <kemitix-maven-tiles.version>3.0.1</kemitix-maven-tiles.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
