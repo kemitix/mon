@@ -5,6 +5,11 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.github.spotbugs:spotbugs-annotations
+    versions:
+    - 4.2.0
+    - 4.2.1
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
