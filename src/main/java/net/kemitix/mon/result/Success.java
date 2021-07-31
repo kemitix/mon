@@ -37,7 +37,8 @@ import java.util.function.Predicate;
  * @param <T> the type of the value in the Result
  */
 @RequiredArgsConstructor
-@SuppressWarnings({"methodcount", "PMD.CyclomaticComplexity"})
+@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount",
+        "PMD.CyclomaticComplexity"})
 class Success<T> implements Result<T> {
 
     private final T value;
@@ -54,7 +55,7 @@ class Success<T> implements Result<T> {
 
     @Override
     @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable"})
-    public <R> Result<R> map(final Function<T, R> f) {
+    public <R> Result<R> map(final ThrowableFunction<T, R, ?> f) {
         try {
             return success(f.apply(value));
         } catch (Throwable e) {
@@ -130,12 +131,22 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public ResultVoid thenWithV(final Function<T, WithResultContinuation<T>> f) {
+        return f.apply(value).call(this).toVoid();
+    }
+
+    @Override
     public Result<T> reduce(final Result<T> identity, final BinaryOperator<T> operator) {
         return flatMap(a -> identity.flatMap(b -> result(() -> operator.apply(a, b))));
     }
 
     @Override
     public <R> Result<R> flatMap(final Function<T, Result<R>> f) {
+        return f.apply(value);
+    }
+
+    @Override
+    public ResultVoid flatMapV(final Function<T, ResultVoid> f) {
         return f.apply(value);
     }
 
@@ -152,5 +163,10 @@ class Success<T> implements Result<T> {
     @Override
     public String toString() {
         return String.format("Result.Success{value=%s}", value);
+    }
+
+     @Override
+    public ResultVoid toVoid() {
+        return Result.ok();
     }
 }

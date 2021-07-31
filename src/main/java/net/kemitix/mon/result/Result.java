@@ -21,7 +21,7 @@
 
 package net.kemitix.mon.result;
 
-import net.kemitix.mon.Functor;
+import net.kemitix.mon.ThrowableFunctor;
 import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
 
@@ -42,7 +42,7 @@ import java.util.stream.Stream;
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
 @SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount"})
-public interface Result<T> extends Functor<T, Result<?>> {
+public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
 
     /**
      * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
@@ -54,7 +54,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      */
     static <T> Result<T> from(final Maybe<T> maybe, final Supplier<Throwable> error) {
         return maybe.map(Result::ok)
-                .orElseGet(() -> Result.error(error.get()));
+                .orElseGet(() -> new Err<>(error.get()));
     }
 
     /**
@@ -87,11 +87,10 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * Create a Result for an error.
      *
      * @param error the error (Throwable)
-     * @param <T>   the type had the result been a success
      * @return an error Result
      */
-    static <T> Result<T> error(final Throwable error) {
-        return new Err<>(error);
+    static ResultVoid error(final Throwable error) {
+        return new ErrVoid(error);
     }
 
     /**
@@ -106,7 +105,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
         try {
             return Result.ok(callable.call());
         } catch (final Throwable e) {
-            return Result.error(e);
+            return new Err<>(e);
         }
     }
 
@@ -122,7 +121,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
         try {
             return Result.ok(callable.call());
         } catch (final Throwable e) {
-            return Result.error(e);
+            return new Err<>(e);
         }
     }
 
@@ -133,7 +132,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return a Result with no value
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    static Result<Void> ofVoid(final VoidCallable callable) {
+    static ResultVoid ofVoid(final VoidCallable callable) {
         try {
             callable.call();
             return Result.ok();
@@ -146,10 +145,10 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * Create a Result for a success.
      *
      * @param value the value
-     * @param <T>   the type of the value
+     * @param <R>   the type of the value
      * @return a successful Result
      */
-    default <T> Result<T> success(final T value) {
+    default <R> Result<R> success(final R value) {
         return new Success<>(value);
     }
 
@@ -157,10 +156,10 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * Create a Result for a success.
      *
      * @param value the value
-     * @param <T>   the type of the value
+     * @param <R>   the type of the value
      * @return a successful Result
      */
-    static <T> Result<T> ok(final T value) {
+    static <R> Result<R> ok(final R value) {
         return new Success<>(value);
     }
 
@@ -169,8 +168,8 @@ public interface Result<T> extends Functor<T, Result<?>> {
      *
      * @return a successful Result
      */
-    static Result<Void> ok() {
-        return Result.ok(null);
+    static ResultVoid ok() {
+        return new SuccessVoid();
     }
 
     /**
@@ -252,6 +251,8 @@ public interface Result<T> extends Functor<T, Result<?>> {
      */
     <R> Result<R> flatMap(Function<T, Result<R>> f);
 
+    ResultVoid flatMapV(Function<T, ResultVoid> f);
+
     /**
      * Applies the function to the contents of a Maybe within the Result.
      *
@@ -283,7 +284,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
     boolean isOkay();
 
     @Override
-    <R> Result<R> map(Function<T, R> f);
+    <R> Result<R> map(ThrowableFunction<T, R, ?> f);
 
     /**
      * Matches the Result, either success or error, and supplies the appropriate Consumer with the value or error.
@@ -398,6 +399,7 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * @return the Result or a new error Result
      */
     Result<T> thenWith(Function<T, WithResultContinuation<T>> f);
+    ResultVoid thenWithV(Function<T, WithResultContinuation<T>> f);
 
     /**
      * Reduce two Results of the same type into one using the reducing function provided.
@@ -460,14 +462,15 @@ public interface Result<T> extends Functor<T, Result<?>> {
      * successfully by the function, or an Err Result for the first value that
      * failed.
      */
-    static <N> Result<Void> applyOver(
+    static <N> ResultVoid applyOver(
             Stream<N> stream,
             Consumer<N> consumer
     ) {
         return applyOver(stream, n -> {
             consumer.accept(n);
             return null;
-        }, null, (unused1, unused2) -> null);
+        }, null, (unused1, unused2) -> null)
+                .toVoid();
     }
 
     /**
@@ -505,4 +508,5 @@ public interface Result<T> extends Functor<T, Result<?>> {
         return acc.get();
     }
 
+    ResultVoid toVoid();
 }

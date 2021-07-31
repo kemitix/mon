@@ -37,7 +37,8 @@ import java.util.function.Predicate;
  * @param <T> the type of the value in the Result if it has been a success
  */
 @RequiredArgsConstructor
-@SuppressWarnings({"methodcount", "PMD.CyclomaticComplexity"})
+@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount",
+        "PMD.CyclomaticComplexity"})
 class Err<T> implements Result<T> {
 
     private final Throwable error;
@@ -58,7 +59,12 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    public <R> Result<R> map(final Function<T, R> f) {
+    public ResultVoid flatMapV(final Function<T, ResultVoid> f) {
+        return Result.error(error);
+    }
+
+    @Override
+    public <R> Result<R> map(final ThrowableFunction<T, R, ?> f) {
         return err(error);
     }
 
@@ -135,13 +141,19 @@ class Err<T> implements Result<T> {
     }
 
     @Override
+    public ResultVoid thenWithV(final Function<T, WithResultContinuation<T>> f) {
+        return toVoid();
+    }
+
+    @Override
     public Result<T> reduce(final Result<T> identify, final BinaryOperator<T> operator) {
         return this;
     }
 
     @Override
     public boolean equals(final Object other) {
-        return other instanceof Err && Objects.equals(error, ((Err) other).error);
+        return other instanceof Err
+                && Objects.equals(error, ((Err) other).error);
     }
 
     @Override
@@ -152,5 +164,10 @@ class Err<T> implements Result<T> {
     @Override
     public String toString() {
         return String.format("Result.Error{error=%s}", error);
+    }
+
+    @Override
+    public ResultVoid toVoid() {
+        return new ErrVoid(error);
     }
 }

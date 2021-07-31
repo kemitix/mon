@@ -3,11 +3,7 @@ package net.kemitix.mon;
 import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
-import net.kemitix.mon.result.CheckedErrorResultException;
-import net.kemitix.mon.result.ErrorResultException;
-import net.kemitix.mon.result.VoidCallable;
-import net.kemitix.mon.result.Result;
-import net.kemitix.mon.result.UnexpectedErrorResultException;
+import net.kemitix.mon.result.*;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -32,15 +29,27 @@ class ResultTest implements WithAssertions {
     class BasicPropertiesTests {
 
         @Test
+        @SuppressWarnings({"PMD.JUnitTestContainsTooManyAsserts"})
         void equality() {
-            assertThat(Result.ok(1)).isEqualTo(Result.ok(1));
-            assertThat(Result.ok(1)).isNotEqualTo(Result.ok(2));
             final RuntimeException runtimeException = new RuntimeException();
-            assertThat(Result.ok(1)).isNotEqualTo(Result.error(runtimeException));
-            assertThat(Result.error(runtimeException)).isEqualTo(Result.error(runtimeException));
-            assertThat(Result.error(runtimeException)).isNotEqualTo(Result.error(new RuntimeException()));
-            assertThat(Result.ok(1).equals("1")).isFalse();
-            assertThat(Result.error(new RuntimeException()).equals("1")).isFalse();
+            // Success
+            assertThat(Result.ok(1)).as("Success: same integer value").isEqualTo(Result.ok(1));
+            assertThat(Result.ok(1)).as("Success: diff integer values").isNotEqualTo(Result.ok(2));
+            assertThat(Result.ok(1).equals("1")).as("Success: string v integer").isFalse(); // NOPMD
+            assertThat(Result.ok(1)).as("Success: success v error").isNotEqualTo(Result.error(runtimeException));
+            // SuccessVoid
+            assertThat(Result.ok()).as("SuccessVoid: void v void").isEqualTo(Result.ok());
+            assertThat(Result.ok().hashCode()).as("SuccessVoid: hash v void").isNotNull();
+            assertThat(Result.ok()).as("SuccessVoid: void v integer").isNotEqualTo(Result.ok(1));
+            assertThat(Result.ok()).as("SuccessVoid: v ErrorVoid").isNotEqualTo(Result.error(runtimeException));
+            // Error
+            assertThat(Result.ok(1).err(runtimeException)).as("error v error").isEqualTo(Result.ok(1).err(runtimeException));
+            assertThat(Result.ok(1).err(runtimeException)).as("error v other error").isNotEqualTo(Result.ok(1).err(new RuntimeException()));
+            assertThat(Result.ok(1).err(runtimeException)).as("error v string").isNotEqualTo("1");
+            // ErrorVoid
+            assertThat(Result.error(runtimeException)).as("same error value").isEqualTo(Result.error(runtimeException));
+            assertThat(Result.error(runtimeException)).as("diff error values").isNotEqualTo(Result.error(new RuntimeException()));
+            assertThat(Result.error(new RuntimeException()).equals("1")).as("error v string").isFalse(); // NOPMD
         }
 
         @Test
@@ -60,6 +69,17 @@ class ResultTest implements WithAssertions {
         }
 
         @Test
+        void errorVHashCodesAreUnique() {
+            // despite having 'equivalent' exceptions, the exceptions are distinct instances, so should be considered unique
+            //given
+            final RuntimeException exception1 = new RuntimeException("message");
+            final RuntimeException exception2 = new RuntimeException("message");
+            assumeThat(exception1.hashCode()).isNotEqualTo(exception2.hashCode());
+            //then
+            assertThat(Result.ok(1).err(exception1).hashCode()).isNotEqualTo(Result.ok(1).err(exception2).hashCode());
+        }
+
+        @Test
         void whenOkVoid_isOkay() {
             //when
             var result = Result.ok();
@@ -68,12 +88,20 @@ class ResultTest implements WithAssertions {
         }
 
         @Test
+        void whenOkVoid_isError() {
+            //when
+            var result = Result.ok();
+            //then
+            assertThat(result.isError()).isFalse();
+        }
+
+        @Test
         void whenOkayVoid_match_isNull() {
             //when
             var result = Result.ok();
             //then
             result.match(
-                    success -> assertThat(success).isNull(),
+                    () -> assertThat(true).isTrue(),
                     error -> fail("not an error")
             );
         }
@@ -108,7 +136,7 @@ class ResultTest implements WithAssertions {
         @Test
         void whenError_isError() {
             //when
-            final Result<String> result = Result.error(new Exception());
+            final Result<Integer> result = anError(new Exception());
             //then
             assertThat(result.isOkay()).isFalse();
         }
@@ -116,7 +144,7 @@ class ResultTest implements WithAssertions {
         @Test
         void whenError_isNotSuccess() {
             //when
-            final Result<String> result = Result.error(new Exception());
+            final Result<Integer> result = anError(new Exception());
             //then
             assertThat(result.isError()).isTrue();
         }
@@ -124,7 +152,7 @@ class ResultTest implements WithAssertions {
         @Test
         void whenError_matchError() {
             //given
-            final Result<Object> result = Result.error(new Exception("bad"));
+            final Result<Integer> result = anError(new Exception("bad"));
             //then
             result.match(
                     success -> fail("not a success"),
@@ -143,13 +171,33 @@ class ResultTest implements WithAssertions {
         }
 
         @Test
+        void okayVoid_toString() {
+            //given
+            final ResultVoid ok = Result.ok();
+            //when
+            final String toString = ok.toString();
+            //then
+            assertThat(toString).contains("Result.SuccessVoid{}");
+        }
+
+        @Test
         void error_toString() {
             //given
-            final Result<Integer> error = Result.error(new RuntimeException("failed"));
+            final Result<Integer> error = anError(new RuntimeException("failed"));
             //when
             final String toString = error.toString();
             //then
             assertThat(toString).contains("Result.Error{error=java.lang.RuntimeException: failed}");
+        }
+
+        @Test
+        void errorVoid_toString() {
+            //given
+            final ResultVoid error = Result.error(new RuntimeException("failed"));
+            //when
+            final String toString = error.toString();
+            //then
+            assertThat(toString).contains("Result.ErrorVoid{error=java.lang.RuntimeException: failed}");
         }
 
         @Test
@@ -181,18 +229,22 @@ class ResultTest implements WithAssertions {
         }
     }
 
+    private Result<Integer> anError(Exception e) {
+        return Result.ok(1)
+                .flatMap(s -> Result.of(() -> {throw e;}));
+    }
+
     @Nested
     @DisplayName("flatMap")
     class FlatMapTests {
         @Test
         void okay_whenFlatMapToOkay_isOkay() {
             //given
-            final Result<String> result = Result.ok("good");
+            final Result<String> ok = Result.ok("good");
             //when
-            final Result<String> flatMap = result.flatMap(v -> Result.ok(v.toUpperCase()));
+            final Result<String> result = ok.flatMap(v -> Result.ok(v.toUpperCase()));
             //then
-            assertThat(flatMap.isOkay()).isTrue();
-            flatMap.match(
+            result.match(
                     success -> assertThat(success).isEqualTo("GOOD"),
                     error -> fail("not an error")
             );
@@ -203,7 +255,7 @@ class ResultTest implements WithAssertions {
             //given
             final Result<String> result = Result.ok("good");
             //when
-            final Result<String> flatMap = result.flatMap(v -> Result.error(new Exception("bad flat map")));
+            final Result<Integer> flatMap = result.flatMap(v -> anError(new Exception("bad flat map")));
             //then
             assertThat(flatMap.isOkay()).isFalse();
         }
@@ -211,9 +263,9 @@ class ResultTest implements WithAssertions {
         @Test
         void error_whenFlatMapToOkay_isError() {
             //given
-            final Result<String> result = Result.error(new Exception("bad"));
+            final Result<Integer> result = anError(new Exception("bad"));
             //when
-            final Result<String> flatMap = result.flatMap(v -> Result.ok(v.toUpperCase()));
+            final Result<Object> flatMap = result.flatMap(Result::ok);
             //then
             assertThat(flatMap.isError()).isTrue();
         }
@@ -221,9 +273,56 @@ class ResultTest implements WithAssertions {
         @Test
         void error_whenFlatMapToError_isError() {
             //given
-            final Result<String> result = Result.error(new Exception("bad"));
+            final Result<Integer> result = anError(new Exception("bad"));
             //when
-            final Result<String> flatMap = result.flatMap(v -> Result.error(new Exception("bad flat map")));
+            final Result<Integer> flatMap = result.flatMap(v -> anError(new Exception("bad flat map")));
+            //then
+            assertThat(flatMap.isError()).isTrue();
+        }
+    }
+
+    @Nested
+    @DisplayName("flatMapV")
+    class FlatMapVTests {
+        @Test
+        void okay_whenFlatMapVToOkay_isOkayVoid() {
+            //given
+            final Result<String> result = Result.ok("good");
+            //when
+            final ResultVoid flatMap = result.flatMapV(v -> Result.ok());
+            //then
+            flatMap.match(
+                    () -> assertThat(true).isTrue(),
+                    error -> fail("not an error")
+            );
+        }
+
+        @Test
+        void okay_whenFlatMapVToError_isErrorVoid() {
+            //given
+            final Result<String> result = Result.ok("good");
+            //when
+            final ResultVoid flatMap = result.flatMapV(v -> Result.error(new Exception("bad flat map")));
+            //then
+            assertThat(flatMap.isOkay()).isFalse();
+        }
+
+        @Test
+        void error_whenFlatMapVToOkay_isErrorVoid() {
+            //given
+            final Result<Integer> result = anError(new Exception("bad"));
+            //when
+            final ResultVoid flatMap = result.flatMapV(value -> Result.ok());
+            //then
+            assertThat(flatMap.isError()).isTrue();
+        }
+
+        @Test
+        void error_whenFlatMapVToError_isErrorVoid() {
+            //given
+            final Result<Integer> result = anError(new Exception("bad"));
+            //when
+            final ResultVoid flatMap = result.flatMapV(v -> Result.error(new Exception("bad flat map")));
             //then
             assertThat(flatMap.isError()).isTrue();
         }
@@ -239,7 +338,6 @@ class ResultTest implements WithAssertions {
             //when
             final Result<String> result = okResult.map(value -> String.valueOf(value));
             //then
-            assertThat(result.isOkay()).isTrue();
             result.match(
                     success -> assertThat(success).isEqualTo("1"),
                     error -> fail("not an error")
@@ -255,7 +353,6 @@ class ResultTest implements WithAssertions {
                 throw new RuntimeException("map error");
             });
             //then
-            assertThat(result.isError()).isTrue();
             result.match(
                     success -> fail("not an success"),
                     error -> assertThat(error).hasMessage("map error")
@@ -266,11 +363,10 @@ class ResultTest implements WithAssertions {
         void error_whenMap_isError() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> errorResult = Result.error(exception);
+            final Result<Integer> errorResult = anError(exception);
             //when
             final Result<String> result = errorResult.map(value -> String.valueOf(value));
             //then
-            assertThat(result.isError()).isTrue();
             result.match(
                     success -> fail("not an success"),
                     error -> assertThat(error).isSameAs(exception)
@@ -288,7 +384,6 @@ class ResultTest implements WithAssertions {
             //when
             final Result<Maybe<Integer>> maybeResult = okResult.maybe(value -> value >= 0);
             //then
-            assertThat(maybeResult.isOkay()).isTrue();
             maybeResult.match(
                     success -> assertThat(success.toOptional()).contains(1),
                     error -> fail("not an error")
@@ -302,7 +397,6 @@ class ResultTest implements WithAssertions {
             //when
             final Result<Maybe<Integer>> maybeResult = okResult.maybe(value -> value >= 4);
             //then
-            assertThat(maybeResult.isOkay()).isTrue();
             maybeResult.match(
                     success -> assertThat(success.toOptional()).isEmpty(),
                     error -> fail("not an error")
@@ -313,11 +407,10 @@ class ResultTest implements WithAssertions {
         void error_whenMaybe_wherePasses_isError() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> errorResult = Result.error(exception);
+            final Result<Integer> errorResult = anError(exception);
             //when
             final Result<Maybe<Integer>> maybeResult = errorResult.maybe(value -> value >= 0);
             //then
-            assertThat(maybeResult.isError()).isTrue();
             maybeResult.match(
                     success -> fail("not a success"),
                     error -> assertThat(error).isSameAs(exception)
@@ -328,11 +421,10 @@ class ResultTest implements WithAssertions {
         void error_whenMaybe_whereFails_isError() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> errorResult = Result.error(exception);
+            final Result<Integer> errorResult = anError(exception);
             //when
             final Result<Maybe<Integer>> maybeResult = errorResult.maybe(value -> value >= 4);
             //then
-            assertThat(maybeResult.isError()).isTrue();
             maybeResult.match(
                     success -> fail("not a success"),
                     error -> assertThat(error).isSameAs(exception)
@@ -350,7 +442,6 @@ class ResultTest implements WithAssertions {
                 //when
                 final Result<Integer> result = Result.from(just, () -> new RuntimeException());
                 //then
-                assertThat(result.isOkay()).isTrue();
                 result.match(
                         success -> assertThat(success).isEqualTo(1),
                         error -> fail("not an error")
@@ -365,7 +456,6 @@ class ResultTest implements WithAssertions {
                 //when
                 final Result<Object> result = Result.from(nothing, () -> exception);
                 //then
-                assertThat(result.isError()).isTrue();
                 result.match(
                         success -> fail("not a success"),
                         error -> assertThat(error).isSameAs(exception)
@@ -390,9 +480,9 @@ class ResultTest implements WithAssertions {
             @Test
             void error_whenToMaybe_isNothing() {
                 //given
-                final Result<Object> error = Result.error(new RuntimeException());
+                final Result<Integer> error = anError(new RuntimeException());
                 //when
-                final Maybe<Object> maybe = Result.toMaybe(error);
+                final Maybe<Integer> maybe = Result.toMaybe(error);
                 //then
                 assertThat(maybe.toOptional()).isEmpty();
             }
@@ -416,7 +506,7 @@ class ResultTest implements WithAssertions {
         void error_whenOrElseThrow_throws() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             //when
             assertThatThrownBy(() -> error.orElseThrow())
                     .isInstanceOf(CheckedErrorResultException.class)
@@ -437,7 +527,7 @@ class ResultTest implements WithAssertions {
         void errorT_whenOrElseThrowT_throwsT() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Object> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             //then
             assertThatThrownBy(() -> error.orElseThrow(RuntimeException.class)).isSameAs(exception);
         }
@@ -446,7 +536,7 @@ class ResultTest implements WithAssertions {
         void errorR_whenOrElseThrowT_throwsWrappedR() {
             //given
             final IOException exception = new IOException();
-            final Result<Object> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             //then
             assertThatThrownBy(() -> error.orElseThrow(RuntimeException.class))
                     .isInstanceOf(UnexpectedErrorResultException.class)
@@ -471,7 +561,7 @@ class ResultTest implements WithAssertions {
         void error_whenOrElseThrowUnchecked_throwsWrapped() {
             //given
             final IOException exception = new IOException();
-            final Result<Object> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             //then
             assertThatThrownBy(() -> error.orElseThrowUnchecked())
                     .isInstanceOf(ErrorResultException.class)
@@ -499,9 +589,9 @@ class ResultTest implements WithAssertions {
         void JustError_whenInvert_isError() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Maybe<Result<Object>> justError = Maybe.just(Result.error(exception));
+            final Maybe<Result<Integer>> justError = Maybe.just(anError(exception));
             //when
-            final Result<Maybe<Object>> result = Result.swap(justError);
+            final Result<Maybe<Integer>> result = Result.swap(justError);
             //then
             result.match(
                     success -> fail("Not a success"),
@@ -561,7 +651,6 @@ class ResultTest implements WithAssertions {
             //when
             final Result<Double> doubleResult = useCase.businessOperation("file klmno", "file pqrstu");
             //then
-            assertThat(doubleResult.isOkay()).isFalse();
             doubleResult.match(
                     success -> fail("not okay"),
                     error -> assertThat(error)
@@ -577,25 +666,44 @@ class ResultTest implements WithAssertions {
         @Test
         void okay_whenPeek_isConsumed() {
             //given
-            final Result<Integer> result = Result.ok(1);
-            final AtomicReference<Integer> consumed = new AtomicReference<>(0);
+            final Result<Integer> okay = Result.ok(1);
+            final AtomicBoolean consumed = new AtomicBoolean(false);
             //when
-            final Result<Integer> peeked = result.peek(consumed::set);
+            okay.peek(v -> consumed.set(true));
             //then
-            assertThat(consumed).hasValue(1);
-            assertThat(peeked).isSameAs(result);
+            assertThat(consumed).isTrue();
+        }
+
+        @Test
+        void okay_whenPeek_isOriginal() {
+            //given
+            final Result<Integer> okay = Result.ok(1);
+            final AtomicBoolean consumed = new AtomicBoolean(false);
+            //when
+            final Result<Integer> result = okay.peek(v -> consumed.set(true));
+            //then
+            assertThat(result).isSameAs(okay);
         }
 
         @Test
         void error_whenPeek_isNotConsumed() {
             //given
-            final Result<Integer> result = Result.error(new RuntimeException());
-            final AtomicReference<Integer> consumed = new AtomicReference<>(0);
+            final Result<Integer> error = anError(new RuntimeException());
+            final AtomicBoolean consumed = new AtomicBoolean(false);
             //when
-            final Result<Integer> peeked = result.peek(consumed::set);
+            error.peek(newValue -> consumed.set(true));
             //then
-            assertThat(consumed).hasValue(0);
-            assertThat(peeked).isSameAs(result);
+            assertThat(consumed).isFalse(); // peek should not occur
+        }
+        @Test
+        void error_whenPeek_isSelf() {
+            //given
+            final Result<Integer> error = anError(new RuntimeException());
+            final AtomicBoolean consumed = new AtomicBoolean(false);
+            //when
+            final Result<Integer> result = error.peek(v -> consumed.set(true));
+            //then
+            assertThat(result).isSameAs(error);
         }
     }
 
@@ -614,7 +722,27 @@ class ResultTest implements WithAssertions {
         void error_whenOnError_isConsumed() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
+            final AtomicReference<Throwable> capture = new AtomicReference<>();
+            //when
+            error.onError(capture::set);
+            //then
+            assertThat(capture).hasValue(exception);
+        }
+
+        @Test
+        void okayVoid_whenOnError_isIgnored() {
+            //given
+            final ResultVoid ok = Result.ok();
+            //when
+            ok.onError(e -> fail("not an error"));
+        }
+
+        @Test
+        void errorVoid_whenOnError_isConsumed() {
+            //given
+            final RuntimeException exception = new RuntimeException();
+            final ResultVoid error = Result.error(exception);
             final AtomicReference<Throwable> capture = new AtomicReference<>();
             //when
             error.onError(capture::set);
@@ -628,6 +756,7 @@ class ResultTest implements WithAssertions {
     class OnErrorByTypeTests {
 
         @Test
+        @DisplayName("okay when on error is ignored")
         void okay_whenOnError_isIgnored() {
             //given
             final Result<Integer> ok = Result.ok(1);
@@ -641,7 +770,7 @@ class ResultTest implements WithAssertions {
         void error_whenOnError_isConsumed() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             final AtomicReference<Throwable> capture = new AtomicReference<>();
             //when
             error.onError(RuntimeException.class,
@@ -655,7 +784,45 @@ class ResultTest implements WithAssertions {
         void error_withNoMatch_whenOnError_isIgnored() {
             //given
             RuntimeException exception = new RuntimeException();
-            Result<Integer> error = Result.error(exception);
+            Result<Integer> error = anError(exception);
+            final AtomicReference<Throwable> capture = new AtomicReference<>();
+            //when
+            error.onError(Exception.class,
+                    capture::set);
+            //then
+            assertThat(capture).hasValue(null);
+        }
+
+        @Test
+        @DisplayName("okay void when on error is ignored")
+        void okayVoid_whenOnError_isIgnored() {
+            //given
+            final ResultVoid ok = Result.ok();
+            //when
+            ok.onError(Throwable.class,
+                    e -> fail("not an error"));
+        }
+
+        @Test
+        @DisplayName("error void with matching type is consumed")
+        void errorVoid_whenOnError_isConsumed() {
+            //given
+            final RuntimeException exception = new RuntimeException();
+            final ResultVoid error = Result.error(exception);
+            final AtomicReference<Throwable> capture = new AtomicReference<>();
+            //when
+            error.onError(RuntimeException.class,
+                    capture::set);
+            //then
+            assertThat(capture).hasValue(exception);
+        }
+
+        @Test
+        @DisplayName("error void with non-matching type is ignored")
+        void errorVoid_withNoMatch_whenOnError_isIgnored() {
+            //given
+            RuntimeException exception = new RuntimeException();
+            ResultVoid error = Result.error(exception);
             final AtomicReference<Throwable> capture = new AtomicReference<>();
             //when
             error.onError(Exception.class,
@@ -672,13 +839,13 @@ class ResultTest implements WithAssertions {
         void error_whenOnSuccess_isIgnored() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             //when
             error.onSuccess(e -> fail("not a success"));
         }
 
         @Test
-        void okay_whenOnError_isConsumed() {
+        void okay_whenOnSuccess_isConsumed() {
             //given
             final AtomicReference<Integer> capture = new AtomicReference<>();
             final Result<Integer> ok = Result.ok(1);
@@ -687,13 +854,33 @@ class ResultTest implements WithAssertions {
             //then
             assertThat(capture).hasValue(1);
         }
+
+        @Test
+        void errorVoid_whenOnSuccess_isIgnored() {
+            //given
+            final RuntimeException exception = new RuntimeException();
+            final ResultVoid error = Result.error(exception);
+            //when
+            error.onSuccess(() -> fail("not a success"));
+        }
+
+        @Test
+        void okayVoid_whenOnSuccess_isConsumed() {
+            //given
+            final AtomicReference<Integer> capture = new AtomicReference<>();
+            final ResultVoid ok = Result.ok();
+            //when
+            ok.onSuccess(() -> capture.set(1));
+            //then
+            assertThat(capture).hasValue(1);
+        }
     }
 
     @Nested
     @DisplayName("recover")
     class RecoverTests {
-        @Nested @DisplayName("with recovery plan")
-        class RecoveryPlanTests {
+        @Nested @DisplayName("Result")
+        class ResultRecoveryTests {
             @Test
             void okay_whenRecover_thenNoChange() {
                 //given
@@ -707,8 +894,9 @@ class ResultTest implements WithAssertions {
             @Test
             void error_whenRecover_isSuccess() {
                 //given
-                final Result<Integer> error = Result.error(new RuntimeException());
+                final Result<Integer> error = anError(new RuntimeException());
                 //when
+                // recover can't change the type of the result
                 final Result<Integer> recovered = error.recover(e -> Result.ok(2));
                 //then
                 recovered.peek(v -> assertThat(v).isEqualTo(2));
@@ -717,13 +905,98 @@ class ResultTest implements WithAssertions {
             @Test
             void error_whenRecover_whereError_isUpdatedError() {
                 //given
-                final Result<Integer> error = Result.error(new RuntimeException("original"));
+                final Result<Integer> error = anError(new RuntimeException("original"));
                 //when
-                final Result<Integer> recovered = error.recover(e -> Result.error(new RuntimeException("updated")));
+                final Result<Integer> recovered = error.recover(e -> anError(new RuntimeException("updated")));
                 //then
                 recovered.onError(e -> assertThat(e).hasMessage("updated"));
             }
         }
+        @Nested @DisplayName("ResultVoid")
+        class ResultVoidRecoveryTests {
+            @Test
+            void okayVoid_whenRecover_thenNoChange() {
+                //given
+                final ResultVoid ok = Result.ok();
+                //when
+                final ResultVoid recovered = ok.recover(e -> Result.ok());
+                //then
+                assertThat(recovered).isSameAs(ok);
+            }
+
+            @Test
+            void error_whenRecover_isSuccess() {
+                //given
+                final ResultVoid error = Result.error(new RuntimeException());
+                //when
+                // recover can't change the type of the result
+                final ResultVoid recovered = error.recover(e -> Result.ok());
+                //then
+                assertThat(recovered.isOkay()).isTrue();
+            }
+
+            @Test
+            void error_whenRecover_whereError_isUpdatedError() {
+                //given
+                final ResultVoid error = Result.error(new RuntimeException("original"));
+                //when
+                final ResultVoid recovered = error.recover(e -> Result.error(new RuntimeException("updated")));
+                //then
+                recovered.onError(e -> assertThat(e).hasMessage("updated"));
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("inject (recover for ResultVoid)")
+    class InjectTests {
+        @Test
+        @DisplayName("SuccessVoid#inject is Success with Value")
+        void okayVoid_whenInject_isOkayValue() {
+            //given
+            final ResultVoid ok = Result.ok();
+            //when
+            final Result<Integer> result = ok.inject(() -> 1);
+            //then
+            assertThat(result).isEqualTo(Result.ok(1));
+        }
+
+        @Test
+        @DisplayName("okayVoid when Inject fails then error")
+        void okayVoid_whenInjectIsError_isError() {
+            //given
+            final ResultVoid ok = Result.ok();
+            //when
+            final Result<Integer> result = ok.inject(() -> {throw new RuntimeException();});
+            //then
+            assertThat(result.isError()).isTrue();
+        }
+
+        @Test
+        @DisplayName("errorVoid when inject is Success with Value")
+        void errorVoid_whenInject_isInjectedValue() {
+            //given
+            final ResultVoid error = Result.error(new RuntimeException());
+            //when
+            final Result<Integer> result = error.inject(() -> 1);
+            //then
+            assertThat(result).isEqualTo(Result.ok(1));
+        }
+
+        @Test
+        @DisplayName("errorVoid when Inject fails then original error")
+        void errorVoid_whenInjectIsError_isOriginalError() {
+            //given
+            RuntimeException exception = new RuntimeException();
+            final ResultVoid error = Result.error(exception);
+            //when
+            final Result<Integer> result = error.inject(() -> {throw new RuntimeException();});
+            //then
+            result.match(
+                    x -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception));
+        }
+
     }
 
     @Nested
@@ -736,8 +1009,9 @@ class ResultTest implements WithAssertions {
             //when
             final Result<String> result = ok.andThen(v -> () -> "success");
             //then
-            assertThat(result.isOkay()).isTrue();
-            result.peek(v -> assertThat(v).isEqualTo("success"));
+            result.match(
+                    v -> assertThat(v).isEqualTo("success"),
+                    e -> fail("not an error"));
         }
 
         @Test
@@ -750,34 +1024,94 @@ class ResultTest implements WithAssertions {
                 throw exception;
             });
             //then
-            assertThat(result.isError()).isTrue();
-            result.onError(e -> assertThat(e).isSameAs(exception));
+            result.match(
+                    x -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception));
         }
 
         @Test
         void error_whereAndThen_whereSuccess_isError() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Object> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             //when
             final Result<Object> result = error.andThen(v -> () -> "success");
             //then
-            assertThat(result.isError()).isTrue();
-            result.onError(e -> assertThat(e).isSameAs(exception));
+            result.match(
+                    x -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception));
         }
 
         @Test
         void error_whenAndThen_whereError_isOriginalError() {
             //given
             final RuntimeException exception1 = new RuntimeException();
-            final Result<Object> error = Result.error(exception1);
+            final Result<Integer> error = anError(exception1);
             //when
             final Result<Object> result = error.andThen(v -> () -> {
                 throw new RuntimeException();
             });
             //then
-            assertThat(result.isError()).isTrue();
-            result.onError(e -> assertThat(e).isSameAs(exception1));
+            result.match(
+                    x -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception1));
+        }
+
+        @Test
+        void okayVoid_whenAndThen_whereSuccess_isUpdatedSuccess() {
+            //given
+            final ResultVoid ok = Result.ok();
+            //when
+            final ResultVoid result = ok.andThen(() -> {
+                // do nothing
+            });
+            //then
+            assertThat(result.isOkay()).isTrue();
+        }
+
+        @Test
+        void okayVoid_whenAndThen_whereError_isError() {
+            //given
+            final ResultVoid ok = Result.ok();
+            final RuntimeException exception = new RuntimeException();
+            //when
+            final ResultVoid result = ok.andThen(() -> {
+                throw exception;
+            });
+            //then
+            result.match(
+                    () -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception));
+        }
+
+        @Test
+        void errorVoid_whereAndThen_whereSuccess_isError() {
+            //given
+            final RuntimeException exception = new RuntimeException();
+            final ResultVoid error = Result.error(exception);
+            //when
+            final ResultVoid result = error.andThen(() -> {
+                // do nothing
+            });
+            //then
+            result.match(
+                    () -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception));
+        }
+
+        @Test
+        void errorVoid_whenAndThen_whereError_isOriginalError() {
+            //given
+            final RuntimeException exception1 = new RuntimeException();
+            final ResultVoid error = Result.error(exception1);
+            //when
+            final ResultVoid result = error.andThen(() -> {
+                throw new RuntimeException();
+            });
+            //then
+            result.match(
+                    () -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception1));
         }
     }
 
@@ -806,15 +1140,16 @@ class ResultTest implements WithAssertions {
                 throw exception;
             });
             //then
-            assertThat(result.isError()).isTrue();
-            result.onError(e -> assertThat(e).isSameAs(exception));
+            result.match(
+                    x -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception));
         }
 
         @Test
         void error_whenThenWith_whereOkay_thenOriginalError() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             //when
             final Result<Integer> result = error.thenWith(v -> () -> {
                 // do something with v
@@ -827,7 +1162,7 @@ class ResultTest implements WithAssertions {
         void error_whenThenWith_whenError_thenOriginalError() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> error = Result.error(exception);
+            final Result<Integer> error = anError(exception);
             //when
             final Result<Integer> result = error.thenWith(v -> () -> {
                 throw new RuntimeException();
@@ -835,6 +1170,65 @@ class ResultTest implements WithAssertions {
             //then
             assertThat(result).isSameAs(error);
         }
+
+    }
+
+    @Nested
+    @DisplayName("thenWithV")
+    class ThenWithVTests {
+        @Test
+        void okay_whenThenWithV_whereOkay_isSuccessVoid() {
+            //given
+            final Result<Integer> ok = Result.ok(1);
+            //when
+            final ResultVoid result = ok.thenWithV(v -> () -> {
+                // do something with v
+            });
+            //then
+            assertThat(result.isOkay()).isTrue();
+        }
+
+        @Test
+        void okay_whenThenWithV_whereError_thenErrorVoid() {
+            //given
+            final Result<Integer> ok = Result.ok(1);
+            final RuntimeException exception = new RuntimeException();
+            //when
+            final ResultVoid result = ok.thenWithV(v -> () -> {
+                throw exception;
+            });
+            //then
+            result.match(
+                    () -> fail("not a success"),
+                    e -> assertThat(e).isSameAs(exception));
+        }
+
+        @Test
+        void error_whenThenWithV_whereOkay_thenErrorVoid() {
+            //given
+            final RuntimeException exception = new RuntimeException();
+            final Result<Integer> error = anError(exception);
+            //when
+            final ResultVoid result = error.thenWithV(v -> () -> {
+                // do something with v
+            });
+            //then
+            assertThat(result.isError()).isTrue();
+        }
+
+        @Test
+        void error_whenThenWithV_whenError_thenErrorVoid() {
+            //given
+            final RuntimeException exception = new RuntimeException();
+            final Result<Integer> error = anError(exception);
+            //when
+            final ResultVoid result = error.thenWithV(v -> () -> {
+                throw new RuntimeException();
+            });
+            //then
+            assertThat(result.isError()).isTrue();
+        }
+
     }
 
     @Nested
@@ -872,7 +1266,7 @@ class ResultTest implements WithAssertions {
             final Result<Maybe<Integer>> okJust = Result.ok(Maybe.just(1));
             final RuntimeException exception = new RuntimeException();
             //when
-            final Result<Maybe<Integer>> result = Result.flatMapMaybe(okJust, v -> Result.error(exception));
+            final Result<Maybe<Integer>> result = Result.flatMapMaybe(okJust, v -> Result.ok(v).err(exception));
             //then
             result.match(
                     success -> fail("Not a success"),
@@ -897,7 +1291,7 @@ class ResultTest implements WithAssertions {
         void error_whenFlatMapMaybe_thenDoNotApply() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Maybe<Integer>> maybeResult = Result.error(exception);
+            final Result<Maybe<Integer>> maybeResult = Result.ok(Maybe.just(1)).err(exception);
             //when
             final Result<Maybe<String>> result = Result.flatMapMaybe(maybeResult, maybe -> Result.ok(maybe.flatMap(v -> Maybe.just("2"))));
             //then
@@ -930,7 +1324,7 @@ class ResultTest implements WithAssertions {
             //given
             final Result<Integer> result1 = Result.ok(1);
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> result10 = Result.error(exception);
+            final Result<Integer> result10 = anError(exception);
             //when
             final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
             //then
@@ -944,7 +1338,7 @@ class ResultTest implements WithAssertions {
         void errorOkay_whenReduce_thenError() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Integer> result1 = Result.error(exception);
+            final Result<Integer> result1 = anError(exception);
             final Result<Integer> result10 = Result.ok(10);
             //when
             final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
@@ -959,9 +1353,9 @@ class ResultTest implements WithAssertions {
         void errorError_whenReduce_thenError() {
             //given
             final RuntimeException exception1 = new RuntimeException();
-            final Result<Integer> result1 = Result.error(exception1);
+            final Result<Integer> result1 = anError(exception1);
             final RuntimeException exception10 = new RuntimeException();
-            final Result<Integer> result10 = Result.error(exception10);
+            final Result<Integer> result10 = anError(exception10);
             //when
             final Result<Integer> result11 = result1.reduce(result10, (a, b) -> a + b);
             //then
@@ -1012,8 +1406,10 @@ class ResultTest implements WithAssertions {
             //when
             var result = Result.applyOver(stream, accumulate);
             //then
-            assertThat(result.isOkay()).isTrue();
-            assertThat(acc).hasValue(3);
+            result.match(
+                    () -> assertThat(acc).hasValue(3),
+                    e -> fail("should pass")
+            );
         }
 
         @Test
@@ -1041,7 +1437,6 @@ class ResultTest implements WithAssertions {
                 throw exception;
             }, 0, Integer::sum);
             //then
-            assertThat(result.isError()).isTrue();
             result.match(
                     success -> fail("not a success"),
                     error -> assertThat(error).isSameAs(exception)
@@ -1064,6 +1459,10 @@ class ResultTest implements WithAssertions {
                         success -> fail("not a success"),
                         error -> assertThat(error).hasMessage("ccc")
                 );
+            }
+            @Test
+            @DisplayName("processing stopped after first error")
+            void stoppedOnFirstError() {
                 assertThat(processed).contains("ccc");
             }
 
@@ -1138,11 +1537,10 @@ class ResultTest implements WithAssertions {
             //given
             var stream = Stream.of("error");
             var exception = new RuntimeException();
-            Function<String, Result<Integer>> f = s -> Result.error(exception);
+            Function<String, Result<Integer>> f = s -> anError(exception);
             //when
             var result = Result.flatApplyOver(stream, f, 0, Integer::sum);
             //then
-            assertThat(result.isError()).isTrue();
             result.match(
                     success -> fail("not a success"),
                     error -> assertThat(error).isSameAs(exception)
@@ -1160,12 +1558,17 @@ class ResultTest implements WithAssertions {
             });
             Result<Integer> result = Result.flatApplyOver(stream, f, 0, Integer::sum);
 
-            @Test @DisplayName("is first error")
+            @Test
+            @DisplayName("error in result is the first error raised")
             void isFirstError() {
                 result.match(
                         success -> fail("not a success"),
                         error -> assertThat(error).hasMessage("ccc")
                 );
+            }
+            @Test
+            @DisplayName("Processing stopped after first error")
+            void stoppedOnFirstError() {
                 assertThat(processed).contains("ccc");
             }
 
@@ -1208,9 +1611,9 @@ class ResultTest implements WithAssertions {
         @DisplayName("Success becomes Right")
         void successIsRight() {
             //given
-            var result = Result.ok("success");
+            Result<String> result = Result.ok("success");
             //when
-            var either = result.toEither();
+            Either<Throwable, String> either = result.toEither();
             //then
             either.match(
                     left -> fail("not a left"),
@@ -1222,10 +1625,10 @@ class ResultTest implements WithAssertions {
         @DisplayName("Error becomes Left")
         void errorIsLeft() {
             //given
-            var exception = new RuntimeException();
-            var result = Result.error(exception);
+            RuntimeException exception = new RuntimeException();
+            Result<Integer> result = anError(exception);
             //when
-            var either = result.toEither();
+            Either<Throwable, Integer> either = result.toEither();
             //then
             either.match(
                     left -> assumeThat(left).isSameAs(exception),
@@ -1241,10 +1644,10 @@ class ResultTest implements WithAssertions {
         @Test @DisplayName("left is error")
         void leftIsError() {
             //given
-            var exception = new RuntimeException();
-            var either = Either.<Throwable, String>left(exception);
+            RuntimeException exception = new RuntimeException();
+            Either<Throwable, String> either = Either.left(exception);
             //when
-            var result = Result.from(either);
+            Result<String> result = Result.from(either);
             //then
             result.match(
                     success -> fail("not a success"),
@@ -1255,9 +1658,9 @@ class ResultTest implements WithAssertions {
         @Test @DisplayName("right is success")
         void rightIsSuccess() {
             //given
-            var either = Either.<Throwable, String>right("foo");
+            Either<Throwable, String> either = Either.right("foo");
             //when
-            var result = Result.from(either);
+            Result<String> result = Result.from(either);
             //then
             result.match(
                     success -> assertThat(success).isEqualTo("foo"),
@@ -1279,10 +1682,10 @@ class ResultTest implements WithAssertions {
                 //do nothing
             };
             //when
-            var result = Result.ofVoid(voidCallable);
+            ResultVoid result = Result.ofVoid(voidCallable);
             //then
             result.match(
-                    success -> assertThat(success).isNull(),
+                    () -> assertThat(true).isTrue(),
                     error -> fail("not an error")
             );
         }
@@ -1291,15 +1694,15 @@ class ResultTest implements WithAssertions {
         @DisplayName("throws exception is an Error")
         void exceptionIsError() {
             //given
-            var exception = new RuntimeException();
+            RuntimeException exception = new RuntimeException();
             VoidCallable voidCallable = () -> {
                 throw exception;
             };
             //when
-            var result = Result.ofVoid(voidCallable);
+            ResultVoid result = Result.ofVoid(voidCallable);
             //then
             result.match(
-                    success -> fail("not a success"),
+                    () -> fail("not a success"),
                     error -> assertThat(error).isSameAs(exception)
             );
         }
@@ -1335,7 +1738,7 @@ class ResultTest implements WithAssertions {
             if (okay) {
                 return Result.ok(fileName.length());
             }
-            return Result.error(new RuntimeException(fileName));
+            return Result.ok(fileName.length()).err(new RuntimeException(fileName));
         }
 
         private Result<Integer> adjustValue(final Integer value) {

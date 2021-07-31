@@ -50,7 +50,7 @@ public interface WithResultContinuation<T> {
         try {
             run();
         } catch (Throwable e) {
-            return Result.error(e);
+            return currentResult.err(e);
         }
         return currentResult;
     }
