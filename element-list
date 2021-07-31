@@ -1,0 +1,8 @@
+net.kemitix.mon
+net.kemitix.mon.combinator
+net.kemitix.mon.experimental
+net.kemitix.mon.experimental.either
+net.kemitix.mon.lazy
+net.kemitix.mon.maybe
+net.kemitix.mon.result
+net.kemitix.mon.tree
