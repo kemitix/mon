@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
 import net.kemitix.mon.result.*;
+import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,6 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assumptions.assumeThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class ResultTest implements WithAssertions {
 
@@ -1707,6 +1709,116 @@ class ResultTest implements WithAssertions {
             );
         }
 
+    }
+
+    /**
+     * These include snippets from the Javadocs and are meant to prove that the examples are valid.
+     */
+    @Nested
+    @DisplayName("javadoc documentation")
+    class JavadocTests {
+        @Nested
+        @DisplayName("Static constructors")
+        class StaticConstructors {
+            @Test
+            @DisplayName("ok")
+            void ok() {
+                ResultVoid okay = Result.ok();
+                //
+                assertThat(okay.isOkay()).isTrue();
+            }
+
+            @Test
+            @DisplayName("ok(value)")
+            void okValue() {
+                Result<Integer> okay = Result.ok(1);
+                //
+                okay.match(
+                        s -> assertThat(s).isEqualTo(1),
+                        e -> fail("not an err")
+                );
+            }
+
+            @Test
+            @DisplayName("of")
+            void of() {
+                Result<Integer> okay = Result.of(() -> 1);
+                Result<Integer> error = Result.of(() -> {
+                    throw new RuntimeException();
+                });
+                //
+                assertSoftly(s -> {
+                    okay.match(
+                            v -> s.assertThat(v).isEqualTo(1),
+                            e -> fail("not an err")
+                    );
+                    error.match(
+                            v -> fail("not a success"),
+                            e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
+                    );
+                });
+            }
+
+            @Test
+            @DisplayName("ofVoid")
+            void ofVoid() {
+                ResultVoid okay = Result.ofVoid(() -> System.out.println("Hello, World!"));
+                ResultVoid error = Result.ofVoid(() -> {
+                    throw new Exception();
+                });
+                //
+                assertSoftly(s -> {
+                    s.assertThat(okay.isOkay()).isTrue();
+                    s.assertThat(error.isError()).isTrue();
+                });
+            }
+
+            @Test
+            @DisplayName("error")
+            void error() {
+                ResultVoid error = Result.error(new RuntimeException());
+                //
+                assertThat(error.isError()).isTrue();
+            }
+
+            @Test
+            @DisplayName("from Either")
+            void fromEither() {
+                Either<Throwable, String> eitherRight = Either.right("Hello, World!");
+                Either<Throwable, String> eitherLeft = Either.left(new RuntimeException());
+                Result<String> success = Result.from(eitherRight);
+                Result<String> error = Result.from(eitherLeft);
+                //
+                assertSoftly(s -> {
+                    success.match(
+                            v -> s.assertThat(v).isEqualTo("Hello, World!"),
+                            e -> fail("not an err")
+                    );
+                    error.match(
+                            v -> fail("not a success"),
+                            e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
+                    );
+                });
+            }
+
+            @Test
+            @DisplayName("from Maybe")
+            void fromMaybe() {
+                Maybe<Integer> maybe = Maybe.maybe(getValue());
+                Result<Integer> result = Result.from(maybe, () -> new RuntimeException());
+                //
+                assertSoftly(s -> {
+                    result.match(
+                            v -> s.assertThat(v).isEqualTo(1),
+                            e -> fail("not an err")
+                    );
+                });
+            }
+
+            private Integer getValue() {
+                return 1;
+            }
+        }
     }
 
     @RequiredArgsConstructor

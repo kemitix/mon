@@ -48,6 +48,8 @@ import static org.apiguardian.api.API.Status.STABLE;
  *     <li>{@link #of(Callable)}</li>
  *     <li>{@link #ofVoid(VoidCallable)}</li>
  *     <li>{@link #error(Throwable)}</li>
+ *     <li>{@link #from(Either)}</li>
+ *     <li>{@link #from(Maybe, Supplier)}</li>
  * </ul>
  *
  * @param <T> the type of the result when a success
@@ -161,14 +163,46 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
         return new ErrVoid(error);
     }
 
-    // END Static Constructors
+    /**
+     * Creates a Result from the Either, where the Result will be an error if
+     * the Either is a Left, and a success if it is a Right.
+     *
+     * <pre><code>
+     * import net.kemitix.mon.experimental.either.Either;
+     *
+     * Either&lt;Throwable, String&gt; eitherRight = Either.right("Hello, World!");
+     * Either&lt;Throwable, String&gt; eitherLeft = Either.left(new RuntimeException());
+     *
+     * Result&lt;String&gt; success = Result.from(eitherRight);
+     * Result&lt;String&gt; error = Result.from(eitherLeft);
+     * </code></pre>
+     *
+     * @param either the either that could contain an error in left or a value in right
+     * @param <T>    the type of the right value
+     * @return a Result containing the right value of the Either when it is a
+     * Right, or the left error when it is a Left.
+     */
+    @API(status = API.Status.EXPERIMENTAL)
+    static <T> Result<T> from(Either<Throwable, T> either) {
+        return Result.from(
+                Maybe.fromOptional(either.getRight()),
+                () -> either.getLeft().get());
+    }
 
     /**
      * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
      *
+     * <p>Where the {@code Maybe} is nothing, then the Supplier will provide the error for the Result.</p>
+     *
+     * <pre><code>
+     * Maybe<Integer> maybe = Maybe.maybe(1);
+     * Result<Integer> result = Result.from(maybe,
+     *     () -> new RuntimeException());</p>
+     * </code></pre>
+     *
      * @param maybe the Maybe the might contain the value of the Result
      * @param error the error that will be the Result if maybe is Nothing
-     * @param <T>   the type of the Maybe and the Result
+     * @param <T>   the type of the value in the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
     static <T> Result<T> from(final Maybe<T> maybe, final Supplier<Throwable> error) {
@@ -176,20 +210,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
                 .orElseGet(() -> new Err<>(error.get()));
     }
 
-    /**
-     * Creates a Result from the Either, where the Result will be an error if
-     * the Either is a Left, and a success if it is a Right.
-     *
-     * @param either the either that could contain an error in left or a value in right
-     * @param <T>    the type of the right value
-     * @return a Result containing the right value of the Either when it is a
-     * Right, or the left error when it is a Left.
-     */
-    static <T> Result<T> from(Either<Throwable, T> either) {
-        return Result.from(
-                Maybe.fromOptional(either.getRight()),
-                () -> either.getLeft().get());
-    }
+    // END Static Constructors
 
     /**
      * Create a Result for an error.
