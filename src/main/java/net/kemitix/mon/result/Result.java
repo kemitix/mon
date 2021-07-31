@@ -350,8 +350,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * <p>However, if the {@code Result} is an {@link Err}, then the {@code Maybe} will be {@code Nothing}.</p>
      *
      * <pre><code>
-     *     Result<Integer> result = Result.of(() -> getValue());
-     *     Maybe<Integer> maybe = Result.toMaybe(result);
+     * Result&let;Integer&gt; result = Result.of(() -&gt; getValue());
+     * Maybe&let;Integer&gt; maybe = Result.toMaybe(result);
      * </code></pre>
      *
      * @param result the Result the might contain the value of the Result
