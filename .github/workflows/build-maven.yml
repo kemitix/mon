@@ -22,3 +22,18 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: build-jar
         run: mvn -B install
+  javadoc:
+    runs-on: ubuntu-latest:
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2.1.0
+        with:
+          distribution: adopt
+          java-version: 16
+      - name: create-javadoc
+        run: mvn -B javadoc:javadoc
+      - name:
+        uses: actions/upload-artifact@v2
+          with:
+            name: javadoc
+            path: target/site/apidocs
