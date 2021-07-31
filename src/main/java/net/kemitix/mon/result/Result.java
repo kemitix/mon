@@ -205,6 +205,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <T>   the type of the value in the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
+    @API(status = API.Status.EXPERIMENTAL)
     static <T> Result<T> from(final Maybe<T> maybe, final Supplier<Throwable> error) {
         return maybe.map(Result::ok)
                 .orElseGet(() -> new Err<>(error.get()));
