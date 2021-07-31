@@ -55,29 +55,6 @@ would have called the error `Consumer`.
 
 These static methods provide integration with the `Maybe` class.
 
-#### `Result<Maybe<T>> invert(Maybe<Result<T>> maybeResult)`
-
-Swaps the `Result` within a `Maybe`, so that `Result` contains a `Maybe`.
-
-```java
-class ResultInvertExample {
-    Maybe<Result<Integer>> maybe = Maybe.maybe(Result.of(() -> getValue()));
-    Result<Maybe<Integer>> result = Result.invert(maybe);
-}
-```
----
-#### `Result<Maybe<R>> flatMapMaybe(Result<Maybe<T>> maybeResult, Function<Maybe<T>,Result<Maybe<R>>> f)`
-
-Applies the function to the contents of a `Maybe` within the `Result`.
-
-```java
-class ResultOkExample {
-    Result<Maybe<Integer>> result = Result.of(() -> Maybe.maybe(getValue()));
-    Result<Maybe<Integer>> maybeResult = Result.flatMapMaybe(result,
-            maybe -> Result.of(() -> maybe.map(v -> v * 2)));
-}
-```
----
 #### `Result<R> applyOver(Stream<N> stream, Function<N, R> f, R zero, BiFunction<R, R, R> accumulator)`
 
 Applies a function to a stream of values, folding the results using the zero

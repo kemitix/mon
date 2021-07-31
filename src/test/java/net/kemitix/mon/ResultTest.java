@@ -1832,6 +1832,22 @@ class ResultTest implements WithAssertions {
                     );
                 });
             }
+            @Test
+            @DisplayName("flatMayMaybe")
+            void flatMapMaybe() {
+                Result<Maybe<Integer>> result = Result.of(() -> Maybe.maybe(getValue()));
+                Result<Maybe<Integer>> maybeResult = Result.flatMapMaybe(result,
+                        maybe -> Result.of(() -> maybe.map(v -> v * 2)));
+                //
+                assertSoftly(s -> {
+                    maybeResult.match(
+                            m -> m.match(
+                                    v -> s.assertThat(v).isEqualTo(2 * getValue()),
+                                    () -> fail("not a nothing")),
+                            e -> fail("not an err")
+                    );
+                });
+            }
         }
         private Integer getValue() {
             return 1;

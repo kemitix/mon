@@ -310,7 +310,13 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     }
 
     /**
-     * Applies the function to the contents of a Maybe within the Result.
+     * Applies the function to the contents of a {@link Maybe} within the {@code Result}.
+     *
+     * <pre><code>
+     * Result&lt;Maybe&lt;Integer&gt;&gt; result = Result.of(() -&gt; Maybe.maybe(getValue()));
+     * Result&lt;Maybe&lt;Integer&gt;&gt; maybeResult = Result.flatMapMaybe(result,
+     *        maybe -> Result.of(() -&gtl; maybe.map(v -&gt; v * 2)));
+     * </code></pre>
      *
      * @param maybeResult the Result that may contain a value
      * @param f           the function to apply to the value
@@ -327,7 +333,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     }
 
     /**
-     * Swaps the inner Result of a Maybe, so that a Result is on the outside.
+     * Swaps the inner {@code Result} of a {@link Maybe}, so that a {@code Result} contains a {@code Maybe}.
      *
      * @param maybeResult the Maybe the contains a Result
      * @param <T>         the type of the value that may be in the Result
