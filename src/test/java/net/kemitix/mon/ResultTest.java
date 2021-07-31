@@ -1809,15 +1809,32 @@ class ResultTest implements WithAssertions {
                 //
                 assertSoftly(s -> {
                     result.match(
-                            v -> s.assertThat(v).isEqualTo(1),
+                            v -> s.assertThat(v).isEqualTo(getValue()),
                             e -> fail("not an err")
                     );
                 });
             }
 
-            private Integer getValue() {
-                return 1;
+        }
+        @Nested
+        @DisplayName("Static methods")
+        class StaticMethodsTests {
+            @Test
+            @DisplayName("toMaybe")
+            void toMaybe() {
+                Result<Integer> result = Result.of(() -> getValue());
+                Maybe<Integer> maybe = Result.toMaybe(result);
+                //
+                assertSoftly(s -> {
+                    maybe.match(
+                            j -> s.assertThat(j).isEqualTo(getValue()),
+                            () -> fail("not a nothing")
+                    );
+                });
             }
+        }
+        private Integer getValue() {
+            return 1;
         }
     }
 

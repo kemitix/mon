@@ -342,9 +342,17 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     }
 
     /**
-     * Creates a {@link Maybe} from the Result, where the Result is a success, then the Maybe will contain the value.
+     * Creates a {@link Maybe} from the {@code Result}.
      *
-     * <p>However, if the Result is an error then the Maybe will be nothing.</p>
+     * <p>Where the {@code Result} is a {@link Success}, the {@code Maybe} will be a {@code Just} contain the value of
+     * the {@code Result}.</p>
+     *
+     * <p>However, if the {@code Result} is an {@link Err}, then the {@code Maybe} will be {@code Nothing}.</p>
+     *
+     * <pre><code>
+     *     Result<Integer> result = Result.of(() -> getValue());
+     *     Maybe<Integer> maybe = Result.toMaybe(result);
+     * </code></pre>
      *
      * @param result the Result the might contain the value of the Result
      * @param <T>    the type of the Maybe and the Result

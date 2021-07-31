@@ -55,19 +55,6 @@ would have called the error `Consumer`.
 
 These static methods provide integration with the `Maybe` class.
 
-#### `Maybe<T> toMaybe(Result<T> result)`
-
-Creates a `Maybe` from the `Result`, where the `Result` is a success, then
-the `Maybe` will be a `Just` contain the value of the `Result`. However, if the
-`Result` is an error, then the `Maybe` will be `Nothing`.
-
-```java
-class ResultOkExample {
-    Result<Integer> result = Result.of(() -> getValue());
-    Maybe<Integer> maybe = Result.toMaybe(result);
-}
-```
----
 #### `Result<Maybe<T>> invert(Maybe<Result<T>> maybeResult)`
 
 Swaps the `Result` within a `Maybe`, so that `Result` contains a `Maybe`.
