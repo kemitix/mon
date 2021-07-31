@@ -36,6 +36,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 /**
@@ -211,55 +212,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
                 .orElseGet(() -> new Err<>(error.get()));
     }
 
-    /**
-     * Applies the function to the contents of a Maybe within the Result.
-     *
-     * @param maybeResult the Result that may contain a value
-     * @param f           the function to apply to the value
-     * @param <T>         the type of the original Result
-     * @param <R>         the type of the updated Result
-     * @return a new Maybe within a Result
-     */
-    static <T, R> Result<Maybe<R>> flatMapMaybe(
-            final Result<Maybe<T>> maybeResult,
-            final Function<Maybe<T>, Result<Maybe<R>>> f
-    ) {
-        return maybeResult.flatMap(f);
-    }
-
     // END Static Constructors
     // BEGIN Static methods
-
-    /**
-     * Creates a {@link Maybe} from the Result, where the Result is a success, then the Maybe will contain the value.
-     *
-     * <p>However, if the Result is an error then the Maybe will be nothing.</p>
-     *
-     * @param result the Result the might contain the value of the Result
-     * @param <T>    the type of the Maybe and the Result
-     * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
-     */
-    static <T> Maybe<T> toMaybe(final Result<T> result) {
-        try {
-            return Maybe.just(result.orElseThrow());
-        } catch (final CheckedErrorResultException throwable) {
-            return Maybe.nothing();
-        }
-    }
-
-    /**
-     * Swaps the inner Result of a Maybe, so that a Result is on the outside.
-     *
-     * @param maybeResult the Maybe the contains a Result
-     * @param <T>         the type of the value that may be in the Result
-     * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
-     * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
-     * error, then the Result will also be an error.
-     */
-    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
-        return maybeResult.orElseGet(() -> Result.ok(null))
-                .flatMap(value -> Result.ok(Maybe.maybe(value)));
-    }
 
     /**
      * Applies a function to a stream of values, folding the results using the
@@ -354,6 +308,54 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
                 .limit(1)
                 .forEach(acc::set);
         return acc.get();
+    }
+
+    /**
+     * Applies the function to the contents of a Maybe within the Result.
+     *
+     * @param maybeResult the Result that may contain a value
+     * @param f           the function to apply to the value
+     * @param <T>         the type of the original Result
+     * @param <R>         the type of the updated Result
+     * @return a new Maybe within a Result
+     */
+    static <T, R> Result<Maybe<R>> flatMapMaybe(
+            final Result<Maybe<T>> maybeResult,
+            final Function<Maybe<T>, Result<Maybe<R>>> f
+    ) {
+        return maybeResult.flatMap(f);
+    }
+
+    /**
+     * Swaps the inner Result of a Maybe, so that a Result is on the outside.
+     *
+     * @param maybeResult the Maybe the contains a Result
+     * @param <T>         the type of the value that may be in the Result
+     * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
+     * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
+     * error, then the Result will also be an error.
+     */
+    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
+        return maybeResult.orElseGet(() -> Result.ok(null))
+                .flatMap(value -> Result.ok(Maybe.maybe(value)));
+    }
+
+    /**
+     * Creates a {@link Maybe} from the Result, where the Result is a success, then the Maybe will contain the value.
+     *
+     * <p>However, if the Result is an error then the Maybe will be nothing.</p>
+     *
+     * @param result the Result the might contain the value of the Result
+     * @param <T>    the type of the Maybe and the Result
+     * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
+     */
+    @API(status = DEPRECATED)
+    static <T> Maybe<T> toMaybe(final Result<T> result) {
+        try {
+            return Maybe.just(result.orElseThrow());
+        } catch (final CheckedErrorResultException throwable) {
+            return Maybe.nothing();
+        }
     }
 
     // END Static methods
