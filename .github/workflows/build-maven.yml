@@ -32,7 +32,8 @@ jobs:
           java-version: 16
       - name: create-javadoc
         run: mvn -B javadoc:javadoc
-      - uses: actions/upload-artifact@v2
+      - name: Publish Javadoc
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          name: javadoc
-          path: target/site/apidocs
+          branch: gh-pages # The branch the action should deploy to.
+          folder: target/site/apidocs # The folder the action should deploy.
