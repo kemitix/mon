@@ -32,8 +32,7 @@ jobs:
           java-version: 16
       - name: create-javadoc
         run: mvn -B javadoc:javadoc
-      - name:
-        uses: actions/upload-artifact@v2
-          with:
-            name: javadoc
-            path: target/site/apidocs
+      - uses: actions/upload-artifact@v2
+        with:
+          name: javadoc
+          path: target/site/apidocs
