@@ -56,73 +56,35 @@ import static org.apiguardian.api.API.Status.STABLE;
 @SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount"})
 public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
 
-    /**
-     * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
-     *
-     * @param maybe the Maybe the might contain the value of the Result
-     * @param error the error that will be the Result if maybe is Nothing
-     * @param <T>   the type of the Maybe and the Result
-     * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
-     */
-    static <T> Result<T> from(final Maybe<T> maybe, final Supplier<Throwable> error) {
-        return maybe.map(Result::ok)
-                .orElseGet(() -> new Err<>(error.get()));
-    }
+    // BEGIN Static Constructors
 
     /**
-     * Creates a Result from the Either, where the Result will be an error if
-     * the Either is a Left, and a success if it is a Right.
-     *
-     * @param either the either that could contain an error in left or a value in right
-     * @param <T>    the type of the right value
-     * @return a Result containing the right value of the Either when it is a
-     * Right, or the left error when it is a Left.
-     */
-    static <T> Result<T> from(Either<Throwable, T> either) {
-        return Result.from(
-                Maybe.fromOptional(either.getRight()),
-                () -> either.getLeft().get());
-    }
-
-    /**
-     * Create a Result for an error.
-     *
-     * @param error the error (Throwable)
-     * @param <T>   the type had the result been a success
-     * @return an error Result
-     */
-    default <T> Result<T> err(final Throwable error) {
-        return new Err<>(error);
-    }
-
-    /**
-     * Create a Result for an error.
+     * Creates a success Result with no value.
      *
      * <pre><code>
-     * ResultVoid error = Result.error(new RuntimeException());
+     * ResultVoid okay = Result.ok();
      * </code></pre>
-     *
-     * @param error the error (Throwable)
-     * @return an error Result
+     * @return a successful Result
      */
-    static ResultVoid error(final Throwable error) {
-        return new ErrVoid(error);
+    @API(status = STABLE)
+    static ResultVoid ok() {
+        return new SuccessVoid();
     }
 
     /**
-     * Create a Result for a output of the Callable.
+     * Create a success Result with a value.
      *
-     * @param callable the callable to produce the result
-     * @param <T>      the type of the value
-     * @return a Result
+     * <pre><code>
+     * Result&lt;Integer&gt; okay = Result.ok(1);
+     * </code></pre>
+     *
+     * @param value the value
+     * @param <R>   the type of the value
+     * @return a successful Result
      */
-    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable", "PMD.AvoidDuplicateLiterals"})
-    default <T> Result<T> result(final Callable<T> callable) {
-        try {
-            return Result.ok(callable.call());
-        } catch (final Throwable e) {
-            return new Err<>(e);
-        }
+    @API(status = STABLE)
+    static <R> Result<R> ok(final R value) {
+        return new Success<>(value);
     }
 
     /**
@@ -185,6 +147,78 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     }
 
     /**
+     * Create a Result for an error.
+     *
+     * <pre><code>
+     * ResultVoid error = Result.error(new RuntimeException());
+     * </code></pre>
+     *
+     * @param error the error (Throwable)
+     * @return an error Result
+     */
+    @API(status = STABLE)
+    static ResultVoid error(final Throwable error) {
+        return new ErrVoid(error);
+    }
+
+    // END Static Constructors
+
+    /**
+     * Creates a Result from the Maybe, where the Result will be an error if the Maybe is Nothing.
+     *
+     * @param maybe the Maybe the might contain the value of the Result
+     * @param error the error that will be the Result if maybe is Nothing
+     * @param <T>   the type of the Maybe and the Result
+     * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
+     */
+    static <T> Result<T> from(final Maybe<T> maybe, final Supplier<Throwable> error) {
+        return maybe.map(Result::ok)
+                .orElseGet(() -> new Err<>(error.get()));
+    }
+
+    /**
+     * Creates a Result from the Either, where the Result will be an error if
+     * the Either is a Left, and a success if it is a Right.
+     *
+     * @param either the either that could contain an error in left or a value in right
+     * @param <T>    the type of the right value
+     * @return a Result containing the right value of the Either when it is a
+     * Right, or the left error when it is a Left.
+     */
+    static <T> Result<T> from(Either<Throwable, T> either) {
+        return Result.from(
+                Maybe.fromOptional(either.getRight()),
+                () -> either.getLeft().get());
+    }
+
+    /**
+     * Create a Result for an error.
+     *
+     * @param error the error (Throwable)
+     * @param <T>   the type had the result been a success
+     * @return an error Result
+     */
+    default <T> Result<T> err(final Throwable error) {
+        return new Err<>(error);
+    }
+
+    /**
+     * Create a Result for a output of the Callable.
+     *
+     * @param callable the callable to produce the result
+     * @param <T>      the type of the value
+     * @return a Result
+     */
+    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable", "PMD.AvoidDuplicateLiterals"})
+    default <T> Result<T> result(final Callable<T> callable) {
+        try {
+            return Result.ok(callable.call());
+        } catch (final Throwable e) {
+            return new Err<>(e);
+        }
+    }
+
+    /**
      * Create a Result for a success.
      *
      * @param value the value
@@ -193,35 +227,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      */
     default <R> Result<R> success(final R value) {
         return new Success<>(value);
-    }
-
-    /**
-     * Create a success Result with a value.
-     *
-     * <pre><code>
-     * Result&lt;Integer&gt; okay = Result.ok(1);
-     * </code></pre>
-    *
-     * @param value the value
-     * @param <R>   the type of the value
-     * @return a successful Result
-     */
-    @API(status = STABLE)
-    static <R> Result<R> ok(final R value) {
-        return new Success<>(value);
-    }
-
-    /**
-     * Creates a success Result with no value.
-     *
-     * <pre><code>
-     * ResultVoid okay = Result.ok();
-     * </code></pre>
-     * @return a successful Result
-     */
-    @API(status = STABLE)
-    static ResultVoid ok() {
-        return new SuccessVoid();
     }
 
     /**
