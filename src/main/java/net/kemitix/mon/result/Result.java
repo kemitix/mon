@@ -36,8 +36,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.*;
 
 /**
  * A type for holding a <strong>result</strong> or an <strong>error</strong>.
@@ -319,6 +318,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <R>         the type of the updated Result
      * @return a new Maybe within a Result
      */
+    @API(status = EXPERIMENTAL)
     static <T, R> Result<Maybe<R>> flatMapMaybe(
             final Result<Maybe<T>> maybeResult,
             final Function<Maybe<T>, Result<Maybe<R>>> f
@@ -335,6 +335,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
      * error, then the Result will also be an error.
      */
+    @API(status = DEPRECATED)
     static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
         return maybeResult.orElseGet(() -> Result.ok(null))
                 .flatMap(value -> Result.ok(Maybe.maybe(value)));
@@ -349,7 +350,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <T>    the type of the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
-    @API(status = DEPRECATED)
+    @API(status = EXPERIMENTAL)
     static <T> Maybe<T> toMaybe(final Result<T> result) {
         try {
             return Maybe.just(result.orElseThrow());
