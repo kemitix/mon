@@ -211,7 +211,152 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
                 .orElseGet(() -> new Err<>(error.get()));
     }
 
+    /**
+     * Applies the function to the contents of a Maybe within the Result.
+     *
+     * @param maybeResult the Result that may contain a value
+     * @param f           the function to apply to the value
+     * @param <T>         the type of the original Result
+     * @param <R>         the type of the updated Result
+     * @return a new Maybe within a Result
+     */
+    static <T, R> Result<Maybe<R>> flatMapMaybe(
+            final Result<Maybe<T>> maybeResult,
+            final Function<Maybe<T>, Result<Maybe<R>>> f
+    ) {
+        return maybeResult.flatMap(f);
+    }
+
     // END Static Constructors
+    // BEGIN Static methods
+
+    /**
+     * Creates a {@link Maybe} from the Result, where the Result is a success, then the Maybe will contain the value.
+     *
+     * <p>However, if the Result is an error then the Maybe will be nothing.</p>
+     *
+     * @param result the Result the might contain the value of the Result
+     * @param <T>    the type of the Maybe and the Result
+     * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
+     */
+    static <T> Maybe<T> toMaybe(final Result<T> result) {
+        try {
+            return Maybe.just(result.orElseThrow());
+        } catch (final CheckedErrorResultException throwable) {
+            return Maybe.nothing();
+        }
+    }
+
+    /**
+     * Swaps the inner Result of a Maybe, so that a Result is on the outside.
+     *
+     * @param maybeResult the Maybe the contains a Result
+     * @param <T>         the type of the value that may be in the Result
+     * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
+     * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
+     * error, then the Result will also be an error.
+     */
+    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
+        return maybeResult.orElseGet(() -> Result.ok(null))
+                .flatMap(value -> Result.ok(Maybe.maybe(value)));
+    }
+
+    /**
+     * Applies a function to a stream of values, folding the results using the
+     * zero value and accumulator function.
+     *
+     * <p>If any value results in an error when applying the function, then
+     * processing stops and a Result containing that error is returned,</p>
+     *
+     * @param stream      the values to apply the function to
+     * @param f           the function to apply to the values
+     * @param zero        the initial value to use with the accumulator
+     * @param accumulator the function to combine function outputs together
+     * @param <N>         the type of the stream values
+     * @param <R>         the type of the output value
+     * @return a Success Result of the accumulated function outputs if all
+     * values were transformed successfully by the function, or an Err Result
+     * for the first value that failed.
+     */
+    static <N, R> Result<R> applyOver(
+            Stream<N> stream,
+            Function<N, R> f,
+            R zero,
+            BiFunction<R, R, R> accumulator
+    ) {
+        var acc = new AtomicReference<>(Result.ok(zero));
+        stream.map(t -> Result.of(() -> f.apply(t)))
+                .peek(r ->
+                        r.onSuccess(vNew ->
+                                acc.getAndUpdate(rResult ->
+                                        rResult.map(vOld ->
+                                                accumulator.apply(vNew, vOld)))))
+                .dropWhile(Result::isOkay)
+                .limit(1)
+                .forEach(acc::set);
+        return acc.get();
+    }
+
+    /**
+     * Applies a consumer to a stream of values.
+     *
+     * <p>If any value results in an error when accepted by the consumer, then
+     * processing stops and a Result containing that error is returned,</p>
+     *
+     * @param stream   the value to supply to the consumer
+     * @param consumer the consumer to receive the values
+     * @param <N>      the type of the stream values
+     * @return a Success Result (with no value) if all values were transformed
+     * successfully by the function, or an Err Result for the first value that
+     * failed.
+     */
+    static <N> ResultVoid applyOver(
+            Stream<N> stream,
+            Consumer<N> consumer
+    ) {
+        return applyOver(stream, n -> {
+            consumer.accept(n);
+            return null;
+        }, null, (unused1, unused2) -> null)
+                .toVoid();
+    }
+
+    /**
+     * Applies a function to a stream of values, folding the results using the
+     * zero value and accumulator function.
+     *
+     * <p>If any value results in an error when applying the function, then
+     * processing stops and a Result containing that error is returned,</p>
+     *
+     * @param stream      the values to apply the function to
+     * @param f           the function to apply to the values
+     * @param zero        the initial value to use with the accumulator
+     * @param accumulator the function to combine function outputs together
+     * @param <T>         the type of the stream values
+     * @param <R>         the type of the output value
+     * @return a Success Result of the accumulated function outputs if all
+     * values were transformed successfully by the function, or an Err Result
+     * for the first value that failed.
+     */
+    static <T, R> Result<R> flatApplyOver(
+            Stream<T> stream,
+            Function<T, Result<R>> f,
+            R zero,
+            BiFunction<R, R, R> accumulator
+    ) {
+        var acc = new AtomicReference<>(Result.ok(zero));
+        stream.map(f)
+                .peek(r -> r.onSuccess(vNew ->
+                        acc.getAndUpdate(rResult ->
+                                rResult.map(vOld ->
+                                        accumulator.apply(vNew, vOld)))))
+                .dropWhile(Result::isOkay)
+                .limit(1)
+                .forEach(acc::set);
+        return acc.get();
+    }
+
+    // END Static methods
 
     /**
      * Create a Result for an error.
@@ -249,23 +394,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      */
     default <R> Result<R> success(final R value) {
         return new Success<>(value);
-    }
-
-    /**
-     * Creates a {@link Maybe} from the Result, where the Result is a success, then the Maybe will contain the value.
-     *
-     * <p>However, if the Result is an error then the Maybe will be nothing.</p>
-     *
-     * @param result the Result the might contain the value of the Result
-     * @param <T>    the type of the Maybe and the Result
-     * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
-     */
-    static <T> Maybe<T> toMaybe(final Result<T> result) {
-        try {
-            return Maybe.just(result.orElseThrow());
-        } catch (final CheckedErrorResultException throwable) {
-            return Maybe.nothing();
-        }
     }
 
     /**
@@ -308,20 +436,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     T orElseThrowUnchecked();
 
     /**
-     * Swaps the inner Result of a Maybe, so that a Result is on the outside.
-     *
-     * @param maybeResult the Maybe the contains a Result
-     * @param <T>         the type of the value that may be in the Result
-     * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
-     * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
-     * error, then the Result will also be an error.
-     */
-    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
-        return maybeResult.orElseGet(() -> Result.ok(null))
-                .flatMap(value -> Result.ok(Maybe.maybe(value)));
-    }
-
-    /**
      * Returns a new Result consisting of the result of applying the function to the contents of the Result.
      *
      * @param f   the mapping function the produces a Result
@@ -337,22 +451,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @return a ResultVoid
      */
     ResultVoid flatMapV(Function<T, ResultVoid> f);
-
-    /**
-     * Applies the function to the contents of a Maybe within the Result.
-     *
-     * @param maybeResult the Result that may contain a value
-     * @param f           the function to apply to the value
-     * @param <T>         the type of the original Result
-     * @param <R>         the type of the updated Result
-     * @return a new Maybe within a Result
-     */
-    static <T, R> Result<Maybe<R>> flatMapMaybe(
-            final Result<Maybe<T>> maybeResult,
-            final Function<Maybe<T>, Result<Maybe<R>>> f
-    ) {
-        return maybeResult.flatMap(f);
-    }
 
     /**
      * Checks if the Result is an error.
@@ -517,100 +615,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      */
     Result<T> reduce(Result<T> identify, BinaryOperator<T> operator);
 
-    /**
-     * Applies a function to a stream of values, folding the results using the
-     * zero value and accumulator function.
-     *
-     * <p>If any value results in an error when applying the function, then
-     * processing stops and a Result containing that error is returned,</p>
-     *
-     * @param stream      the values to apply the function to
-     * @param f           the function to apply to the values
-     * @param zero        the initial value to use with the accumulator
-     * @param accumulator the function to combine function outputs together
-     * @param <N>         the type of the stream values
-     * @param <R>         the type of the output value
-     * @return a Success Result of the accumulated function outputs if all
-     * values were transformed successfully by the function, or an Err Result
-     * for the first value that failed.
-     */
-    static <N, R> Result<R> applyOver(
-            Stream<N> stream,
-            Function<N, R> f,
-            R zero,
-            BiFunction<R, R, R> accumulator
-    ) {
-        var acc = new AtomicReference<>(Result.ok(zero));
-        stream.map(t -> Result.of(() -> f.apply(t)))
-                .peek(r ->
-                        r.onSuccess(vNew ->
-                                acc.getAndUpdate(rResult ->
-                                        rResult.map(vOld ->
-                                                accumulator.apply(vNew, vOld)))))
-                .dropWhile(Result::isOkay)
-                .limit(1)
-                .forEach(acc::set);
-        return acc.get();
-    }
-
-    /**
-     * Applies a consumer to a stream of values.
-     *
-     * <p>If any value results in an error when accepted by the consumer, then
-     * processing stops and a Result containing that error is returned,</p>
-     *
-     * @param stream   the value to supply to the consumer
-     * @param consumer the consumer to receive the values
-     * @param <N>      the type of the stream values
-     * @return a Success Result (with no value) if all values were transformed
-     * successfully by the function, or an Err Result for the first value that
-     * failed.
-     */
-    static <N> ResultVoid applyOver(
-            Stream<N> stream,
-            Consumer<N> consumer
-    ) {
-        return applyOver(stream, n -> {
-            consumer.accept(n);
-            return null;
-        }, null, (unused1, unused2) -> null)
-                .toVoid();
-    }
-
-    /**
-     * Applies a function to a stream of values, folding the results using the
-     * zero value and accumulator function.
-     *
-     * <p>If any value results in an error when applying the function, then
-     * processing stops and a Result containing that error is returned,</p>
-     *
-     * @param stream      the values to apply the function to
-     * @param f           the function to apply to the values
-     * @param zero        the initial value to use with the accumulator
-     * @param accumulator the function to combine function outputs together
-     * @param <T>         the type of the stream values
-     * @param <R>         the type of the output value
-     * @return a Success Result of the accumulated function outputs if all
-     * values were transformed successfully by the function, or an Err Result
-     * for the first value that failed.
-     */
-    static <T, R> Result<R> flatApplyOver(
-            Stream<T> stream,
-            Function<T, Result<R>> f,
-            R zero,
-            BiFunction<R, R, R> accumulator
-    ) {
-        var acc = new AtomicReference<>(Result.ok(zero));
-        stream.map(f)
-                .peek(r -> r.onSuccess(vNew ->
-                        acc.getAndUpdate(rResult ->
-                                rResult.map(vOld ->
-                                        accumulator.apply(vNew, vOld)))))
-                .dropWhile(Result::isOkay)
-                .limit(1)
-                .forEach(acc::set);
-        return acc.get();
-    }
-
     ResultVoid toVoid();
+
 }
