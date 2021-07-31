@@ -97,57 +97,6 @@ class ApplyOverExample {
 }
 ```
 ---
-#### `Result<Void> applyOver(Stream<N> stream, Consumer<N> consumer)`
-
-Applies a consumer to a stream of values.
-
-If any value results in an error when accepted by the consumer, then processing
-stops, and a Result containing that error is returned.
-
-Returns a success Result (with no value) if all values were consumed
-successfully by the function, or an error Result for the first value that
-failed.
-
-```java
-import net.kemitix.mon.result.Result;
-
-import java.util.function.Consumer;
-
-class ApplyOverExample {
-
-    public static void main(String[] args) {
-        List<String> processed = new ArrayList<>();
-        Consumer<String> consumer = s -> {
-            if ("dd".equals(s)) {
-                throw new RuntimeException("Invalid input: " + s);
-            }
-            processed.add(s);
-        };
-
-        Stream<String> okayStream = Stream.of("aa", "bb");
-        Result<Void> resultOkay = Result.applyOver(okayStream, consumer);
-        resultOkay.match(
-                success -> System.out.println("All processed okay."),
-                error -> System.out.println("Error: " + error.getMessage())
-        );
-        System.out.println("Processed: " + processed);
-        // All processed okay.
-        // Processed: [aa, bb]
-
-        processed.clear();
-        Stream<String> errorStream = Stream.of("cc", "dd", "ee");
-        Result<Void> resultError = Result.applyOver(errorStream, consumer);
-        resultError.match(
-                success -> System.out.println("All processed okay."),
-                error -> System.out.println("Error: " + error.getMessage())
-        );
-        System.out.println("Processed: " + processed);
-        // Error: Invalid input: dd
-        // Processed: [cc]
-    }
-}
-```
----
 #### `Result<R> flatApplyOver(Stream<T> stream, Function<T, Result<R>> f, R zero, BiFunction<R, R, R> accumulator)`
 
 Applies a function to a stream of values, folding the results using the zero

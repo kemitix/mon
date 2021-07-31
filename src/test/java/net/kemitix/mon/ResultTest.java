@@ -1848,6 +1848,50 @@ class ResultTest implements WithAssertions {
                     );
                 });
             }
+            @Test
+            @DisplayName("flatApply(Stream, Consumer")
+            void flatApplyOverStreamConsumer() {
+                List<String> processed = new ArrayList<>();
+                Consumer<String> consumer = s -> {
+                    if ("dd".equals(s)) {
+                        throw new RuntimeException("Invalid input: " + s);
+                    }
+                    processed.add(s);
+                };
+
+                Stream<String> okayStream = Stream.of("aa", "bb");
+                ResultVoid resultOkay = Result.applyOver(okayStream, consumer);
+                resultOkay.match(
+                        () -> System.out.println("All processed okay."),
+                        error -> System.out.println("Error: " + error.getMessage())
+                );
+                System.out.println("Processed: " + processed);
+                // All processed okay.
+                // Processed: [aa, bb]
+
+                processed.add("--");
+                Stream<String> errorStream = Stream.of("cc", "dd", "ee");// fails at 'dd'
+                ResultVoid resultError = Result.applyOver(errorStream, consumer);
+                resultError.match(
+                        () -> System.out.println("All processed okay."),
+                        error -> System.out.println("Error: " + error.getMessage())
+                );
+                System.out.println("Processed: " + processed);
+                // Error: Invalid input: dd
+                // Processed: [aa, bb, --, cc]
+
+                assertSoftly(s -> {
+                    s.assertThat(processed).containsExactly(
+                            "aa", "bb", "--",
+                            "cc"
+                    );
+                    resultError.match(
+                            () -> fail("not a success"),
+                            e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
+                                    .hasMessage("Invalid input: dd")
+                    );
+                });
+            }
         }
         private Integer getValue() {
             return 1;

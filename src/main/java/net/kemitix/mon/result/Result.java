@@ -256,6 +256,41 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * <p>If any value results in an error when accepted by the consumer, then
      * processing stops and a Result containing that error is returned,</p>
      *
+     * <p>Returns a success Result (with no value) if all values were consumed
+     * successfully by the function, or an error Result for the first value that
+     * failed.</p>
+     *
+     * <pre><code>
+     * List&lt;String&gt; processed = new ArrayList&lt;&gt;();
+     * Consumer&lt;String> consumer = s -&gt; {
+     *     if ("dd".equals(s)) {
+     *         throw new RuntimeException("Invalid input: " + s);
+     *     }
+     *     processed.add(s);
+     * };
+     *
+     * Stream&lt;String&gt; okayStream = Stream.of("aa", "bb");
+     * ResultVoid resultOkay = Result.applyOver(okayStream, consumer);
+     * resultOkay.match(
+     *         () -&gt; System.out.println("All processed okay."),
+     *         error -&gt; System.out.println("Error: " + error.getMessage())
+     * );
+     * System.out.println("Processed: " + processed);
+     * // All processed okay.
+     * // Processed: [aa, bb]
+     *
+     * processed.add("--");
+     * Stream&lt;String&gt; errorStream = Stream.of("cc", "dd", "ee");// fails at 'dd'
+     * ResultVoid resultError = Result.applyOver(errorStream, consumer);
+     * resultError.match(
+     *         () -&gt; System.out.println("All processed okay."),
+     *         error -&gt; System.out.println("Error: " + error.getMessage())
+     * );
+     * System.out.println("Processed: " + processed);
+     * // Error: Invalid input: dd
+     * // Processed: [aa, bb, --, cc]
+     * </code></pre>
+     *
      * @param stream   the value to supply to the consumer
      * @param consumer the consumer to receive the values
      * @param <N>      the type of the stream values
