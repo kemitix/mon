@@ -1,12 +1,7 @@
 ## Result
-
 Allows handling error conditions without the need to `catch` exceptions.
 
-When a `Result` is returned from a method, it will contain one of two values.
-Either the actual result, or an error in the form of an `Exception`. The
-exception is returned within the `Result` and is not thrown.
-
-`Result` is a Monad.
+* [Full Documentation](https://kemitix.github.io/mon/) 
 
 ### Example
 
@@ -56,72 +51,6 @@ would have called the error `Consumer`.
 
 ### Static Constructors
 
-#### `Result<T> of(Callable<T> callable)`
-
-Create a `Result` for the output of the `Callable`.
-
-If the `Callable` throws an `Exception`, then the `Result` will be an error and
-will contain that exception.
-
-This will be the main starting point for most `Result`s where the callable
-could throw an `Exception`.
-
-```java
-class ResultOfExample {
-    Result<Integer> okay = Result.of(() -> 1);
-    Result<Integer> error = Result.of(() -> {
-        throw new RuntimeException();
-    });
-}
-```
----
-#### `Result<Void> ofVoid(Callable<Void> callable)`
-
-Create a Result for calling a Callable that produces no output.
-
-```java
-class ResultOfVoidExample {
-
-    Result<Void> okay = Result.ofVoid(() -> System.out.println("Hello, World!"));
-    Result<Void> error = Result.ofVoid(() -> {
-        throw new Exception();
-    });
-
-}
-```
----
-#### `Result<Void> ok()`
-
-Creates a success Result with no value.
-
-```java
-class ResultOkExample {
-    Result<Void> okay = Result.ok();
-}
-```
----
-#### `Result<T> ok(T value)`
-
-Create a `Result` for a success.
-
-Use this where you have a value that you want to place into the `Result` context.
-
-```java
-class ResultOkExample {
-    Result<Integer> okay = Result.ok(1);
-}
-```
----
-#### `Result<T> error(Throwable error)`
-
-Create a `Result` for an error.
-
-```java
-class ResultErrorExample {
-    Result<Integer> error = Result.error(new RuntimeException());
-}
-```
----
 ### Static Methods
 
 These static methods provide integration with the `Maybe` class.

@@ -20,9 +20,28 @@
  */
 
 /**
- * An experiment in creating something similar to a Type-Alias in Java.
+ * <h1>Result</h1>
  *
- * <p>Ideas initially lifted from the Design with Types series at https://fsharpforfunandprofit.com/</p>
+ * Allows handling error conditions without the need to {@code catch}
+ * exceptions.
+ *
+ * <p>When a {@link Result} is returned from a method, it will be in one of two
+ * states: {@link Success} or {@link Err}. The {@code Success} state will
+ * contain a value from the method. The {@code Err} state will contain a
+ * {@link java.lang.Throwable} detailing the reason for the failure.</p>
+ *
+ * <p>Methods returning a {@code Result} should not throw any exceptions.</p>
+ *
+ * <p>{@code Result} is a Monad.</p>
+ *
+ * <h2>Static Constructors:</h2>
+ * <ul>
+ *     <li>{@link Result#ok()}</li>
+ *     <li>{@link Result#ok(Object)}</li>
+ *     <li>{@link Result#of(Callable)}</li>
+ *     <li>{@link Result#ofVoid(VoidCallable)}</li>
+ *     <li>{@link Result#error(Throwable)}</li>
+ * </ul>
  *
  * @author Paul Campbell (pcampbell@kemitix.net)
  */

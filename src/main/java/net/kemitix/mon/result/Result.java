@@ -24,6 +24,7 @@ package net.kemitix.mon.result;
 import net.kemitix.mon.ThrowableFunctor;
 import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
+import org.apiguardian.api.API;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
@@ -35,8 +36,19 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static org.apiguardian.api.API.Status.STABLE;
+
 /**
- * An Either type for holding a result or an error (Throwable).
+ * A type for holding a <strong>result</strong> or an <strong>error</strong>.
+ *
+ * <h2>Static Constructors:</h2>
+ * <ul>
+ *     <li>{@link #ok()}</li>
+ *     <li>{@link #ok(Object)}</li>
+ *     <li>{@link #of(Callable)}</li>
+ *     <li>{@link #ofVoid(VoidCallable)}</li>
+ *     <li>{@link #error(Throwable)}</li>
+ * </ul>
  *
  * @param <T> the type of the result when a success
  * @author Paul Campbell (pcampbell@kemitix.net)
@@ -86,6 +98,10 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     /**
      * Create a Result for an error.
      *
+     * <pre><code>
+     * ResultVoid error = Result.error(new RuntimeException());
+     * </code></pre>
+     *
      * @param error the error (Throwable)
      * @return an error Result
      */
@@ -110,13 +126,26 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     }
 
     /**
-     * Create a Result for a output of the Callable.
+     * Create a {@link Result} for the output of the {@link Callable}.
+     *
+     * <p>If the {@code Callable} succeeds then the {@code Result} will be a
+     * {@link Success} and will contain the value.
+     * If it throws an {@code Exception}, then the {@code Result} will be an
+     * {@link Err} and will contain that exception.</p>
+     *
+     * <pre><code>
+     * Result&lt;Integer$gt; okay = Result.of(() -&gt; 1);
+     * Result&lt;Integer&gt; error = Result.of(() -&gt; {
+     *     throw new RuntimeException();
+     * });
+     * </code></pre>
      *
      * @param callable the callable to produce the result
      * @param <T>      the type of the value
      * @return a Result
      */
     @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable"})
+    @API(status = STABLE)
     static <T> Result<T> of(final Callable<T> callable) {
         try {
             return Result.ok(callable.call());
@@ -126,12 +155,26 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     }
 
     /**
-     * Create a Result for calling a callable that produces no output.
+     * Create a {@code ResultVoid} after calling a {@link VoidCallable}
+     * that produces no output.
+     *
+     * <p>If the {@code callable} completes successfully then a
+     * {@link SuccessVoid} will be returned. if the {@code callable} throws an
+     * exception, then a {@link ErrVoid} containing the exception will be
+     * returned.</p>
+     *
+     * <pre><code>
+     * ResultVoid okay = Result.ofVoid(() -&gt; System.out.println("Hello, World!"));
+     * ResultVoid error = Result.ofVoid(() -&gt; {
+     *     throw new Exception();
+     * });
+     * </code></pre>
      *
      * @param callable the callable to call
      * @return a Result with no value
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    @API(status = STABLE)
     static ResultVoid ofVoid(final VoidCallable callable) {
         try {
             callable.call();
@@ -153,12 +196,17 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     }
 
     /**
-     * Create a Result for a success.
+     * Create a success Result with a value.
      *
+     * <pre><code>
+     * Result&lt;Integer&gt; okay = Result.ok(1);
+     * </code></pre>
+    *
      * @param value the value
      * @param <R>   the type of the value
      * @return a successful Result
      */
+    @API(status = STABLE)
     static <R> Result<R> ok(final R value) {
         return new Success<>(value);
     }
@@ -166,8 +214,12 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     /**
      * Creates a success Result with no value.
      *
+     * <pre><code>
+     * ResultVoid okay = Result.ok();
+     * </code></pre>
      * @return a successful Result
      */
+    @API(status = STABLE)
     static ResultVoid ok() {
         return new SuccessVoid();
     }
@@ -251,6 +303,12 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      */
     <R> Result<R> flatMap(Function<T, Result<R>> f);
 
+    /**
+     * Returns the void result of applying the function ot the contents of the Result.
+     *
+     * @param f   the mapping function the produces a ResultVoid
+     * @return a ResultVoid
+     */
     ResultVoid flatMapV(Function<T, ResultVoid> f);
 
     /**
@@ -399,6 +457,25 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @return the Result or a new error Result
      */
     Result<T> thenWith(Function<T, WithResultContinuation<T>> f);
+
+    /**
+     * Perform the continuation with the current Result value then return the current Result, assuming there was no
+     * error in the continuation.
+     *
+     * <pre><code>
+     *     Integer doSomething() {...}
+     *     void doSomethingElse(final Integer value) {...}
+     *     Result&lt;Integer&gt; r = Result.of(() -&gt; doSomething())
+     *                              .thenWith(value -&gt; () -&gt; doSomethingElse(value));
+     * </code></pre>
+     *
+     * <p>Where the Result is an Err, then the Result is returned immediately and the continuation is ignored.</p>
+     * <p>Where the Result is a Success, then if an exception is thrown by the continuation the Result returned will be
+     * a new error Result containing that exception, otherwise the original Result will be returned.</p>
+     *
+     * @param f the function to map the Success value into the result continuation
+     * @return the Result or a new error Result
+     */
     ResultVoid thenWithV(Function<T, WithResultContinuation<T>> f);
 
     /**
