@@ -68,38 +68,6 @@ class ResultOkExample {
 }
 ```
 ---
-#### `Result<T> from(Maybe<T> maybe, Supplier<Throwable> error)`
-
-Creates a `Result` from the `Maybe`, where the `Result` will be an error
-if the `Maybe` is nothing. Where the `Maybe` is nothing, then the
-`Supplier<Throwable>` will provide the error for the `Result`.
-
-```java
-class ResultMaybeExample {
-    Maybe<Integer> maybe = Maybe.maybe(getValue());
-    Result<Integer> result = Result.from(maybe,
-            () -> new NoSuchFileException("filename"));
-}
-```
----
-#### `Result<T> from(Either<Throwable, T> either)`
-
-Creates a `Result` from the `Either`, where the `Result` will be an error if the
-`Either` is a `Left` or a success if it is a `Right`.
-
-```java
-import net.kemitix.mon.experimental.either.Either;
-import net.kemitix.mon.result.Result;
-
-class FromEitherExample {
-    Either<Throwable, String> eitherRight = Either.right("Hello, World!");
-    Either<Throwable, String> eitherLeft = Either.left(new RuntimeException());
-
-    Result<String> success = Result.from(eitherRight);
-    Result<String> error = Result.from(eitherLeft);
-}
-```
----
 #### `Result<Maybe<T>> invert(Maybe<Result<T>> maybeResult)`
 
 Swaps the `Result` within a `Maybe`, so that `Result` contains a `Maybe`.
