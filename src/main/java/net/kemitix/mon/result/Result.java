@@ -218,8 +218,35 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Applies a function to a stream of values, folding the results using the
      * zero value and accumulator function.
      *
-     * <p>If any value results in an error when applying the function, then
+     * <p>Returns a success {@code Result} of the accumulated outputs if all
+     * values were transformed successfully by the function, or an error
+     * {@code Result} for the first error. If any value results in an error when applying the function, then
      * processing stops and a Result containing that error is returned,</p>
+     *
+     * <pre><code>
+     * Function<String, Integer> f = s -> {
+     *     if ("dd".equals(s)) {
+     *         throw new RuntimeException("Invalid input: " + s);
+     *     }
+     *     return s.length();
+     * };
+     *
+     * Stream<String> okayStream = Stream.of("aa", "bb");
+     * Result<Integer> resultOkay = Result.applyOver(okayStream, f, 0, Integer::sum);
+     * resultOkay.match(
+     *     success -> System.out.println("Total length: " + success),
+     *     error -> System.out.println("Error: " + error.getMessage())
+     * );
+     * // Total length: 4
+     *
+     * Stream<String> errorStream = Stream.of("cc", "dd");
+     * Result<Integer> resultError = Result.applyOver(errorStream, f, 0, Integer::sum);
+     * resultError.match(
+     *     success -> System.out.println("Total length: " + success), // will not match
+     *     error -> System.out.println("Error: " + error.getMessage())
+     * );
+     * // Error: Invalid input: dd
+     * </code></pre>
      *
      * @param stream      the values to apply the function to
      * @param f           the function to apply to the values
