@@ -1894,7 +1894,7 @@ class ResultTest implements WithAssertions {
             }
             @Test
             @DisplayName("applyOver(Stream, Function, BiFunction")
-            void applyOverStremFunctionBiFunction() {
+            void applyOverStreamFunctionBiFunction() {
                 Function<String, Integer> f = s -> {
                     if ("dd".equals(s)) {
                         throw new RuntimeException("Invalid input: " + s);
@@ -1920,6 +1920,35 @@ class ResultTest implements WithAssertions {
                     );
                     // Error: Invalid input: dd
 
+                });
+            }
+            @Test
+            @DisplayName("flatApplyOver")
+            void flatApplyOver() {
+                Function<String, Result<Integer>> f = s -> {
+                    if ("dd".equals(s)) {
+                        return Result.error(Integer.class, new RuntimeException("Invalid input: " + s));
+                    }
+                    return Result.ok(s.length());
+                };
+
+                assertSoftly(s -> {
+
+                    Stream<String> okayStream = Stream.of("aa", "bb");
+                    Result<Integer> resultOkay = Result.flatApplyOver(okayStream, f, 0, Integer::sum);
+                    resultOkay.match(
+                            success -> s.assertThat(success).isEqualTo(4),
+                            error -> s.fail("not an err")
+                    );
+                    // Total length: 4
+
+                    Stream<String> errorStream = Stream.of("cc", "dd");
+                    Result<Integer> resultError = Result.flatApplyOver(errorStream, f, 0, Integer::sum);
+                    resultError.match(
+                            success -> s.fail("not a success"), // will not match
+                            error -> s.assertThat(error.getMessage()).isEqualTo("Invalid input: dd")
+                    );
+                    // Error: Invalid input: dd
                 });
             }
         }

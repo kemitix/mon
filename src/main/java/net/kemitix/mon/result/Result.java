@@ -163,6 +163,12 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
         return new ErrVoid(error);
     }
 
+    //TODO add javadoc
+    //TODO add tests
+    static <R> Result<R> error(Class<R> aClass, RuntimeException e) {
+        return new Err<>(e);
+    }
+
     /**
      * Creates a Result from the Either, where the Result will be an error if
      * the Either is a Left, and a success if it is a Right.
@@ -182,7 +188,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @return a Result containing the right value of the Either when it is a
      * Right, or the left error when it is a Left.
      */
-    @API(status = API.Status.EXPERIMENTAL)
+    @API(status = EXPERIMENTAL)
     static <T> Result<T> from(Either<Throwable, T> either) {
         return Result.from(
                 Maybe.fromOptional(either.getRight()),
@@ -205,7 +211,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <T>   the type of the value in the Maybe and the Result
      * @return a Result containing the value of the Maybe when it is a Just, or the error when it is Nothing
      */
-    @API(status = API.Status.EXPERIMENTAL)
+    @API(status = EXPERIMENTAL)
     static <T> Result<T> from(final Maybe<T> maybe, final Supplier<Throwable> error) {
         return maybe.map(Result::ok)
                 .orElseGet(() -> new Err<>(error.get()));
@@ -258,6 +264,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * values were transformed successfully by the function, or an Err Result
      * for the first value that failed.
      */
+    @API(status = STABLE)
     static <N, R> Result<R> applyOver(
             Stream<N> stream,
             Function<N, R> f,
@@ -325,6 +332,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * successfully by the function, or an Err Result for the first value that
      * failed.
      */
+    @API(status = STABLE)
     static <N> ResultVoid applyOver(
             Stream<N> stream,
             Consumer<N> consumer
@@ -341,7 +349,41 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * zero value and accumulator function.
      *
      * <p>If any value results in an error when applying the function, then
-     * processing stops and a Result containing that error is returned,</p>
+     * processing stops and a {@code Result} containing that error is returned.</p>
+     *
+     * <p>Returns a success {@code Result} of the accumulated function outputs
+     * if all values were transformed successfully, or an error {@code Result}
+     * for the first value that failed.</p>
+     *
+     * <p>Similar to {@link #applyOver(Stream, Function, Object, BiFunction)},
+     * except that the result of the {@code f} function is a {@code Result}; and
+     * to a {@code flatMap} method in that the {@code Result} is not nested with
+     * in another {@code Result}.</p>
+     *
+     * <pre><code>
+     * Function&lt;String, Integer&gt; f = s -&gt; {
+     *     if ("dd".equals(s)) {
+     *         throw new RuntimeException("Invalid input: " + s);
+     *     }
+     *     return s.length();
+     * };
+     *
+     * Stream&lt;String&gt; okayStream = Stream.of("aa", "bb");
+     * Result&lt;Integer&gt; resultOkay = Result.applyOver(okayStream, f, 0, Integer::sum);
+     * resultOkay.match(
+     *     success -&gt; assertThat(success).isEqualTo(4),
+     *     error -&gt; fail("not an err")
+     * );
+     * // Total length: 4
+     *
+     * Stream&lt;String&gt; errorStream = Stream.of("cc", "dd");
+     * Result&lt;Integer&gt; resultError = Result.applyOver(errorStream, f, 0, Integer::sum);
+     * resultError.match(
+     *     success -&gt; fail("not a success"), // will not match
+     *     error -&gt; assertThat(error.getMessage()).isEqualTo("Invalid input: dd")
+     * );
+     * // Error: Invalid input: dd
+     * </code></pre>
      *
      * @param stream      the values to apply the function to
      * @param f           the function to apply to the values
@@ -353,6 +395,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * values were transformed successfully by the function, or an Err Result
      * for the first value that failed.
      */
+    @API(status = STABLE)
     static <T, R> Result<R> flatApplyOver(
             Stream<T> stream,
             Function<T, Result<R>> f,

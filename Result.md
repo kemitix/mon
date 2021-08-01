@@ -55,51 +55,6 @@ would have called the error `Consumer`.
 
 These static methods provide integration with the `Maybe` class.
 
-#### `Result<R> flatApplyOver(Stream<T> stream, Function<T, Result<R>> f, R zero, BiFunction<R, R, R> accumulator)`
-
-Applies a function to a stream of values, folding the results using the zero
-value and accumulator function.
-
-If any value results in an error when applying the function, then processing
-stops, and a Result containing that error is returned.
-
-Returns a success Result of the accumulated function outputs if all values were
-transformed successfully, or an error Result for the first value that failed.
-
-Similar to `Result<R> applyOver(Stream<N> stream, Function<N, R> f, R zero, BiFunction<R, R, R> accumulator)`
-except that the result of the `f` function is a `Result`, and to a `flatMap`
-method in that the Result is not nested with in another Result.
-
-```java
-class ApplyOverExample {
-
-    public static void main(String[] args) {
-        Function<String, Result<Integer>> f = s -> {
-            if ("dd".equals(s)) {
-                return Result.error(new RuntimeException("Invalid input: " + s));
-            }
-            return Result.ok(s.length());
-        };
-
-        Stream<String> okayStream = Stream.of("aa", "bb");
-        Result<Integer> resultOkay = Result.flatApplyOver(okayStream, f, 0, Integer::sum);
-        resultOkay.match(
-                success -> System.out.println("Total length: " + success),
-                error -> System.out.println("Error: " + error.getMessage())
-        );
-        // Total length: 4
-
-        Stream<String> errorStream = Stream.of("cc", "dd");
-        Result<Integer> resultError = Result.flatApplyOver(errorStream, f, 0, Integer::sum);
-        resultError.match(
-                success -> System.out.println("Total length: " + success), // will not match
-                error -> System.out.println("Error: " + error.getMessage())
-        );
-        // Error: Invalid input: dd
-    }
-}
-```
----
 ### Instance Methods
 
 #### `Result<R> map(Function<T,R> f)`
