@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
 import net.kemitix.mon.result.*;
-import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -45,9 +44,10 @@ class ResultTest implements WithAssertions {
             assertThat(Result.ok()).as("SuccessVoid: void v integer").isNotEqualTo(Result.ok(1));
             assertThat(Result.ok()).as("SuccessVoid: v ErrorVoid").isNotEqualTo(Result.error(runtimeException));
             // Error
-            assertThat(Result.error(Integer.class, runtimeException)).as("error v error").isEqualTo(Result.error(Integer.class, runtimeException));
-            assertThat(Result.error(Integer.class, runtimeException)).as("error v other error").isNotEqualTo(Result.error(Integer.class, new RuntimeException()));
-            assertThat(Result.error(Integer.class, runtimeException)).as("error v string").isNotEqualTo("1");
+            TypeReference<Integer> integerReference = TypeReference.create();
+            assertThat(Result.error(integerReference, runtimeException)).as("error v error").isEqualTo(Result.error(integerReference, runtimeException));
+            assertThat(Result.error(integerReference, runtimeException)).as("error v other error").isNotEqualTo(Result.error(integerReference, new RuntimeException()));
+            assertThat(Result.error(integerReference, runtimeException)).as("error v string").isNotEqualTo("1");
             // ErrorVoid
             assertThat(Result.error(runtimeException)).as("same error value").isEqualTo(Result.error(runtimeException));
             assertThat(Result.error(runtimeException)).as("diff error values").isNotEqualTo(Result.error(new RuntimeException()));
@@ -77,9 +77,10 @@ class ResultTest implements WithAssertions {
             final RuntimeException exception1 = new RuntimeException("message");
             final RuntimeException exception2 = new RuntimeException("message");
             assumeThat(exception1.hashCode()).isNotEqualTo(exception2.hashCode());
+            TypeReference<Integer> integerReference = TypeReference.create();
             //then
-            assertThat(Result.error(Integer.class, exception1).hashCode())
-                    .isNotEqualTo(Result.error(Integer.class, exception2).hashCode());
+            assertThat(Result.error(integerReference, exception1).hashCode())
+                    .isNotEqualTo(Result.error(integerReference, exception2).hashCode());
         }
 
         @Test
@@ -1269,7 +1270,8 @@ class ResultTest implements WithAssertions {
             final Result<Maybe<Integer>> okJust = Result.ok(Maybe.just(1));
             final RuntimeException exception = new RuntimeException();
             //when
-            final Result<Maybe<Integer>> result = Result.flatMapMaybe(okJust, v -> Result.ok(v).err(exception));
+            final Result<Maybe<Integer>> result = Result.flatMapMaybe(okJust, v ->
+                    Result.error(TypeReference.create(), exception));
             //then
             result.match(
                     success -> fail("Not a success"),
@@ -1294,7 +1296,7 @@ class ResultTest implements WithAssertions {
         void error_whenFlatMapMaybe_thenDoNotApply() {
             //given
             final RuntimeException exception = new RuntimeException();
-            final Result<Maybe<Integer>> maybeResult = Result.ok(Maybe.just(1)).err(exception);
+            final Result<Maybe<Integer>> maybeResult = Result.error(TypeReference.create(), exception);
             //when
             final Result<Maybe<String>> result = Result.flatMapMaybe(maybeResult, maybe -> Result.ok(maybe.flatMap(v -> Maybe.just("2"))));
             //then
@@ -1785,7 +1787,7 @@ class ResultTest implements WithAssertions {
             @Test
             @DisplayName("error(Class, Throwable)")
             void errorClassThrowable() {
-                Result<Integer> error = Result.error(Integer.class, new RuntimeException());
+                Result<Integer> error = Result.error(TypeReference.create(), new RuntimeException());
                 //
                 assertThat(error.isError()).isTrue();
             }
@@ -1936,7 +1938,7 @@ class ResultTest implements WithAssertions {
             void flatApplyOver() {
                 Function<String, Result<Integer>> f = s -> {
                     if ("dd".equals(s)) {
-                        return Result.error(Integer.class, new RuntimeException("Invalid input: " + s));
+                        return Result.error(TypeReference.create(), new RuntimeException("Invalid input: " + s));
                     }
                     return Result.ok(s.length());
                 };
@@ -1969,7 +1971,7 @@ class ResultTest implements WithAssertions {
             void toEither() {
                 Result<String> success = Result.ok("success");
                 RuntimeException exception = new RuntimeException();
-                Result<String> error = Result.error(String.class, exception);
+                Result<String> error = Result.error(TypeReference.create(), exception);
 
                 Either<Throwable, String> eitherRight = success.toEither();
                 Either<Throwable, String> eitherLeft = error.toEither();
@@ -2020,7 +2022,7 @@ class ResultTest implements WithAssertions {
             if (okay) {
                 return Result.ok(fileName.length());
             }
-            return Result.ok(fileName.length()).err(new RuntimeException(fileName));
+            return Result.error(TypeReference.create(), new RuntimeException(fileName));
         }
 
         private Result<Integer> adjustValue(final Integer value) {

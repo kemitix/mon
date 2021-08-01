@@ -22,6 +22,7 @@
 package net.kemitix.mon.result;
 
 import net.kemitix.mon.ThrowableFunctor;
+import net.kemitix.mon.TypeReference;
 import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
 import org.apiguardian.api.API;
@@ -48,6 +49,7 @@ import static org.apiguardian.api.API.Status.*;
  *     <li>{@link #of(Callable)}</li>
  *     <li>{@link #ofVoid(VoidCallable)}</li>
  *     <li>{@link #error(Throwable)}</li>
+ *     <li>{@link #error(TypeReference, Throwable)}</li>
  *     <li>{@link #from(Either)}</li>
  *     <li>{@link #from(Maybe, Supplier)}</li>
  * </ul>
@@ -166,16 +168,16 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Create a Result for an error.
      *
      * <pre><code>
-     * Result&lt;Integer&gt; error = Result.error(Integer.class, new RuntimeException());
+     * Result&lt;Integer&gt; error = Result.error(TypeReference.create(), new RuntimeException());
      * </code></pre>
      *
-     * @param aClass the type of the missing) value
+     * @param type the type of the missing) value
      * @param error the error (Throwable)
      * @param <R> The type of the missing value
      * @return an error Result
      */
     @API(status = STABLE)
-    static <R> Result<R> error(Class<R> aClass, RuntimeException error) {
+    static <R> Result<R> error(final TypeReference<R> type, final Throwable error) {
         return new Err<>(error);
     }
 
@@ -497,6 +499,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <T>   the type had the result been a success
      * @return an error Result
      */
+    @Deprecated
+    @API(status = DEPRECATED)
     default <T> Result<T> err(final Throwable error) {
         return new Err<>(error);
     }

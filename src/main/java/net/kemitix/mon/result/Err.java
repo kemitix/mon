@@ -55,7 +55,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public <R> Result<R> flatMap(final Function<T, Result<R>> f) {
-        return err(error);
+        return new Err<>(error);
     }
 
     @Override
@@ -65,7 +65,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public <R> Result<R> map(final ThrowableFunction<T, R, ?> f) {
-        return err(error);
+        return new Err<>(error);
     }
 
     @Override
@@ -75,7 +75,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
-        return err(error);
+        return new Err<>(error);
     }
 
     @Override
@@ -132,7 +132,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return err(error);
+        return new Err<>(error);
     }
 
     @Override

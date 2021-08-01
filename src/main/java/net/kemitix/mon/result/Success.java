@@ -59,7 +59,7 @@ class Success<T> implements Result<T> {
         try {
             return success(f.apply(value));
         } catch (Throwable e) {
-            return err(e);
+            return new Err<>(e);
         }
     }
 
