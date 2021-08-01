@@ -195,9 +195,9 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * <p>Where the {@code Maybe} is nothing, then the Supplier will provide the error for the Result.</p>
      *
      * <pre><code>
-     * Maybe<Integer> maybe = Maybe.maybe(1);
-     * Result<Integer> result = Result.from(maybe,
-     *     () -> new RuntimeException());</p>
+     * Maybe&lt;Integer&gt; maybe = Maybe.maybe(1);
+     * Result&lt;Integer&gt; result = Result.from(maybe,
+     *     () -&gt; new RuntimeException());&lt;/p&gt;
      * </code></pre>
      *
      * @param maybe the Maybe the might contain the value of the Result
@@ -224,26 +224,26 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * processing stops and a Result containing that error is returned,</p>
      *
      * <pre><code>
-     * Function<String, Integer> f = s -> {
+     * Function&lt;String, Integer&gt; f = s -&gt; {
      *     if ("dd".equals(s)) {
      *         throw new RuntimeException("Invalid input: " + s);
      *     }
      *     return s.length();
      * };
      *
-     * Stream<String> okayStream = Stream.of("aa", "bb");
-     * Result<Integer> resultOkay = Result.applyOver(okayStream, f, 0, Integer::sum);
+     * Stream&lt;String&gt; okayStream = Stream.of("aa", "bb");
+     * Result&lt;Integer&gt; resultOkay = Result.applyOver(okayStream, f, 0, Integer::sum);
      * resultOkay.match(
-     *     success -> System.out.println("Total length: " + success),
-     *     error -> System.out.println("Error: " + error.getMessage())
+     *     success -&gt; System.out.println("Total length: " + success),
+     *     error -&gt; System.out.println("Error: " + error.getMessage())
      * );
      * // Total length: 4
      *
-     * Stream<String> errorStream = Stream.of("cc", "dd");
-     * Result<Integer> resultError = Result.applyOver(errorStream, f, 0, Integer::sum);
+     * Stream&lt;String&gt; errorStream = Stream.of("cc", "dd");
+     * Result&lt;Integer&gt; resultError = Result.applyOver(errorStream, f, 0, Integer::sum);
      * resultError.match(
-     *     success -> System.out.println("Total length: " + success), // will not match
-     *     error -> System.out.println("Error: " + error.getMessage())
+     *     success -&gt; System.out.println("Total length: " + success), // will not match
+     *     error -&gt; System.out.println("Error: " + error.getMessage())
      * );
      * // Error: Invalid input: dd
      * </code></pre>
@@ -289,7 +289,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      *
      * <pre><code>
      * List&lt;String&gt; processed = new ArrayList&lt;&gt;();
-     * Consumer&lt;String> consumer = s -&gt; {
+     * Consumer&lt;String&gt; consumer = s -&gt; {
      *     if ("dd".equals(s)) {
      *         throw new RuntimeException("Invalid input: " + s);
      *     }
@@ -377,7 +377,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * <pre><code>
      * Result&lt;Maybe&lt;Integer&gt;&gt; result = Result.of(() -&gt; Maybe.maybe(getValue()));
      * Result&lt;Maybe&lt;Integer&gt;&gt; maybeResult = Result.flatMapMaybe(result,
-     *        maybe -> Result.of(() -&gtl; maybe.map(v -&gt; v * 2)));
+     *        maybe -&gt; Result.of(() -&gt; maybe.map(v -&gt; v * 2)));
      * </code></pre>
      *
      * @param maybeResult the Result that may contain a value
@@ -418,8 +418,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * <p>However, if the {@code Result} is an {@link Err}, then the {@code Maybe} will be {@code Nothing}.</p>
      *
      * <pre><code>
-     * Result&let;Integer&gt; result = Result.of(() -&gt; getValue());
-     * Maybe&let;Integer&gt; maybe = Result.toMaybe(result);
+     * Result&lt;Integer&gt; result = Result.of(() -&gt; getValue());
+     * Maybe&lt;Integer&gt; maybe = Result.toMaybe(result);
      * </code></pre>
      *
      * @param result the Result the might contain the value of the Result
