@@ -45,9 +45,9 @@ class ResultTest implements WithAssertions {
             assertThat(Result.ok()).as("SuccessVoid: void v integer").isNotEqualTo(Result.ok(1));
             assertThat(Result.ok()).as("SuccessVoid: v ErrorVoid").isNotEqualTo(Result.error(runtimeException));
             // Error
-            assertThat(Result.ok(1).err(runtimeException)).as("error v error").isEqualTo(Result.ok(1).err(runtimeException));
-            assertThat(Result.ok(1).err(runtimeException)).as("error v other error").isNotEqualTo(Result.ok(1).err(new RuntimeException()));
-            assertThat(Result.ok(1).err(runtimeException)).as("error v string").isNotEqualTo("1");
+            assertThat(Result.error(Integer.class, runtimeException)).as("error v error").isEqualTo(Result.error(Integer.class, runtimeException));
+            assertThat(Result.error(Integer.class, runtimeException)).as("error v other error").isNotEqualTo(Result.error(Integer.class, new RuntimeException()));
+            assertThat(Result.error(Integer.class, runtimeException)).as("error v string").isNotEqualTo("1");
             // ErrorVoid
             assertThat(Result.error(runtimeException)).as("same error value").isEqualTo(Result.error(runtimeException));
             assertThat(Result.error(runtimeException)).as("diff error values").isNotEqualTo(Result.error(new RuntimeException()));
@@ -78,7 +78,8 @@ class ResultTest implements WithAssertions {
             final RuntimeException exception2 = new RuntimeException("message");
             assumeThat(exception1.hashCode()).isNotEqualTo(exception2.hashCode());
             //then
-            assertThat(Result.ok(1).err(exception1).hashCode()).isNotEqualTo(Result.ok(1).err(exception2).hashCode());
+            assertThat(Result.error(Integer.class, exception1).hashCode())
+                    .isNotEqualTo(Result.error(Integer.class, exception2).hashCode());
         }
 
         @Test
@@ -1774,9 +1775,17 @@ class ResultTest implements WithAssertions {
             }
 
             @Test
-            @DisplayName("error")
-            void error() {
+            @DisplayName("error(Throwable)")
+            void errorThrowable() {
                 ResultVoid error = Result.error(new RuntimeException());
+                //
+                assertThat(error.isError()).isTrue();
+            }
+
+            @Test
+            @DisplayName("error(Class, Throwable)")
+            void errorClassThrowable() {
+                Result<Integer> error = Result.error(Integer.class, new RuntimeException());
                 //
                 assertThat(error.isError()).isTrue();
             }

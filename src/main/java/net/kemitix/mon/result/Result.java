@@ -163,10 +163,20 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
         return new ErrVoid(error);
     }
 
-    //TODO add javadoc
-    //TODO add tests
-    static <R> Result<R> error(Class<R> aClass, RuntimeException e) {
-        return new Err<>(e);
+    /**
+     * Create a Result for an error.
+     *
+     * <pre><code>
+     * Result&lt;Integer&gt; error = Result.error(Integer.class, new RuntimeException());
+     * </code></pre>
+     *
+     * @param aClass the type of the missing) value
+     * @param error the error (Throwable)
+     * @param <R> The type of the missing value
+     * @return an error Result
+     */
+    static <R> Result<R> error(Class<R> aClass, RuntimeException error) {
+        return new Err<>(error);
     }
 
     /**
