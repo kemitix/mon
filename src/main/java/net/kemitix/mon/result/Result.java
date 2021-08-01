@@ -55,7 +55,7 @@ import static org.apiguardian.api.API.Status.*;
  * @param <T> the type of the result when a success
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount"})
+@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount", "PMD.ExcessiveClassLength"})
 public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
 
     // BEGIN Static Constructors
@@ -175,6 +175,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <R> The type of the missing value
      * @return an error Result
      */
+    @API(status = STABLE)
     static <R> Result<R> error(Class<R> aClass, RuntimeException error) {
         return new Err<>(error);
     }
