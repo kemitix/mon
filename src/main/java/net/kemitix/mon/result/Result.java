@@ -57,7 +57,7 @@ import static org.apiguardian.api.API.Status.*;
  */
 @SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount", "PMD.ExcessiveClassLength",
         "PMD.AvoidCatchingThrowable"})
-public interface Result<T> extends ResultIllegals, ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
+public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
 
     // BEGIN Static Constructors
 
@@ -528,10 +528,20 @@ public interface Result<T> extends ResultIllegals, ThrowableFunctor<T, Throwable
     }
 
     /**
-     * Converts the `Result` into an `Either`.
+     * Converts the {@code Result} into an {@link Either}.
+     * 
+     * <pre><code>
+     * Result&lt;String&gt; success = Result.ok("success");
+     * RuntimeException exception = new RuntimeException();
+     * Result&lt;String&gt; error = Result.error(String.class, exception);
      *
-     * @return A `Right` for a success or a `Left` for an error.
+     * Either&lt;Throwable, String&gt; eitherRight = success.toEither();
+     * Either&lt;Throwable, String&gt; eitherLeft = error.toEither();
+     * </code></pre>
+     *
+     * @return A {@code Right} for a success or a {@code Left} for an error.
      */
+    @API(status = EXPERIMENTAL)
     default Either<Throwable, T> toEither() {
         var either = new AtomicReference<Either<Throwable, T>>();
         match(

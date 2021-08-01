@@ -1961,6 +1961,31 @@ class ResultTest implements WithAssertions {
                 });
             }
         }
+        @Nested
+        @DisplayName("default methods")
+        class DefaultMethodTests {
+            @Test
+            @DisplayName("toEither")
+            void toEither() {
+                Result<String> success = Result.ok("success");
+                RuntimeException exception = new RuntimeException();
+                Result<String> error = Result.error(String.class, exception);
+
+                Either<Throwable, String> eitherRight = success.toEither();
+                Either<Throwable, String> eitherLeft = error.toEither();
+                //
+                assertSoftly(s -> {
+                    eitherRight.match(
+                            left -> s.fail("not a left"),
+                            right -> s.assertThat(right).isEqualTo("success")
+                    );
+                    eitherLeft.match(
+                            left -> s.assertThat(left).isSameAs(exception),
+                            right -> s.fail("not a right")
+                    );
+                });
+            }
+        }
         private Integer getValue() {
             return 1;
         }
