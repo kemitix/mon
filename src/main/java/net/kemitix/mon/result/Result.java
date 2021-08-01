@@ -55,8 +55,9 @@ import static org.apiguardian.api.API.Status.*;
  * @param <T> the type of the result when a success
  * @author Paul Campbell (pcampbell@kemitix.net)
  */
-@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount", "PMD.ExcessiveClassLength"})
-public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
+@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount", "PMD.ExcessiveClassLength",
+        "PMD.AvoidCatchingThrowable"})
+public interface Result<T> extends ResultIllegals, ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
 
     // BEGIN Static Constructors
 
@@ -108,7 +109,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <T>      the type of the value
      * @return a Result
      */
-    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable"})
     @API(status = STABLE)
     static <T> Result<T> of(final Callable<T> callable) {
         try {
@@ -137,7 +137,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param callable the callable to call
      * @return a Result with no value
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     @API(status = STABLE)
     static ResultVoid ofVoid(final VoidCallable callable) {
         try {
@@ -509,7 +508,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <T>      the type of the value
      * @return a Result
      */
-    @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable", "PMD.AvoidDuplicateLiterals"})
     default <T> Result<T> result(final Callable<T> callable) {
         try {
             return Result.ok(callable.call());
