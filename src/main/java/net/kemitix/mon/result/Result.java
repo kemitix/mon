@@ -493,20 +493,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     // END Static methods
 
     /**
-     * Create a Result for an error.
-     *
-     * @param error the error (Throwable)
-     * @param <T>   the type had the result been a success
-     * @return an error Result
-     */
-    @Deprecated
-    @API(status = DEPRECATED)
-    default <T> Result<T> err(final Throwable error) {
-        return new Err<>(error);
-    }
-
-    /**
-     * Create a Result for a output of the Callable.
+     * Create a Result for an output of the Callable.
      *
      * @param callable the callable to produce the result
      * @param <T>      the type of the value
