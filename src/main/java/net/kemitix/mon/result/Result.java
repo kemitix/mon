@@ -680,6 +680,12 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      *
      * <p>Similar to the catch block in a try-catch.</p>
      *
+     * <pre><code>
+     * Result.of(() -&gt; getValue())
+     *       .onError(UnsupportedOperationException.class,
+     *                e -&gt; handleError(e))
+     * </code></pre>
+     *
      * @param errorClass the class of Throwable to match
      * @param consumer the consumer to call if it matches
      * @param <E> the Type of the Throwable to match

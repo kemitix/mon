@@ -187,22 +187,3 @@ class ResultOnErrorExample {
 }
 ```
 ---
-#### `<E extends Throwable> Result<T> onError(Class<E> errorClass, Consumer<E> consumer)`
-
-A handler for error state, when the error matches the errorClass. If the
-`Result` is an error and that error is an instance of the errorClass, then
-supply the error to the `Consumer`. Does nothing if the error is not an instance
-of the errorClass, or is a success.
-
-Similar to the catch block in a try-catch.
-
-```java
-class ResultOnErrorExample {
-    public static void main(String[] args) {
-        Result.of(() -> getValue())
-            .onError(UnsupportedOperationException.class,
-                    e -> handleError(e));
-    }
-}
-```
----

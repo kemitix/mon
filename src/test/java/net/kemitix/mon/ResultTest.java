@@ -3,7 +3,13 @@ package net.kemitix.mon;
 import lombok.RequiredArgsConstructor;
 import net.kemitix.mon.experimental.either.Either;
 import net.kemitix.mon.maybe.Maybe;
-import net.kemitix.mon.result.*;
+import net.kemitix.mon.result.CheckedErrorResultException;
+import net.kemitix.mon.result.ErrorResultException;
+import net.kemitix.mon.result.Result;
+import net.kemitix.mon.result.ResultVoid;
+import net.kemitix.mon.result.SuccessVoid;
+import net.kemitix.mon.result.UnexpectedErrorResultException;
+import net.kemitix.mon.result.VoidCallable;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -2030,6 +2036,21 @@ class ResultTest implements WithAssertions {
                 boolean isError = Result.of(() -> getValue()).isError();
                 //
                 assertThat(isError).isFalse();
+            }
+
+            @Test
+            @DisplayName("onErrorClassConsumer")
+            void onErrorClassConsumer() {
+                AtomicReference<Exception> err = new AtomicReference<>();
+                Exception exception = new UnsupportedOperationException();
+                //
+                Result.of(() -> {
+                            throw exception;
+                        })
+                        .onError(UnsupportedOperationException.class,
+                                e -> err.set(e));
+                //
+                assertThat(err).hasValue(exception);
             }
         }
 
