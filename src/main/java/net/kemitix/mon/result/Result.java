@@ -521,7 +521,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * as the cause.
      *
      * <pre><code>
-     * Integer result = Result.of(() -> getValue()).orElseThrow();
+     * Integer result = Result.of(() -&gt; getValue()).orElseThrow();
      * </code></pre>
      *
      * @return the value if a success
@@ -578,6 +578,28 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      */
     boolean isOkay();
 
+    /**
+     * Applies the function to the value within the {@code Result}, returning
+     * the result within another {@code Result}.
+     *
+     * <p>If the initial {@code Result} is a success, then apply the function to
+     * the value within the {@code Result}, returning the result within another
+     * {@code Result}. If the initial {@code Result} is an error, then return
+     * another error without invoking the supplied function.</p>
+     *
+     * <p>If the supplied function throws and exception, then an error
+     * {@code Result} will be returned containing that exception.</p>
+     *
+     * <pre><code>
+     * Result&lt;String&gt; result = Result.of(() -&gt; getValue())
+     *             .map(v -&gt; String.valueOf(v));
+     * </code></pre>
+     *
+     * @param f   the function to apply
+     * @param <R> the type of the value returned by the function to be applied
+     * @return A {@code Result} containing either the original error, the
+     * function output, or any exception thrown by the supplied function.
+     */
     @Override
     <R> Result<R> map(ThrowableFunction<T, R, ?> f);
 
@@ -731,7 +753,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Discard any success value while retaining any error.
      *
      * <pre><code>
-     * ResultVoid result = Result.of(() -> getResultValue()).toVoid();
+     * ResultVoid result = Result.of(() -&gt; getResultValue()).toVoid();
      * </code></pre>
      *
      * @return A {@code SuccessVoid} for a {@code Success} or a {@code ErrVoid} for an {@code Err}.

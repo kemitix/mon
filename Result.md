@@ -51,19 +51,6 @@ would have called the error `Consumer`.
 
 ### Instance Methods
 
-#### `Result<R> map(Function<T,R> f)`
-
-If the `Result` is a success, then apply the function to the value within the
-`Result`, returning the result within another `Result`. If the `Result` is an
-error, then return the error.
-
-```java
-class ResultMapExample {
-    Result<String> result = Result.of(() -> getValue())
-            .map(v -> String.valueOf(v));
-}
-```
----
 #### `Result<R> flatMap(Function<T,Result<R>> f)`
 
 If the `Result` is a success, then return a new `Result` containing the result

@@ -2003,6 +2003,18 @@ class ResultTest implements WithAssertions {
                 //
                 assertThat(result).isInstanceOf(SuccessVoid.class);
             }
+
+            @Test
+            @DisplayName("map")
+            void map() {
+                Result<String> result = Result.of(() -> getValue())
+                        .map(v -> String.valueOf(v));
+                //
+                result.match(
+                        success -> assertThat(success).isEqualTo("1"),
+                        error -> fail("not en err")
+                );
+            }
         }
 
         private Result<Integer> getResultValue() {
