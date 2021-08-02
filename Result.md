@@ -217,14 +217,3 @@ class ResultIsOkayExample {
 }
 ```
 ---
-#### `boolean isError()`
-
-Checks if the `Result` is an error.
-
-```java
-class ResultIsErrorExample {
-    boolean isError = Result.of(() -> getValue())
-            .isError();
-}
-```
----

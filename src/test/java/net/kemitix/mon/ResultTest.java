@@ -2015,6 +2015,14 @@ class ResultTest implements WithAssertions {
                         error -> fail("not en err")
                 );
             }
+
+            @Test
+            @DisplayName("isError")
+            void isError() {
+                boolean isError = Result.of(() -> getValue()).isError();
+                //
+                assertThat(isError).isFalse();
+            }
         }
 
         private Result<Integer> getResultValue() {
