@@ -692,6 +692,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * <p>Similar to the catch block in a try-catch.</p>
      *
      * <pre><code>
+     * void handleError(Throwable e) {...}
      * Result.of(() -&gt; getValue())
      *       .onError(UnsupportedOperationException.class,
      *                e -&gt; handleError(e))
@@ -702,6 +703,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <E> the Type of the Throwable to match
      * @return the original unmodified Result
      */
+    @API(status = STABLE)
     <E extends Throwable> Result<T> onError(
             Class<E> errorClass,
             Consumer<E> consumer
@@ -713,10 +715,10 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * <p>Combination of {@link #flatMap(Function)} and {@link #of(Callable)}.</p>
      *
      * <pre><code>
-     *     Integer doSomething() {...}
-     *     String doSomethingElse(final Integer value) {...}
-     *     Result&lt;String&gt; r = Result.of(() -&gt; doSomething())
-     *                              .andThen(value -&gt; () -&gt; doSomethingElse(value));
+     * Integer doSomething() {...}
+     * String doSomethingElse(final Integer value) {...}
+     * Result&lt;String&gt; r = Result.of(() -&gt; doSomething())
+     *                                .andThen(value -&gt; () -&gt; doSomethingElse(value));
      * </code></pre>
      *
      * <p>When the Result is an Err, then the original error is carried over and the Callable is never called.</p>
@@ -725,6 +727,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param <R> the type of the final Result
      * @return a new Result
      */
+    @API(status = STABLE)
     <R> Result<R> andThen(Function<T, Callable<R>> f);
 
     /**
@@ -732,10 +735,10 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * error in the continuation.
      *
      * <pre><code>
-     *     Integer doSomething() {...}
-     *     void doSomethingElse(final Integer value) {...}
-     *     Result&lt;Integer&gt; r = Result.of(() -&gt; doSomething())
-     *                              .thenWith(value -&gt; () -&gt; doSomethingElse(value));
+     * Integer doSomething() {...}
+     * void doSomethingElse(final Integer value) {...}
+     * Result&lt;Integer&gt; r = Result.of(() -&gt; doSomething())
+     *                                 .thenWith(value -&gt; () -&gt; doSomethingElse(value));
      * </code></pre>
      *
      * <p>Where the Result is an Err, then the Result is returned immediately and the continuation is ignored.</p>
@@ -745,6 +748,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param f the function to map the Success value into the result continuation
      * @return the Result or a new error Result
      */
+    @API(status = STABLE)
     Result<T> thenWith(Function<T, WithResultContinuation<T>> f);
 
     /**
@@ -752,10 +756,10 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * error in the continuation.
      *
      * <pre><code>
-     *     Integer doSomething() {...}
-     *     void doSomethingElse(final Integer value) {...}
-     *     Result&lt;Integer&gt; r = Result.of(() -&gt; doSomething())
-     *                              .thenWith(value -&gt; () -&gt; doSomethingElse(value));
+     * Integer doSomething() {...}
+     * void doSomethingElse(final Integer value) {...}
+     * Result&lt;Integer&gt; r = Result.of(() -&gt; doSomething())
+     *                                 .thenWith(value -&gt; () -&gt; doSomethingElse(value));
      * </code></pre>
      *
      * <p>Where the Result is an Err, then the Result is returned immediately and the continuation is ignored.</p>
@@ -765,6 +769,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param f the function to map the Success value into the result continuation
      * @return the Result or a new error Result
      */
+    @API(status = STABLE)
     ResultVoid thenWithV(Function<T, WithResultContinuation<T>> f);
 
     /**
@@ -788,6 +793,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      *
      * @return A {@code SuccessVoid} for a {@code Success} or a {@code ErrVoid} for an {@code Err}.
      */
+    @API(status = STABLE)
     ResultVoid toVoid();
 
 }
