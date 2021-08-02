@@ -493,21 +493,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     // END Static methods
 
     /**
-     * Create a Result for an output of the Callable.
-     *
-     * @param callable the callable to produce the result
-     * @param <T>      the type of the value
-     * @return a Result
-     */
-    default <T> Result<T> result(final Callable<T> callable) {
-        try {
-            return Result.ok(callable.call());
-        } catch (final Throwable e) {
-            return new Err<>(e);
-        }
-    }
-
-    /**
      * Create a Result for a success.
      *
      * @param value the value
