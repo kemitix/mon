@@ -727,6 +727,15 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      */
     Result<T> reduce(Result<T> identify, BinaryOperator<T> operator);
 
+    /**
+     * Discard any success value while retaining any error.
+     *
+     * <pre><code>
+     * ResultVoid result = Result.of(() -> getResultValue()).toVoid();
+     * </code></pre>
+     *
+     * @return A {@code SuccessVoid} for a {@code Success} or a {@code ErrVoid} for an {@code Err}.
+     */
     ResultVoid toVoid();
 
 }

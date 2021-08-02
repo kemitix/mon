@@ -1995,7 +1995,20 @@ class ResultTest implements WithAssertions {
                         .isThrownBy(() -> Result.of(() -> getErrorValue()).orElseThrow())
                         .withCauseInstanceOf(RuntimeException.class);
             }
+
+            @Test
+            @DisplayName("toVoid")
+            void toVoid() {
+                ResultVoid result = Result.of(() -> getResultValue()).toVoid();
+                //
+                assertThat(result).isInstanceOf(SuccessVoid.class);
+            }
         }
+
+        private Result<Integer> getResultValue() {
+            return Result.ok(getValue());
+        }
+
         private Integer getValue() {
             return 1;
         }

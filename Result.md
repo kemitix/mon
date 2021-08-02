@@ -49,12 +49,6 @@ Had `callRiskyMethod()` thrown an exception it would have been caught by the
 `Result` would skip the `flatMap` and continue at the `match()` where it
 would have called the error `Consumer`.
 
-### Static Constructors
-
-### Static Methods
-
-These static methods provide integration with the `Maybe` class.
-
 ### Instance Methods
 
 #### `Result<R> map(Function<T,R> f)`
