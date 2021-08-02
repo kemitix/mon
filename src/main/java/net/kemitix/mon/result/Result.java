@@ -587,7 +587,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * {@code Result}. If the initial {@code Result} is an error, then return
      * another error without invoking the supplied function.</p>
      *
-     * <p>If the supplied function throws and exception, then an error
+     * <p>If the supplied function throws an exception, then an error
      * {@code Result} will be returned containing that exception.</p>
      *
      * <pre><code>
@@ -601,6 +601,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * function output, or any exception thrown by the supplied function.
      */
     @Override
+    @API(status = STABLE)
     <R> Result<R> map(ThrowableFunction<T, R, ?> f);
 
     /**
