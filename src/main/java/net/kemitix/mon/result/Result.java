@@ -737,8 +737,16 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     <R> Result<R> andThen(Function<T, Callable<R>> f);
 
     /**
-     * Perform the continuation with the current Result value then return the current Result, assuming there was no
-     * error in the continuation.
+     * Perform the continuation with the value within the success {@code Result}
+     * and return itself.
+     *
+     * <p>Where the {@code Result} is a success, then if an exception is thrown
+     * by the continuation the {@code Result} returned will be a new error
+     * {@code Result} containing that exception, otherwise the original
+     * {@code Result}will be returned.</p>
+
+     * <p>Where the {@code Result} is an error, then the {@code Result} is
+     * returned immediately and the continuation is ignored.</p>
      *
      * <pre><code>
      * Integer doSomething() {...}
@@ -747,11 +755,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      *                                 .thenWith(value -&gt; () -&gt; doSomethingElse(value));
      * </code></pre>
      *
-     * <p>Where the Result is an Err, then the Result is returned immediately and the continuation is ignored.</p>
-     * <p>Where the Result is a Success, then if an exception is thrown by the continuation the Result returned will be
-     * a new error Result containing that exception, otherwise the original Result will be returned.</p>
-     *
-     * @param f the function to map the Success value into the result continuation
+     * @param f the function to map the Success value into the result
+     *          continuation
      * @return the Result or a new error Result
      */
     @API(status = STABLE)

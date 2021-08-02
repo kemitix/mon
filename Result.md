@@ -120,19 +120,3 @@ class ResultPeekExample {
 }
 ```
 ---
-#### `Result<T> thenWith(Function<T,WithResultContinuation<T>> f)`
-
-Perform the continuation with the current `Result` value then return the
-current `Result`, assuming there was no error in the continuation.
-
-```java
-class ResultThenWithExample {
-    Result<Integer> result =
-            Result.of(() -> getValue())
-                    .thenWith(v -> () -> System.out.println(v))
-                    .thenWith(v -> () -> {
-                        throw new IOException();
-                    });
-}
-```
----

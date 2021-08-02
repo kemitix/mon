@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assumptions.assumeThat;
@@ -1914,6 +1915,19 @@ class ResultTest implements WithAssertions {
                     );
                     // Error: Invalid input: dd
                 });
+            }
+
+            @Test
+            @DisplayName("thenWith")
+            void thenWith() {
+                AtomicInteger capture = new AtomicInteger();
+                Supplier<Integer> doSomething = () -> 1;
+                Consumer<Integer> doSomethingElse = capture::set;
+                //
+                Result<Integer> r = Result.of(() -> doSomething.get())
+                        .thenWith(value -> () -> doSomethingElse.accept(value));
+                //
+                assertThat(capture).hasValue(1);
             }
         }
         @Nested
