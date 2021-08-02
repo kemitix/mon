@@ -531,13 +531,20 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     T orElseThrow() throws CheckedErrorResultException;
 
     /**
-     * Extracts the successful value from the result, or throws the error Throwable.
+     * Return the successful value from the result, or throws the error if it is an instance of the type specified,
+     * otherwise it will throw an {@link UnexpectedErrorResultException} with the error as the cause.
+     *
+     * <pre><code>
+     * Integer result = Result.of(() -&gt; getValue())
+     *                        .orElseThrow(IOException.class);
+     * </code></pre>
      *
      * @param type the type of checked exception that may be thrown
      * @param <E>  the type of the checked exception to throw
      * @return the value if a success
      * @throws E if the result is an error
      */
+    @API(status = STABLE)
     <E extends Exception> T orElseThrow(Class<E> type) throws E;
 
     /**

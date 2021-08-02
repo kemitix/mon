@@ -148,16 +148,3 @@ class ResultMaybeExample {
 }
 ```
 ---
-#### `<E extends Exception> T orElseThrow(Class<E> type) throws E`
-
-Extracts the successful value from the `Result`, or throws the error when it
-is of the given type. Any other errors will be thrown inside an
-`UnexpectedErrorResultException`.
-
-```java
-class ResultOrElseThrowExample {
-    Integer result = Result.of(() -> getValue())
-            .orElseThrow(IOException.class);
-}
-```
----

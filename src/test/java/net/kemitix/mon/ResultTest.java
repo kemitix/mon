@@ -2075,6 +2075,15 @@ class ResultTest implements WithAssertions {
                 assertThat(result).isEqualTo(1);
             }
 
+            @Test
+            @DisplayName("orElseThrowClass")
+            void orElseThrowClass() throws IOException {
+                Integer result = Result.of(() -> getValue())
+                        .orElseThrow(IOException.class);
+                //
+                assertThat(result).isEqualTo(1);
+            }
+
         }
 
         private Result<Integer> getResultValue() {
