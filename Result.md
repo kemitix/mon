@@ -206,14 +206,3 @@ class ResultOnErrorExample {
 }
 ```
 ---
-#### `boolean isOkay()`
-
-Checks if the `Result` is a success.
-
-```java
-class ResultIsOkayExample {
-    boolean isOkay = Result.of(() -> getValue())
-            .isOkay();
-}
-```
----

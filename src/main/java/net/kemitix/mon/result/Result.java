@@ -580,6 +580,11 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     /**
      * Checks if the Result is a success.
      *
+     * <pre><code>
+     * boolean isOkay = Result.of(() -> getValue())
+     *                        .isOkay();
+     * </code></pre>
+     *
      * @return true if the Result is a success.
      */
     @API(status = STABLE)

@@ -2017,6 +2017,14 @@ class ResultTest implements WithAssertions {
             }
 
             @Test
+            @DisplayName("isOkay")
+            void isOkay() {
+                boolean isOkay = Result.of(() -> getValue()).isOkay();
+                //
+                assertThat(isOkay).isTrue();
+            }
+
+            @Test
             @DisplayName("isError")
             void isError() {
                 boolean isError = Result.of(() -> getValue()).isError();
