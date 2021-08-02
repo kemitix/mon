@@ -568,7 +568,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Checks if the Result is an error.
      *
      * <pre><code>
-     * boolean isError = Result.of(() -> getValue()).isError();
+     * boolean isError = Result.of(() -&gt; getValue())
+     *                         .isError();
      * </code></pre>
      *
      * @return true if the Result is an error.
