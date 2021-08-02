@@ -541,10 +541,17 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     <E extends Exception> T orElseThrow(Class<E> type) throws E;
 
     /**
-     * Extracts the successful value from the result, or throws the error in a {@link UnexpectedErrorResultException}.
+     * Returns the successful value from the result, or throws an {@link ErrorResultException}, an unchecked exception,
+     * with the error as the cause.
+     *
+     * <pre><code>
+     * Integer result = Result.of(() -&gt; getValue())
+     *                        .orElseThrowUnchecked();
+     * </code></pre>
      *
      * @return the value if a success
      */
+    @API(status = STABLE)
     T orElseThrowUnchecked();
 
     /**

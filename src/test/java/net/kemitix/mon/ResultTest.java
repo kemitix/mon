@@ -2065,6 +2065,16 @@ class ResultTest implements WithAssertions {
                 //
                 assertThat(err).hasValue(exception);
             }
+
+            @Test
+            @DisplayName("orElseThrowUnchecked")
+            void orElseThrowUnchecked() {
+                Integer result = Result.of(() -> getValue())
+                        .orElseThrowUnchecked();
+                //
+                assertThat(result).isEqualTo(1);
+            }
+
         }
 
         private Result<Integer> getResultValue() {

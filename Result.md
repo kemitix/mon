@@ -161,15 +161,3 @@ class ResultOrElseThrowExample {
 }
 ```
 ---
-#### `T orElseThrowUnchecked()`
-
-Extracts the successful value from the `Result`, or throws the error within
-an `ErrorResultException`.
-
-```java
-class ResultOrElseThrowUncheckedExample {
-    Integer result = Result.of(() -> getValue())
-            .orElseThrowUnchecked();
-}
-```
----
