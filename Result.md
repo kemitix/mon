@@ -136,15 +136,3 @@ class ResultThenWithExample {
 }
 ```
 ---
-#### `Result<Maybe<T>> maybe(Predicate<T> predicate)`
-
-Wraps the value within the `Result` in a `Maybe`, either a `Just` if the
-predicate is true, or `Nothing`.
-
-```java
-class ResultMaybeExample {
-    Result<Maybe<Integer>> result = Result.of(() -> getValue())
-            .maybe(v -> v % 2 == 0);
-}
-```
----

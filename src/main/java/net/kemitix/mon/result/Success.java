@@ -69,14 +69,6 @@ class Success<T> implements Result<T> {
     }
 
     @Override
-    public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
-        if (predicate.test(value)) {
-            return new Success<>(Maybe.just(value));
-        }
-        return new Success<>(Maybe.nothing());
-    }
-
-    @Override
     public T orElseThrow() {
         return value;
     }

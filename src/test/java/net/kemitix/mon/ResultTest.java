@@ -387,59 +387,6 @@ class ResultTest implements WithAssertions {
     @Nested
     @DisplayName("maybe")
     class MaybeTests {
-        @Test
-        void okay_whenMaybe_wherePasses_isOkayJust() {
-            //given
-            final Result<Integer> okResult = Result.ok(1);
-            //when
-            final Result<Maybe<Integer>> maybeResult = okResult.maybe(value -> value >= 0);
-            //then
-            maybeResult.match(
-                    success -> assertThat(success.toOptional()).contains(1),
-                    error -> fail("not an error")
-            );
-        }
-
-        @Test
-        void okay_whenMaybe_whereFails_isOkayNothing() {
-            //given
-            final Result<Integer> okResult = Result.ok(1);
-            //when
-            final Result<Maybe<Integer>> maybeResult = okResult.maybe(value -> value >= 4);
-            //then
-            maybeResult.match(
-                    success -> assertThat(success.toOptional()).isEmpty(),
-                    error -> fail("not an error")
-            );
-        }
-
-        @Test
-        void error_whenMaybe_wherePasses_isError() {
-            //given
-            final RuntimeException exception = new RuntimeException();
-            final Result<Integer> errorResult = anError(exception);
-            //when
-            final Result<Maybe<Integer>> maybeResult = errorResult.maybe(value -> value >= 0);
-            //then
-            maybeResult.match(
-                    success -> fail("not a success"),
-                    error -> assertThat(error).isSameAs(exception)
-            );
-        }
-
-        @Test
-        void error_whenMaybe_whereFails_isError() {
-            //given
-            final RuntimeException exception = new RuntimeException();
-            final Result<Integer> errorResult = anError(exception);
-            //when
-            final Result<Maybe<Integer>> maybeResult = errorResult.maybe(value -> value >= 4);
-            //then
-            maybeResult.match(
-                    success -> fail("not a success"),
-                    error -> assertThat(error).isSameAs(exception)
-            );
-        }
 
         @Nested
         @DisplayName("fromMaybe")

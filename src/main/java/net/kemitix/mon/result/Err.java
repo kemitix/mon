@@ -74,11 +74,6 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
-        return new Err<>(error);
-    }
-
-    @Override
     public T orElseThrow() throws CheckedErrorResultException {
         throw CheckedErrorResultException.with(error);
     }

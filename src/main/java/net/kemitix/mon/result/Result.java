@@ -639,14 +639,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     void match(Consumer<T> onSuccess, Consumer<Throwable> onError);
 
     /**
-     * Wraps the value within the Result in a Maybe, either a Just if the predicate is true, or Nothing.
-     *
-     * @param predicate the test to decide
-     * @return a Result containing a Maybe that may or may not contain a value
-     */
-    Result<Maybe<T>> maybe(Predicate<T> predicate);
-
-    /**
      * Provide the value within the Result, if it is a success, to the Consumer, and returns this Result.
      *
      * @param consumer the Consumer to the value if a success
