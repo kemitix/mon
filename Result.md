@@ -173,17 +173,3 @@ class ResultOrElseThrowUncheckedExample {
 }
 ```
 ---
-#### `void onError(Consumer<Throwable> errorConsumer)`
-
-A handler for error states. If the `Result` is an error, then supply the error
-to the `Consumer`. Does nothing if the `Result` is a success.
-
-```java
-class ResultOnErrorExample {
-    public static void main(String[] args) {
-        Result.of(() -> getValue())
-            .onError(e -> handleError(e));
-    }
-}
-```
----

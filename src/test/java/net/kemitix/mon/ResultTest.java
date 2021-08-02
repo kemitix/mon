@@ -2052,6 +2052,19 @@ class ResultTest implements WithAssertions {
                 //
                 assertThat(err).hasValue(exception);
             }
+            @Test
+            @DisplayName("onErrorConsumer")
+            void onErrorConsumer() {
+                AtomicReference<Throwable> err = new AtomicReference<>();
+                Exception exception = new UnsupportedOperationException();
+                //
+                Result.of(() -> {
+                            throw exception;
+                        })
+                        .onError(e -> err.set(e));
+                //
+                assertThat(err).hasValue(exception);
+            }
         }
 
         private Result<Integer> getResultValue() {
