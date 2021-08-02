@@ -57,7 +57,7 @@ class Success<T> implements Result<T> {
     @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable"})
     public <R> Result<R> map(final ThrowableFunction<T, R, ?> f) {
         try {
-            return success(f.apply(value));
+            return new Success<>(f.apply(value));
         } catch (Throwable e) {
             return new Err<>(e);
         }
@@ -71,9 +71,9 @@ class Success<T> implements Result<T> {
     @Override
     public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
         if (predicate.test(value)) {
-            return success(Maybe.just(value));
+            return new Success<>(Maybe.just(value));
         }
-        return success(Maybe.nothing());
+        return new Success<>(Maybe.nothing());
     }
 
     @Override

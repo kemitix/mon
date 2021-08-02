@@ -493,17 +493,6 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     // END Static methods
 
     /**
-     * Create a Result for a success.
-     *
-     * @param value the value
-     * @param <R>   the type of the value
-     * @return a successful Result
-     */
-    default <R> Result<R> success(final R value) {
-        return new Success<>(value);
-    }
-
-    /**
      * Converts the {@code Result} into an {@link Either}.
      * 
      * <pre><code>
