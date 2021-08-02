@@ -1987,10 +1987,21 @@ class ResultTest implements WithAssertions {
                     );
                 });
             }
+
+            @Test
+            @DisplayName("orElse")
+            void orElse() {
+                assertThatExceptionOfType(CheckedErrorResultException.class)
+                        .isThrownBy(() -> Result.of(() -> getErrorValue()).orElseThrow())
+                        .withCauseInstanceOf(RuntimeException.class);
+            }
         }
         private Integer getValue() {
             return 1;
         }
+        private Integer getErrorValue() {
+            throw new RuntimeException();
+        };
     }
 
     @RequiredArgsConstructor

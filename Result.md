@@ -167,18 +167,6 @@ class ResultMaybeExample {
 }
 ```
 ---
-#### `T orElseThrow()`
-
-Extracts the successful value from the `Result`, or throws the error
-within a `CheckedErrorResultException`.
-
-```java
-class ResultOrElseThrowExample {
-    Integer result = Result.of(() -> getValue())
-            .orElseThrow();
-}
-```
----
 #### `<E extends Exception> T orElseThrow(Class<E> type) throws E`
 
 Extracts the successful value from the `Result`, or throws the error when it

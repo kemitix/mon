@@ -517,11 +517,17 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     }
 
     /**
-     * Extracts the successful value from the result, or throws the error within a {@link CheckedErrorResultException}.
+     * Extracts the successful value from the result, or throws a {@link CheckedErrorResultException} with the error
+     * as the cause.
+     *
+     * <pre><code>
+     * Integer result = Result.of(() -> getValue()).orElseThrow();
+     * </code></pre>
      *
      * @return the value if a success
      * @throws CheckedErrorResultException if the result is an error
      */
+    @API(status = STABLE)
     T orElseThrow() throws CheckedErrorResultException;
 
     /**
