@@ -621,8 +621,8 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      * <pre><code>
      * Result.of(()-> getValue())
      *       .match(
-     *           success -> capture.set(success),
-     *           error -> capture.set(error)
+     *           success -> doSomething(success),
+     *           error -> handleError(error)
      *       );
      * </code></pre>
      *
