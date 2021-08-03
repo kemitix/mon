@@ -746,8 +746,9 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param f   the function to map the Success value into the Callable
      * @param <R> the type of the final Result
      * @return a new Result
+     * @deprecated Use {@link #map(ThrowableFunction)}
      */
-    @API(status = STABLE)
+    @API(status = DEPRECATED)
     <R> Result<R> andThen(Function<T, Callable<R>> f);
 
     /**

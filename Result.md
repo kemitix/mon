@@ -65,18 +65,3 @@ class ResultFlatMapExample {
 }
 ```
 ---
-#### `Result<R> andThen(Function<T,Callable<R>> f)`
-
-Maps a successful `Result` to another `Result` using a `Callable` that is able
-to throw a checked exception.
-
-```java
-class ResultAndThenExample {
-    Result<String> result =
-            Result.of(() -> getValue())
-                    .andThen(v -> () -> {
-                        throw new IOException();
-                    });
-}
-```
----
