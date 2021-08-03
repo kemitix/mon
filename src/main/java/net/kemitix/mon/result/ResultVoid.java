@@ -4,19 +4,13 @@ import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface ResultVoid {
-
-    boolean isError();
-
-    boolean isOkay();
+public interface ResultVoid extends BaseResult {
 
     void match(Runnable onSuccess, Consumer<Throwable> onError);
 
     ResultVoid recover(Function<Throwable, ResultVoid> f);
 
     void onSuccess(Runnable runnable);
-
-    void onError(Consumer<Throwable> errorConsumer);
 
     <E extends Throwable> ResultVoid onError(
             Class<E> errorClass,
@@ -26,4 +20,5 @@ public interface ResultVoid {
     ResultVoid andThen(VoidCallable f);
 
     <T> Result<T> inject(Callable<T> f);
+
 }
