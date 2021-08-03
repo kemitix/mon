@@ -18,7 +18,7 @@ https://search.maven.org/artifact/net.kemitix/mon)
 - [Wrapper](#Wrapper) - light-weight type-alias-like
 - [TypeAlias](#TypeAlias) - type-alias-like monadic wrapper
 - [Maybe](#Maybe) - Maybe, Just or Nothing
-- [Result](Result.md) - Result, Success or Err
+- [Result](https://kemitix.github.io/mon/net/kemitix/mon/result/package-summary.html) - Result, Success or Err
 - [Tree](#Tree) - generic trees
 - [Lazy](#Lazy) - lazy evaluation
 - [Either](#Either) - Either, Left or Right
