@@ -108,15 +108,3 @@ class ResultRecoverExample {
 }
 ```
 ---
-#### `Result<T> peek(Consumer<T> consumer)`
-
-Provide the value within the Result, if it is a success, to the `Consumer`,
-and returns this Result.
-
-```java
-class ResultPeekExample {
-    Result<Integer> result = Result.of(() -> getValue())
-            .peek(v -> System.out.println(v));
-}
-```
----

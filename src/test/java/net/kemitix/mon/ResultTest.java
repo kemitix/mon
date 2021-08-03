@@ -1933,6 +1933,7 @@ class ResultTest implements WithAssertions {
         @Nested
         @DisplayName("default methods")
         class DefaultMethodTests {
+
             @Test
             @DisplayName("toEither")
             void toEither() {
@@ -1954,6 +1955,12 @@ class ResultTest implements WithAssertions {
                     );
                 });
             }
+
+        }
+
+        @Nested
+        @DisplayName("instance methods")
+        class InstanceMethods {
 
             @Test
             @DisplayName("orElse")
@@ -2013,6 +2020,7 @@ class ResultTest implements WithAssertions {
                 //
                 assertThat(err).hasValue(exception);
             }
+
             @Test
             @DisplayName("onErrorConsumer")
             void onErrorConsumer() {
@@ -2045,6 +2053,16 @@ class ResultTest implements WithAssertions {
                 assertThat(result).isEqualTo(1);
             }
 
+            @Test
+            @DisplayName("peek")
+            void peek() {
+                AtomicInteger capture = new AtomicInteger();
+                //
+                Result<Integer> result = Result.of(() -> getValue())
+                        .peek(v -> capture.set(v));
+                //
+                assertThat(capture).hasValue(getValue());
+            }
         }
 
         private Result<Integer> getResultValue() {

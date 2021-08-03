@@ -641,6 +641,11 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     /**
      * Provide the value within the Result, if it is a success, to the Consumer, and returns this Result.
      *
+     * <pre><code>
+     * Result&lt;Integer&gt; result = Result.of(() -&gt; getValue())
+     *                                      .peek(v -&gt; System.out.println(v));
+     * </code></pre>
+     *
      * @param consumer the Consumer to the value if a success
      * @return this Result
      */
