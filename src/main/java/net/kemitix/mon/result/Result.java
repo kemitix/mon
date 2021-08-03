@@ -214,8 +214,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      *
      * <pre><code>
      * Maybe&lt;Integer&gt; maybe = Maybe.maybe(1);
-     * Result&lt;Integer&gt; result = Result.from(maybe,
-     *     () -&gt; new RuntimeException());&lt;/p&gt;
+     * Result&lt;Integer&gt; result = Result.from(maybe, () -&gt; new RuntimeException());&lt;/p&gt;
      * </code></pre>
      *
      * @param maybe the Maybe the might contain the value of the Result
@@ -521,7 +520,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * as the cause.
      *
      * <pre><code>
-     * Integer result = Result.of(() -&gt; getValue()).orElseThrow();
+     * Integer result = Result.of(() -&gt; getValue())
+     *                        .orElseThrow();
      * </code></pre>
      *
      * @return the value if a success
@@ -618,7 +618,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      *
      * <pre><code>
      * Result&lt;String&gt; result = Result.of(() -&gt; getValue())
-     *             .map(v -&gt; String.valueOf(v));
+     *                               .map(v -&gt; String.valueOf(v));
      * </code></pre>
      *
      * @param f   the function to apply
@@ -643,7 +643,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      *
      * <pre><code>
      * Result&lt;Integer&gt; result = Result.of(() -&gt; getValue())
-     *                                      .peek(v -&gt; System.out.println(v));
+     *                                .peek(v -&gt; System.out.println(v));
      * </code></pre>
      *
      * @param consumer the Consumer to the value if a success
@@ -652,13 +652,18 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     Result<T> peek(Consumer<T> consumer);
 
     /**
-     * Provide a way to attempt to recover from an error state.
+     * Attempts to restore an error {@code Result} to a success.
      *
-     * <p>When the Result is not an Err, this is a no-op.</p>
+     * <p>When the Result is already a success, then the result is returned unmodified.</p>
+     *
+     * <pre><code>
+     * Result&lt;Integer&gt; result = Result.of(() -&gt; getValue())
+     *                                .recover(e -> Result.of(() -&gt; getSafeValue(e)));
+     * </code></pre>
      *
      * @param f the function to recover from the error
-     * @return if Result is an Err, a new Result, either a Success, or if recovery is not possible an other Err.
-     * If Result is a Success, then this results itself.
+     * @return if Result is an error, a new Result, either a Success, or if recovery is not possible another error.
+     * If the Result is already a success, then this results itself.
      */
     Result<T> recover(Function<Throwable, Result<T>> f);
 
@@ -729,7 +734,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Integer doSomething() {...}
      * String doSomethingElse(final Integer value) {...}
      * Result&lt;String&gt; r = Result.of(() -&gt; doSomething())
-     *                                .andThen(value -&gt; () -&gt; doSomethingElse(value));
+     *                          .andThen(value -&gt; () -&gt; doSomethingElse(value));
      * </code></pre>
      *
      * <p>When the Result is an Err, then the original error is carried over and the Callable is never called.</p>
@@ -757,7 +762,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Integer doSomething() {...}
      * void doSomethingElse(final Integer value) {...}
      * Result&lt;Integer&gt; r = Result.of(() -&gt; doSomething())
-     *                                 .thenWith(value -&gt; () -&gt; doSomethingElse(value));
+     *                           .thenWith(value -&gt; () -&gt; doSomethingElse(value));
      * </code></pre>
      *
      * @param f the function to map the Success value into the result
@@ -775,7 +780,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Integer doSomething() {...}
      * void doSomethingElse(final Integer value) {...}
      * Result&lt;Integer&gt; r = Result.of(() -&gt; doSomething())
-     *                                 .thenWith(value -&gt; () -&gt; doSomethingElse(value));
+     *                           .thenWith(value -&gt; () -&gt; doSomethingElse(value));
      * </code></pre>
      *
      * <p>Where the Result is an Err, then the Result is returned immediately and the continuation is ignored.</p>
@@ -804,7 +809,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Discard any success value while retaining any error.
      *
      * <pre><code>
-     * ResultVoid result = Result.of(() -&gt; getResultValue()).toVoid();
+     * ResultVoid result = Result.of(() -&gt; getResultValue())
+     *                           .toVoid();
      * </code></pre>
      *
      * @return A {@code SuccessVoid} for a {@code Success} or a {@code ErrVoid} for an {@code Err}.

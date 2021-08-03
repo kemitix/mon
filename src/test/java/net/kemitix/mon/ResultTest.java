@@ -2063,6 +2063,18 @@ class ResultTest implements WithAssertions {
                 //
                 assertThat(capture).hasValue(getValue());
             }
+
+            @Test
+            @DisplayName("recover")
+            void recover() {
+                Result<Integer> result = Result.of(() -> getErrorValue())
+                        .recover(e -> Result.of(() -> getSafeValue(e)));
+                //
+                result.match(
+                        s -> assertThat(s).isEqualTo(2),
+                        e -> fail("not an error")
+                );
+            }
         }
 
         private Result<Integer> getResultValue() {
@@ -2072,6 +2084,11 @@ class ResultTest implements WithAssertions {
         private Integer getValue() {
             return 1;
         }
+
+        private Integer getSafeValue(Throwable e) {
+            return 2;
+        }
+
         private Integer getErrorValue() {
             throw new RuntimeException();
         };

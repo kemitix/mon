@@ -97,14 +97,3 @@ class ResultMatchExample {
 }
 ```
 ---
-#### `Result<T> recover(Function<Throwable,Result<T>> f)`
-
-Provide a way to attempt to recover from an error state.
-
-```java
-class ResultRecoverExample {
-    Result<Integer> result = Result.of(() -> getValue())
-            .recover(e -> Result.of(() -> getSafeValue(e)));
-}
-```
----
