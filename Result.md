@@ -51,17 +51,3 @@ would have called the error `Consumer`.
 
 ### Instance Methods
 
-#### `Result<R> flatMap(Function<T,Result<R>> f)`
-
-If the `Result` is a success, then return a new `Result` containing the result
-of applying the function to the contents of the `Result`. If the `Result` is an
-error, then return the error.
-
-```java
-class ResultFlatMapExample {
-    Result<String> result =
-            Result.of(() -> getValue())
-                    .flatMap(v -> Result.of(() -> String.valueOf(v)));
-}
-```
----

@@ -562,12 +562,20 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     T orElseThrowUnchecked();
 
     /**
-     * Returns a new Result consisting of the result of applying the function to the contents of the Result.
+     * Applies the function to the value within the {@code Result} and returns the result if this is a success,
+     * otherwise returns a new {@code Result} with the existing error.
+     *
+     * <pre><code>
+     *     Result<String> result =
+     *             Result.of(() -> getValue())
+     *                     .flatMap(v -> Result.of(() -> String.valueOf(v)));
+     * </code></pre>
      *
      * @param f   the mapping function the produces a Result
      * @param <R> the type of the value withing the Result of the mapping function
      * @return a Result
      */
+    @API(status = STABLE)
     <R> Result<R> flatMap(Function<T, Result<R>> f);
 
     /**

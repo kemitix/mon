@@ -2090,6 +2090,19 @@ class ResultTest implements WithAssertions {
                 assertThat(capture).hasValue(getValue());
             }
 
+            @Test
+            @DisplayName("flatMap")
+            void flatMap() {
+                Result<String> result =
+                        Result.of(() -> getValue())
+                                .flatMap(v -> Result.of(() -> String.valueOf(v)));
+                //
+                result.match(
+                        s -> assertThat(s).isEqualTo("1"),
+                        e -> fail("not an err")
+                );
+            }
+
         }
 
         private Result<Integer> getResultValue() {
