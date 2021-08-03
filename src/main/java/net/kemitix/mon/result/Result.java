@@ -667,6 +667,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @param consumer the Consumer to the value if a success
      * @return this Result
      */
+    @API(status = STABLE)
     Result<T> peek(Consumer<T> consumer);
 
     /**
@@ -683,16 +684,23 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @return if Result is an error, a new Result, either a Success, or if recovery is not possible another error.
      * If the Result is already a success, then this results itself.
      */
+    @API(status = STABLE)
     Result<T> recover(Function<Throwable, Result<T>> f);
 
     /**
      * A handler to success states.
+     *
+     * <pre><code>
+     * Result.of(() -> getValue())
+     *       .onSuccess(v -> doSomething(v));
+     * </code></pre>
      *
      * <p>When this is a success then tne Consumer will be supplied with the
      * success value. When this is an error, then nothing happens.</p>
      *
      * @param successConsumer the consumer to handle the success
      */
+    @API(status = STABLE)
     void onSuccess(Consumer<T> successConsumer);
 
     /**

@@ -2112,6 +2112,17 @@ class ResultTest implements WithAssertions {
                 assertThat(result.isOkay()).isTrue();
             }
 
+            @Test
+            @DisplayName("onSuccess")
+            void onSuccess() {
+                AtomicInteger capture = new AtomicInteger();
+                //
+                Result.of(() -> getValue())
+                        .onSuccess(v -> capture.set(v));
+                //
+                assertThat(capture).hasValue(getValue());
+            }
+
         }
 
         private Result<Integer> getResultValue() {
