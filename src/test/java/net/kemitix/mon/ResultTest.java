@@ -2111,6 +2111,7 @@ class ResultTest implements WithAssertions {
                 //
                 assertThat(result.isOkay()).isTrue();
             }
+
         }
 
         private Result<Integer> getResultValue() {

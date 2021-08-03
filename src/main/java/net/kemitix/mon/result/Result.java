@@ -643,12 +643,17 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * Matches the Result, either success or error, and supplies the appropriate Consumer with the value or error.
      *
      * <pre><code>
-     *
+     * Result.of(()-> getValue())
+     *       .match(
+     *           success -> capture.set(success),
+     *           error -> capture.set(error)
+     *       );
      * </code></pre>
      *
      * @param onSuccess the Consumer to pass the value of a successful Result to
      * @param onError   the Consumer to pass the error from an error Result to
      */
+    @API(status = STABLE)
     void match(Consumer<T> onSuccess, Consumer<Throwable> onError);
 
     /**
