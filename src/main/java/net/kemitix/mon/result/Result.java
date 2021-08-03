@@ -691,8 +691,9 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * A handler to success states.
      *
      * <pre><code>
+     * void handleSuccess(Integer value) {...}
      * Result.of(() -> getValue())
-     *       .onSuccess(v -> doSomething(v));
+     *       .onSuccess(v -> handleSuccess(v));
      * </code></pre>
      *
      * <p>When this is a success then tne Consumer will be supplied with the
@@ -826,10 +827,11 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * <p>If either Result is an error, then the reduce will return the error. If both are errors, then the error of
      * {@code this} Result will be returned.</p>
      *
-     * @param identify the identify Result
+     * @param identify the identity Result
      * @param operator the function to combine the values the Results
      * @return a Result containing the combination of the two Results
      */
+    @API(status = EXPERIMENTAL)
     Result<T> reduce(Result<T> identify, BinaryOperator<T> operator);
 
     /**
