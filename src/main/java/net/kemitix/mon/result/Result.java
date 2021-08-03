@@ -451,8 +451,10 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
      * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
      * error, then the Result will also be an error.
+     * @deprecated
      */
     @API(status = DEPRECATED)
+    @Deprecated
     static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
         return maybeResult.orElseGet(() -> Result.ok(null))
                 .flatMap(value -> Result.ok(Maybe.maybe(value)));
@@ -772,6 +774,7 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * @deprecated Use {@link #map(ThrowableFunction)}
      */
     @API(status = DEPRECATED)
+    @Deprecated
     <R> Result<R> andThen(Function<T, Callable<R>> f);
 
     /**
