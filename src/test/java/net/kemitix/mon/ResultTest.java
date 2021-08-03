@@ -2075,6 +2075,21 @@ class ResultTest implements WithAssertions {
                         e -> fail("not an error")
                 );
             }
+
+            @Test
+            @DisplayName("match")
+            void match() {
+                AtomicReference<Object> capture = new AtomicReference<>();
+                //
+                Result.of(()-> getValue())
+                        .match(
+                                success -> capture.set(success),
+                                error -> capture.set(error)
+                        );
+                //
+                assertThat(capture).hasValue(getValue());
+            }
+
         }
 
         private Result<Integer> getResultValue() {

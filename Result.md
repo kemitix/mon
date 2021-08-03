@@ -80,20 +80,3 @@ class ResultAndThenExample {
 }
 ```
 ---
-#### `void match(Consumer<T> onSuccess, Consumer<Throwable> onError)`
-
-Matches the `Result`, either success or error, and supplies the appropriate
-`Consumer` with the value or error.
-
-```java
-class ResultMatchExample {
-    public static void main(String[] args) {
-        Result.of(()-> getValue())
-                .match(
-                        success ->System.out.println(success),
-                        error ->System.err.println(error.getMessage())
-                );
-    }
-}
-```
----
