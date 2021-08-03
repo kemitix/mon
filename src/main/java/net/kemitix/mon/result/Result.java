@@ -29,12 +29,7 @@ import org.apiguardian.api.API;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 import static org.apiguardian.api.API.Status.*;
@@ -566,9 +561,8 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
      * otherwise returns a new {@code Result} with the existing error.
      *
      * <pre><code>
-     *     Result<String> result =
-     *             Result.of(() -> getValue())
-     *                     .flatMap(v -> Result.of(() -> String.valueOf(v)));
+     * Result&lt;String&gt; result = Result.of(() -&gt; getValue())
+     *                               .flatMap(v -&gt; Result.of(() -&gt; String.valueOf(v)));
      * </code></pre>
      *
      * @param f   the mapping function the produces a Result
@@ -579,11 +573,18 @@ public interface Result<T> extends ThrowableFunctor<T, ThrowableFunctor<?, ?>> {
     <R> Result<R> flatMap(Function<T, Result<R>> f);
 
     /**
-     * Returns the void result of applying the function ot the contents of the Result.
+     * Applies the function to the value within the {@code Result} and returns the void result if this is a success,
+     * otherwise returns a new {@code Result} with the existing error.
+     *
+     * <pre><code>
+     * ResultVoid result = Result.of(() -> getValue())
+     *                           .flatMapV(v -> Result.ok());
+     * </code></pre>
      *
      * @param f   the mapping function the produces a ResultVoid
      * @return a ResultVoid
      */
+    @API(status = STABLE)
     ResultVoid flatMapV(Function<T, ResultVoid> f);
 
     /**

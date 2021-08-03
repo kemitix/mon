@@ -2103,6 +2103,14 @@ class ResultTest implements WithAssertions {
                 );
             }
 
+            @Test
+            @DisplayName("flatMapV")
+            void flatMapV() {
+                ResultVoid result = Result.of(() -> getValue())
+                        .flatMapV(v -> Result.ok());
+                //
+                assertThat(result.isOkay()).isTrue();
+            }
         }
 
         private Result<Integer> getResultValue() {
