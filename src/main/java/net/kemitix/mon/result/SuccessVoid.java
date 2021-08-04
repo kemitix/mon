@@ -69,7 +69,7 @@ public class SuccessVoid implements ResultVoid {
             f.call();
             return this;
         } catch (Exception e) {
-            return Result.error(e);
+            return new ErrVoid(e);
         }
     }
 
