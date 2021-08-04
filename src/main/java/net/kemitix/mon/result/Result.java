@@ -492,6 +492,34 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
     // END Static methods
 
     /**
+     * Create a {@link Result} for the output of the {@link Callable}.
+     *
+     * <p>If the {@code Callable} succeeds then the {@code Result} will be a
+     * {@link Success} and will contain the value.
+     * If it throws an {@code Exception}, then the {@code Result} will be an
+     * {@link Err} and will contain that exception.</p>
+     *
+     * <pre><code>
+     * Result&lt;Integer$gt; okay = Result.of(() -&gt; 1);
+     * Result&lt;Integer&gt; error = Result.of(() -&gt; {
+     *     throw new RuntimeException();
+     * });
+     * </code></pre>
+     *
+     * @param callable the callable to produce the result
+     * @param <R>      the type of the value
+     * @return a Result
+     */
+    @API(status = EXPERIMENTAL)
+    default <R> Result<R> result(final Callable<R> callable) {
+        try {
+            return Result.ok(callable.call());
+        } catch (final Throwable e) {
+            return new Err<>(e);
+        }
+    }
+
+    /**
      * Converts the {@code Result} into an {@link Either}.
      * 
      * <pre><code>
