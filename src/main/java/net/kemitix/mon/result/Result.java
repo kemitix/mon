@@ -21,6 +21,7 @@
 
 package net.kemitix.mon.result;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.kemitix.mon.ThrowableFunctor;
 import net.kemitix.mon.TypeReference;
 import net.kemitix.mon.experimental.either.Either;
@@ -172,6 +173,8 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      * @return an error Result
      */
     @API(status = STABLE)
+    @SuppressFBWarnings(value = "UP_UNUSED_PARAMETER",
+            justification = "Use the type parameter to fingerprint the return type")
     static <R> Result<R> error(final TypeReference<R> type, final Throwable error) {
         return new Err<>(error);
     }
