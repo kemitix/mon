@@ -2215,7 +2215,17 @@ class ResultTest implements WithAssertions {
                 assertThat(err.get()).isSameAs(exception);
             }
 
-            //TODO andThen
+            @Test
+            @DisplayName("andThen")
+            void andThen() {
+                AtomicBoolean capture = new AtomicBoolean();
+                //
+                Result.ofVoid(() -> doSomethingRisky())
+                        .andThen(() -> capture.set(true));
+                //
+                assertThat(capture).isFalse();
+            }
+
             //TODO inject
 
             private void doSomethingSafe() {

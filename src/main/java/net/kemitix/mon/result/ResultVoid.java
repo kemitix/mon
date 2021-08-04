@@ -97,6 +97,18 @@ public interface ResultVoid extends BaseResult {
             Consumer<E> consumer
     );
 
+    /**
+     * Execute the callable if the {@code Result} is a success, ignore it if is an error.
+     *
+     * <pre><code>
+     * Result.ofVoid(() -&gt; doSomethingRisky())
+     *       .andThen(() -&gt; doSomethingRisky("again"));
+     * </code></pre>
+     *
+     * @param f   the function to map the Success value into the Callable
+     * @return itself unless the callable fails when it will return a new error Result
+     */
+    @API(status = STABLE)
     ResultVoid andThen(VoidCallable f);
 
     <T> Result<T> inject(Callable<T> f);
