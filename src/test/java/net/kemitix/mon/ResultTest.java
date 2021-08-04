@@ -1674,472 +1674,548 @@ class ResultTest implements WithAssertions {
     @Nested
     @DisplayName("javadoc documentation")
     class JavadocTests {
+
         @Nested
-        @DisplayName("Static constructors")
-        class StaticConstructors {
-            @Test
-            @DisplayName("ok")
-            void ok() {
-                ResultVoid okay = Result.ok();
-                //
-                assertThat(okay.isOkay()).isTrue();
-            }
+        @DisplayName("Result")
+        class ResultJavadocTests {
 
-            @Test
-            @DisplayName("ok(value)")
-            void okValue() {
-                Result<Integer> okay = Result.ok(1);
-                //
-                okay.match(
-                        s -> assertThat(s).isEqualTo(1),
-                        e -> fail("not an err")
-                );
-            }
+            @Nested
+            @DisplayName("Static constructors")
+            class StaticConstructors {
+                @Test
+                @DisplayName("ok")
+                void ok() {
+                    ResultVoid okay = Result.ok();
+                    //
+                    assertThat(okay.isOkay()).isTrue();
+                }
 
-            @Test
-            @DisplayName("of")
-            void of() {
-                Result<Integer> okay = Result.of(() -> 1);
-                Result<Integer> error = Result.of(() -> {
-                    throw new RuntimeException();
-                });
-                //
-                assertSoftly(s -> {
+                @Test
+                @DisplayName("ok(value)")
+                void okValue() {
+                    Result<Integer> okay = Result.ok(1);
+                    //
                     okay.match(
-                            v -> s.assertThat(v).isEqualTo(1),
+                            s -> assertThat(s).isEqualTo(1),
                             e -> fail("not an err")
                     );
-                    error.match(
-                            v -> fail("not a success"),
-                            e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
+                }
+
+                @Test
+                @DisplayName("of")
+                void of() {
+                    Result<Integer> okay = Result.of(() -> 1);
+                    Result<Integer> error = Result.of(() -> {
+                        throw new RuntimeException();
+                    });
+                    //
+                    assertSoftly(s -> {
+                        okay.match(
+                                v -> s.assertThat(v).isEqualTo(1),
+                                e -> fail("not an err")
+                        );
+                        error.match(
+                                v -> fail("not a success"),
+                                e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
+                        );
+                    });
+                }
+
+                @Test
+                @DisplayName("ofVoid")
+                void ofVoid() {
+                    ResultVoid okay = Result.ofVoid(() -> System.out.println("Hello, World!"));
+                    ResultVoid error = Result.ofVoid(() -> {
+                        throw new Exception();
+                    });
+                    //
+                    assertSoftly(s -> {
+                        s.assertThat(okay.isOkay()).isTrue();
+                        s.assertThat(error.isError()).isTrue();
+                    });
+                }
+
+                @Test
+                @DisplayName("error(Throwable)")
+                void errorThrowable() {
+                    ResultVoid error = Result.error(new RuntimeException());
+                    //
+                    assertThat(error.isError()).isTrue();
+                }
+
+                @Test
+                @DisplayName("error(Class, Throwable)")
+                void errorClassThrowable() {
+                    Result<Integer> error = Result.error(TypeReference.create(), new RuntimeException());
+                    //
+                    assertThat(error.isError()).isTrue();
+                }
+
+                @Test
+                @DisplayName("from Either")
+                void fromEither() {
+                    Either<Throwable, String> eitherRight = Either.right("Hello, World!");
+                    Either<Throwable, String> eitherLeft = Either.left(new RuntimeException());
+                    Result<String> success = Result.from(eitherRight);
+                    Result<String> error = Result.from(eitherLeft);
+                    //
+                    assertSoftly(s -> {
+                        success.match(
+                                v -> s.assertThat(v).isEqualTo("Hello, World!"),
+                                e -> fail("not an err")
+                        );
+                        error.match(
+                                v -> fail("not a success"),
+                                e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
+                        );
+                    });
+                }
+
+                @Test
+                @DisplayName("from Maybe")
+                void fromMaybe() {
+                    Maybe<Integer> maybe = Maybe.maybe(getValue());
+                    Result<Integer> result = Result.from(maybe, () -> new RuntimeException());
+                    //
+                    assertSoftly(s -> {
+                        result.match(
+                                v -> s.assertThat(v).isEqualTo(getValue()),
+                                e -> fail("not an err")
+                        );
+                    });
+                }
+
+            }
+
+            @Nested
+            @DisplayName("Static methods")
+            class StaticMethodsTests {
+                @Test
+                @DisplayName("toMaybe")
+                void toMaybe() {
+                    Result<Integer> result = Result.of(() -> getValue());
+                    Maybe<Integer> maybe = Result.toMaybe(result);
+                    //
+                    assertSoftly(s -> {
+                        maybe.match(
+                                j -> s.assertThat(j).isEqualTo(getValue()),
+                                () -> fail("not a nothing")
+                        );
+                    });
+                }
+
+                @Test
+                @DisplayName("flatMayMaybe")
+                void flatMapMaybe() {
+                    Result<Maybe<Integer>> result = Result.of(() -> Maybe.maybe(getValue()));
+                    Result<Maybe<Integer>> maybeResult = Result.flatMapMaybe(result,
+                            maybe -> Result.of(() -> maybe.map(v -> v * 2)));
+                    //
+                    assertSoftly(s -> {
+                        maybeResult.match(
+                                m -> m.match(
+                                        v -> s.assertThat(v).isEqualTo(2 * getValue()),
+                                        () -> fail("not a nothing")),
+                                e -> fail("not an err")
+                        );
+                    });
+                }
+
+                @Test
+                @DisplayName("flatApply(Stream, Consumer")
+                void flatApplyOverStreamConsumer() {
+                    List<String> processed = new ArrayList<>();
+                    Consumer<String> consumer = s -> {
+                        if ("dd".equals(s)) {
+                            throw new RuntimeException("Invalid input: " + s);
+                        }
+                        processed.add(s);
+                    };
+
+                    Stream<String> okayStream = Stream.of("aa", "bb");
+                    ResultVoid resultOkay = Result.applyOver(okayStream, consumer);
+                    resultOkay.match(
+                            () -> System.out.println("All processed okay."),
+                            error -> System.out.println("Error: " + error.getMessage())
                     );
-                });
-            }
+                    System.out.println("Processed: " + processed);
+                    // All processed okay.
+                    // Processed: [aa, bb]
 
-            @Test
-            @DisplayName("ofVoid")
-            void ofVoid() {
-                ResultVoid okay = Result.ofVoid(() -> System.out.println("Hello, World!"));
-                ResultVoid error = Result.ofVoid(() -> {
-                    throw new Exception();
-                });
-                //
-                assertSoftly(s -> {
-                    s.assertThat(okay.isOkay()).isTrue();
-                    s.assertThat(error.isError()).isTrue();
-                });
-            }
-
-            @Test
-            @DisplayName("error(Throwable)")
-            void errorThrowable() {
-                ResultVoid error = Result.error(new RuntimeException());
-                //
-                assertThat(error.isError()).isTrue();
-            }
-
-            @Test
-            @DisplayName("error(Class, Throwable)")
-            void errorClassThrowable() {
-                Result<Integer> error = Result.error(TypeReference.create(), new RuntimeException());
-                //
-                assertThat(error.isError()).isTrue();
-            }
-
-            @Test
-            @DisplayName("from Either")
-            void fromEither() {
-                Either<Throwable, String> eitherRight = Either.right("Hello, World!");
-                Either<Throwable, String> eitherLeft = Either.left(new RuntimeException());
-                Result<String> success = Result.from(eitherRight);
-                Result<String> error = Result.from(eitherLeft);
-                //
-                assertSoftly(s -> {
-                    success.match(
-                            v -> s.assertThat(v).isEqualTo("Hello, World!"),
-                            e -> fail("not an err")
+                    processed.add("--");
+                    Stream<String> errorStream = Stream.of("cc", "dd", "ee");// fails at 'dd'
+                    ResultVoid resultError = Result.applyOver(errorStream, consumer);
+                    resultError.match(
+                            () -> System.out.println("All processed okay."),
+                            error -> System.out.println("Error: " + error.getMessage())
                     );
-                    error.match(
-                            v -> fail("not a success"),
-                            e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
-                    );
-                });
+                    System.out.println("Processed: " + processed);
+                    // Error: Invalid input: dd
+                    // Processed: [aa, bb, --, cc]
+
+                    assertSoftly(s -> {
+                        s.assertThat(processed).containsExactly(
+                                "aa", "bb", "--",
+                                "cc"
+                        );
+                        resultError.match(
+                                () -> s.fail("not a success"),
+                                e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
+                                        .hasMessage("Invalid input: dd")
+                        );
+                    });
+                }
+
+                @Test
+                @DisplayName("applyOver(Stream, Function, BiFunction")
+                void applyOverStreamFunctionBiFunction() {
+                    Function<String, Integer> f = s -> {
+                        if ("dd".equals(s)) {
+                            throw new RuntimeException("Invalid input: " + s);
+                        }
+                        return s.length();
+                    };
+
+                    assertSoftly(s -> {
+
+                        Stream<String> okayStream = Stream.of("aa", "bb");
+                        Result<Integer> resultOkay = Result.applyOver(okayStream, f, 0, Integer::sum);
+                        resultOkay.match(
+                                success -> s.assertThat(success).isEqualTo(4),
+                                error -> s.fail("not an err")
+                        );
+                        // Total length: 4
+
+                        Stream<String> errorStream = Stream.of("cc", "dd");
+                        Result<Integer> resultError = Result.applyOver(errorStream, f, 0, Integer::sum);
+                        resultError.match(
+                                success -> s.fail("not a success"), // will not match
+                                error -> s.assertThat(error.getMessage()).isEqualTo("Invalid input: dd")
+                        );
+                        // Error: Invalid input: dd
+
+                    });
+                }
+
+                @Test
+                @DisplayName("flatApplyOver")
+                void flatApplyOver() {
+                    Function<String, Result<Integer>> f = s -> {
+                        if ("dd".equals(s)) {
+                            return Result.error(TypeReference.create(), new RuntimeException("Invalid input: " + s));
+                        }
+                        return Result.ok(s.length());
+                    };
+
+                    assertSoftly(s -> {
+
+                        Stream<String> okayStream = Stream.of("aa", "bb");
+                        Result<Integer> resultOkay = Result.flatApplyOver(okayStream, f, 0, Integer::sum);
+                        resultOkay.match(
+                                success -> s.assertThat(success).isEqualTo(4),
+                                error -> s.fail("not an err")
+                        );
+                        // Total length: 4
+
+                        Stream<String> errorStream = Stream.of("cc", "dd");
+                        Result<Integer> resultError = Result.flatApplyOver(errorStream, f, 0, Integer::sum);
+                        resultError.match(
+                                success -> s.fail("not a success"), // will not match
+                                error -> s.assertThat(error.getMessage()).isEqualTo("Invalid input: dd")
+                        );
+                        // Error: Invalid input: dd
+                    });
+                }
+
+                @Test
+                @DisplayName("thenWith")
+                void thenWith() {
+                    AtomicInteger capture = new AtomicInteger();
+                    Supplier<Integer> doSomething = () -> 1;
+                    Consumer<Integer> doSomethingElse = capture::set;
+                    //
+                    Result<Integer> r = Result.of(() -> doSomething.get())
+                            .thenWith(value -> () -> doSomethingElse.accept(value));
+                    //
+                    assertThat(capture).hasValue(1);
+                }
             }
 
-            @Test
-            @DisplayName("from Maybe")
-            void fromMaybe() {
-                Maybe<Integer> maybe = Maybe.maybe(getValue());
-                Result<Integer> result = Result.from(maybe, () -> new RuntimeException());
-                //
-                assertSoftly(s -> {
+            @Nested
+            @DisplayName("default methods")
+            class DefaultMethodTests {
+
+                @Test
+                @DisplayName("toEither")
+                void toEither() {
+                    Result<String> success = Result.ok("success");
+                    RuntimeException exception = new RuntimeException();
+                    Result<String> error = Result.error(TypeReference.create(), exception);
+
+                    Either<Throwable, String> eitherRight = success.toEither();
+                    Either<Throwable, String> eitherLeft = error.toEither();
+                    //
+                    assertSoftly(s -> {
+                        eitherRight.match(
+                                left -> s.fail("not a left"),
+                                right -> s.assertThat(right).isEqualTo("success")
+                        );
+                        eitherLeft.match(
+                                left -> s.assertThat(left).isSameAs(exception),
+                                right -> s.fail("not a right")
+                        );
+                    });
+                }
+
+            }
+
+            @Nested
+            @DisplayName("instance methods")
+            class InstanceMethods {
+
+                @Test
+                @DisplayName("orElse")
+                void orElse() {
+                    assertThatExceptionOfType(CheckedErrorResultException.class)
+                            .isThrownBy(() -> Result.of(() -> getErrorValue()).orElseThrow())
+                            .withCauseInstanceOf(RuntimeException.class);
+                }
+
+                @Test
+                @DisplayName("toVoid")
+                void toVoid() {
+                    ResultVoid result = Result.of(() -> getResultValue()).toVoid();
+                    //
+                    assertThat(result).isInstanceOf(SuccessVoid.class);
+                }
+
+                @Test
+                @DisplayName("map")
+                void map() {
+                    Result<String> result = Result.of(() -> getValue())
+                            .map(v -> String.valueOf(v));
+                    //
                     result.match(
-                            v -> s.assertThat(v).isEqualTo(getValue()),
+                            success -> assertThat(success).isEqualTo("1"),
+                            error -> fail("not en err")
+                    );
+                }
+
+                @Test
+                @DisplayName("isOkay")
+                void isOkay() {
+                    boolean isOkay = Result.of(() -> getValue()).isOkay();
+                    //
+                    assertThat(isOkay).isTrue();
+                }
+
+                @Test
+                @DisplayName("isError")
+                void isError() {
+                    boolean isError = Result.of(() -> getValue()).isError();
+                    //
+                    assertThat(isError).isFalse();
+                }
+
+                @Test
+                @DisplayName("onErrorClassConsumer")
+                void onErrorClassConsumer() {
+                    AtomicReference<Exception> err = new AtomicReference<>();
+                    Exception exception = new UnsupportedOperationException();
+                    //
+                    Result.of(() -> {
+                                throw exception;
+                            })
+                            .onError(UnsupportedOperationException.class,
+                                    e -> err.set(e));
+                    //
+                    assertThat(err).hasValue(exception);
+                }
+
+                @Test
+                @DisplayName("onErrorConsumer")
+                void onErrorConsumer() {
+                    AtomicReference<Throwable> err = new AtomicReference<>();
+                    Exception exception = new UnsupportedOperationException();
+                    //
+                    Result.of(() -> {
+                                throw exception;
+                            })
+                            .onError(e -> err.set(e));
+                    //
+                    assertThat(err).hasValue(exception);
+                }
+
+                @Test
+                @DisplayName("orElseThrowUnchecked")
+                void orElseThrowUnchecked() {
+                    Integer result = Result.of(() -> getValue())
+                            .orElseThrowUnchecked();
+                    //
+                    assertThat(result).isEqualTo(1);
+                }
+
+                @Test
+                @DisplayName("orElseThrowClass")
+                void orElseThrowClass() throws IOException {
+                    Integer result = Result.of(() -> getValue())
+                            .orElseThrow(IOException.class);
+                    //
+                    assertThat(result).isEqualTo(1);
+                }
+
+                @Test
+                @DisplayName("peek")
+                void peek() {
+                    AtomicInteger capture = new AtomicInteger();
+                    //
+                    Result<Integer> result = Result.of(() -> getValue())
+                            .peek(v -> capture.set(v));
+                    //
+                    assertThat(capture).hasValue(getValue());
+                }
+
+                @Test
+                @DisplayName("recover")
+                void recover() {
+                    Result<Integer> result = Result.of(() -> getErrorValue())
+                            .recover(e -> Result.of(() -> getSafeValue(e)));
+                    //
+                    result.match(
+                            s -> assertThat(s).isEqualTo(2),
+                            e -> fail("not an error")
+                    );
+                }
+
+                @Test
+                @DisplayName("match")
+                void match() {
+                    AtomicReference<Object> capture = new AtomicReference<>();
+                    //
+                    Result.of(() -> getValue())
+                            .match(
+                                    success -> capture.set(success),
+                                    error -> capture.set(error)
+                            );
+                    //
+                    assertThat(capture).hasValue(getValue());
+                }
+
+                @Test
+                @DisplayName("flatMap")
+                void flatMap() {
+                    Result<String> result =
+                            Result.of(() -> getValue())
+                                    .flatMap(v -> Result.of(() -> String.valueOf(v)));
+                    //
+                    result.match(
+                            s -> assertThat(s).isEqualTo("1"),
                             e -> fail("not an err")
                     );
-                });
+                }
+
+                @Test
+                @DisplayName("flatMapV")
+                void flatMapV() {
+                    ResultVoid result = Result.of(() -> getValue())
+                            .flatMapV(v -> Result.ok());
+                    //
+                    assertThat(result.isOkay()).isTrue();
+                }
+
+                @Test
+                @DisplayName("onSuccess")
+                void onSuccess() {
+                    AtomicInteger capture = new AtomicInteger();
+                    //
+                    Result.of(() -> getValue())
+                            .onSuccess(v -> capture.set(v));
+                    //
+                    assertThat(capture).hasValue(getValue());
+                }
+
             }
 
-        }
-        @Nested
-        @DisplayName("Static methods")
-        class StaticMethodsTests {
-            @Test
-            @DisplayName("toMaybe")
-            void toMaybe() {
-                Result<Integer> result = Result.of(() -> getValue());
-                Maybe<Integer> maybe = Result.toMaybe(result);
-                //
-                assertSoftly(s -> {
-                    maybe.match(
-                            j -> s.assertThat(j).isEqualTo(getValue()),
-                            () -> fail("not a nothing")
-                    );
-                });
-            }
-            @Test
-            @DisplayName("flatMayMaybe")
-            void flatMapMaybe() {
-                Result<Maybe<Integer>> result = Result.of(() -> Maybe.maybe(getValue()));
-                Result<Maybe<Integer>> maybeResult = Result.flatMapMaybe(result,
-                        maybe -> Result.of(() -> maybe.map(v -> v * 2)));
-                //
-                assertSoftly(s -> {
-                    maybeResult.match(
-                            m -> m.match(
-                                    v -> s.assertThat(v).isEqualTo(2 * getValue()),
-                                    () -> fail("not a nothing")),
-                            e -> fail("not an err")
-                    );
-                });
-            }
-            @Test
-            @DisplayName("flatApply(Stream, Consumer")
-            void flatApplyOverStreamConsumer() {
-                List<String> processed = new ArrayList<>();
-                Consumer<String> consumer = s -> {
-                    if ("dd".equals(s)) {
-                        throw new RuntimeException("Invalid input: " + s);
-                    }
-                    processed.add(s);
-                };
-
-                Stream<String> okayStream = Stream.of("aa", "bb");
-                ResultVoid resultOkay = Result.applyOver(okayStream, consumer);
-                resultOkay.match(
-                        () -> System.out.println("All processed okay."),
-                        error -> System.out.println("Error: " + error.getMessage())
-                );
-                System.out.println("Processed: " + processed);
-                // All processed okay.
-                // Processed: [aa, bb]
-
-                processed.add("--");
-                Stream<String> errorStream = Stream.of("cc", "dd", "ee");// fails at 'dd'
-                ResultVoid resultError = Result.applyOver(errorStream, consumer);
-                resultError.match(
-                        () -> System.out.println("All processed okay."),
-                        error -> System.out.println("Error: " + error.getMessage())
-                );
-                System.out.println("Processed: " + processed);
-                // Error: Invalid input: dd
-                // Processed: [aa, bb, --, cc]
-
-                assertSoftly(s -> {
-                    s.assertThat(processed).containsExactly(
-                            "aa", "bb", "--",
-                            "cc"
-                    );
-                    resultError.match(
-                            () -> s.fail("not a success"),
-                            e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
-                                    .hasMessage("Invalid input: dd")
-                    );
-                });
-            }
-            @Test
-            @DisplayName("applyOver(Stream, Function, BiFunction")
-            void applyOverStreamFunctionBiFunction() {
-                Function<String, Integer> f = s -> {
-                    if ("dd".equals(s)) {
-                        throw new RuntimeException("Invalid input: " + s);
-                    }
-                    return s.length();
-                };
-
-                assertSoftly(s -> {
-
-                    Stream<String> okayStream = Stream.of("aa", "bb");
-                    Result<Integer> resultOkay = Result.applyOver(okayStream, f, 0, Integer::sum);
-                    resultOkay.match(
-                            success -> s.assertThat(success).isEqualTo(4),
-                            error -> s.fail("not an err")
-                    );
-                    // Total length: 4
-
-                    Stream<String> errorStream = Stream.of("cc", "dd");
-                    Result<Integer> resultError = Result.applyOver(errorStream, f, 0, Integer::sum);
-                    resultError.match(
-                            success -> s.fail("not a success"), // will not match
-                            error -> s.assertThat(error.getMessage()).isEqualTo("Invalid input: dd")
-                    );
-                    // Error: Invalid input: dd
-
-                });
-            }
-            @Test
-            @DisplayName("flatApplyOver")
-            void flatApplyOver() {
-                Function<String, Result<Integer>> f = s -> {
-                    if ("dd".equals(s)) {
-                        return Result.error(TypeReference.create(), new RuntimeException("Invalid input: " + s));
-                    }
-                    return Result.ok(s.length());
-                };
-
-                assertSoftly(s -> {
-
-                    Stream<String> okayStream = Stream.of("aa", "bb");
-                    Result<Integer> resultOkay = Result.flatApplyOver(okayStream, f, 0, Integer::sum);
-                    resultOkay.match(
-                            success -> s.assertThat(success).isEqualTo(4),
-                            error -> s.fail("not an err")
-                    );
-                    // Total length: 4
-
-                    Stream<String> errorStream = Stream.of("cc", "dd");
-                    Result<Integer> resultError = Result.flatApplyOver(errorStream, f, 0, Integer::sum);
-                    resultError.match(
-                            success -> s.fail("not a success"), // will not match
-                            error -> s.assertThat(error.getMessage()).isEqualTo("Invalid input: dd")
-                    );
-                    // Error: Invalid input: dd
-                });
+            private Result<Integer> getResultValue() {
+                return Result.ok(getValue());
             }
 
-            @Test
-            @DisplayName("thenWith")
-            void thenWith() {
-                AtomicInteger capture = new AtomicInteger();
-                Supplier<Integer> doSomething = () -> 1;
-                Consumer<Integer> doSomethingElse = capture::set;
-                //
-                Result<Integer> r = Result.of(() -> doSomething.get())
-                        .thenWith(value -> () -> doSomethingElse.accept(value));
-                //
-                assertThat(capture).hasValue(1);
+            private Integer getValue() {
+                return 1;
             }
-        }
-        @Nested
-        @DisplayName("default methods")
-        class DefaultMethodTests {
 
-            @Test
-            @DisplayName("toEither")
-            void toEither() {
-                Result<String> success = Result.ok("success");
-                RuntimeException exception = new RuntimeException();
-                Result<String> error = Result.error(TypeReference.create(), exception);
+            private Integer getSafeValue(Throwable e) {
+                return 2;
+            }
 
-                Either<Throwable, String> eitherRight = success.toEither();
-                Either<Throwable, String> eitherLeft = error.toEither();
-                //
-                assertSoftly(s -> {
-                    eitherRight.match(
-                            left -> s.fail("not a left"),
-                            right -> s.assertThat(right).isEqualTo("success")
-                    );
-                    eitherLeft.match(
-                            left -> s.assertThat(left).isSameAs(exception),
-                            right -> s.fail("not a right")
-                    );
-                });
+            private Integer getErrorValue() {
+                throw new RuntimeException();
             }
 
         }
 
         @Nested
-        @DisplayName("instance methods")
-        class InstanceMethods {
+        @DisplayName("ResultVoid")
+        class ResultVoidJavadocTests {
 
             @Test
-            @DisplayName("orElse")
-            void orElse() {
-                assertThatExceptionOfType(CheckedErrorResultException.class)
-                        .isThrownBy(() -> Result.of(() -> getErrorValue()).orElseThrow())
-                        .withCauseInstanceOf(RuntimeException.class);
-            }
-
-            @Test
-            @DisplayName("toVoid")
-            void toVoid() {
-                ResultVoid result = Result.of(() -> getResultValue()).toVoid();
+            @DisplayName("match")
+            void match() {
+                AtomicBoolean success = new AtomicBoolean();
+                AtomicBoolean error = new AtomicBoolean();
                 //
-                assertThat(result).isInstanceOf(SuccessVoid.class);
-            }
-
-            @Test
-            @DisplayName("map")
-            void map() {
-                Result<String> result = Result.of(() -> getValue())
-                        .map(v -> String.valueOf(v));
+                Result.ofVoid(() -> doSomethingSafe()) // ResultVoid
+                        .match(
+                                () -> success.set(true), // has no value
+                                e -> error.set(true)
+                        );
                 //
-                result.match(
-                        success -> assertThat(success).isEqualTo("1"),
-                        error -> fail("not en err")
-                );
-            }
-
-            @Test
-            @DisplayName("isOkay")
-            void isOkay() {
-                boolean isOkay = Result.of(() -> getValue()).isOkay();
-                //
-                assertThat(isOkay).isTrue();
-            }
-
-            @Test
-            @DisplayName("isError")
-            void isError() {
-                boolean isError = Result.of(() -> getValue()).isError();
-                //
-                assertThat(isError).isFalse();
-            }
-
-            @Test
-            @DisplayName("onErrorClassConsumer")
-            void onErrorClassConsumer() {
-                AtomicReference<Exception> err = new AtomicReference<>();
-                Exception exception = new UnsupportedOperationException();
-                //
-                Result.of(() -> {
-                            throw exception;
-                        })
-                        .onError(UnsupportedOperationException.class,
-                                e -> err.set(e));
-                //
-                assertThat(err).hasValue(exception);
-            }
-
-            @Test
-            @DisplayName("onErrorConsumer")
-            void onErrorConsumer() {
-                AtomicReference<Throwable> err = new AtomicReference<>();
-                Exception exception = new UnsupportedOperationException();
-                //
-                Result.of(() -> {
-                            throw exception;
-                        })
-                        .onError(e -> err.set(e));
-                //
-                assertThat(err).hasValue(exception);
-            }
-
-            @Test
-            @DisplayName("orElseThrowUnchecked")
-            void orElseThrowUnchecked() {
-                Integer result = Result.of(() -> getValue())
-                        .orElseThrowUnchecked();
-                //
-                assertThat(result).isEqualTo(1);
-            }
-
-            @Test
-            @DisplayName("orElseThrowClass")
-            void orElseThrowClass() throws IOException {
-                Integer result = Result.of(() -> getValue())
-                        .orElseThrow(IOException.class);
-                //
-                assertThat(result).isEqualTo(1);
-            }
-
-            @Test
-            @DisplayName("peek")
-            void peek() {
-                AtomicInteger capture = new AtomicInteger();
-                //
-                Result<Integer> result = Result.of(() -> getValue())
-                        .peek(v -> capture.set(v));
-                //
-                assertThat(capture).hasValue(getValue());
+                assertSoftly(s -> {
+                    s.assertThat(success).isTrue();
+                    s.assertThat(error).isFalse();
+                });
             }
 
             @Test
             @DisplayName("recover")
             void recover() {
-                Result<Integer> result = Result.of(() -> getErrorValue())
-                        .recover(e -> Result.of(() -> getSafeValue(e)));
+                ResultVoid result = Result.ofVoid(() -> doSomethingRisky("first"))
+                        .recover(e -> Result.ofVoid(() -> doSomethingRisky("second")));
                 //
                 result.match(
-                        s -> assertThat(s).isEqualTo(2),
-                        e -> fail("not an error")
+                        () -> fail("not a success"),
+                        e -> assertThat(e).isInstanceOf(RuntimeException.class)
+                                .extracting("message").isEqualTo("second")
                 );
-            }
-
-            @Test
-            @DisplayName("match")
-            void match() {
-                AtomicReference<Object> capture = new AtomicReference<>();
-                //
-                Result.of(()-> getValue())
-                        .match(
-                                success -> capture.set(success),
-                                error -> capture.set(error)
-                        );
-                //
-                assertThat(capture).hasValue(getValue());
-            }
-
-            @Test
-            @DisplayName("flatMap")
-            void flatMap() {
-                Result<String> result =
-                        Result.of(() -> getValue())
-                                .flatMap(v -> Result.of(() -> String.valueOf(v)));
-                //
-                result.match(
-                        s -> assertThat(s).isEqualTo("1"),
-                        e -> fail("not an err")
-                );
-            }
-
-            @Test
-            @DisplayName("flatMapV")
-            void flatMapV() {
-                ResultVoid result = Result.of(() -> getValue())
-                        .flatMapV(v -> Result.ok());
-                //
-                assertThat(result.isOkay()).isTrue();
             }
 
             @Test
             @DisplayName("onSuccess")
             void onSuccess() {
-                AtomicInteger capture = new AtomicInteger();
+                AtomicBoolean capture = new AtomicBoolean();
                 //
-                Result.of(() -> getValue())
-                        .onSuccess(v -> capture.set(v));
+                Result.ofVoid(() -> doSomethingRisky())
+                        .onSuccess(() -> capture.set(true));
                 //
-                assertThat(capture).hasValue(getValue());
+                assertThat(capture).isFalse();
+            }
+
+            //TODO andThen
+            //TODO inject
+
+            private void doSomethingSafe() {
+
+            }
+
+            private void doSomethingRisky() throws RuntimeException {
+                throw new RuntimeException();
+            }
+
+            private void doSomethingRisky(String message) throws RuntimeException {
+                throw new RuntimeException(message);
             }
 
         }
-
-        private Result<Integer> getResultValue() {
-            return Result.ok(getValue());
-        }
-
-        private Integer getValue() {
-            return 1;
-        }
-
-        private Integer getSafeValue(Throwable e) {
-            return 2;
-        }
-
-        private Integer getErrorValue() {
-            throw new RuntimeException();
-        };
     }
 
     @RequiredArgsConstructor

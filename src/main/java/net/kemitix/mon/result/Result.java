@@ -616,7 +616,8 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
     <R> Result<R> map(ThrowableFunction<T, R, ?> f);
 
     /**
-     * Matches the Result, either success or error, and supplies the appropriate Consumer with the value or error.
+     * Matches the Result, either success or error, and supplies the appropriate
+     * Consumer with the value or error.
      *
      * <pre><code>
      * Result.of(()-> getValue())
@@ -649,7 +650,8 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
     /**
      * Attempts to restore an error {@code Result} to a success.
      *
-     * <p>When the Result is already a success, then the result is returned unmodified.</p>
+     * <p>When the Result is already a success, then the result is returned
+     * unmodified.</p>
      *
      * <pre><code>
      * Result&lt;Integer&gt; result = Result.of(() -&gt; getValue())
@@ -657,14 +659,15 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      * </code></pre>
      *
      * @param f the function to recover from the error
-     * @return if Result is an error, a new Result, either a Success, or if recovery is not possible another error.
-     * If the Result is already a success, then this results itself.
+     * @return if Result is an error, a new Result, either a Success, or if
+     * recovery is not possible another error. If the Result is already a
+     * success, then this returns itself.
      */
     @API(status = STABLE)
     Result<T> recover(Function<Throwable, Result<T>> f);
 
     /**
-     * A handler to success states.
+     * A handler for success states.
      *
      * <pre><code>
      * void handleSuccess(Integer value) {...}
