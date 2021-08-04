@@ -1946,6 +1946,27 @@ class ResultTest implements WithAssertions {
             class DefaultMethodTests {
 
                 @Test
+                @DisplayName("result")
+                void result() {
+                    Result<Integer> start = Result.ok(1);
+                    Result<Integer> okay = start.result(() -> 1);
+                    Result<Integer> error = start.result(() -> {
+                        throw new RuntimeException();
+                    });
+                    //
+                    assertSoftly(s -> {
+                        okay.match(
+                                v -> s.assertThat(v).isEqualTo(1),
+                                e -> fail("not an err")
+                        );
+                        error.match(
+                                v -> fail("not a success"),
+                                e -> s.assertThat(e).isInstanceOf(RuntimeException.class)
+                        );
+                    });
+                }
+
+                @Test
                 @DisplayName("toEither")
                 void toEither() {
                     Result<String> success = Result.ok("success");

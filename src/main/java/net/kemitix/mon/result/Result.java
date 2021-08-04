@@ -500,8 +500,9 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      * {@link Err} and will contain that exception.</p>
      *
      * <pre><code>
-     * Result&lt;Integer$gt; okay = Result.of(() -&gt; 1);
-     * Result&lt;Integer&gt; error = Result.of(() -&gt; {
+     * Result&lt;Integer&gt; start = Result.ok(1);
+     * Result&lt;Integer&gt; okay = start.result(() -&gt; 1);
+     * Result&lt;Integer&gt; error = start.result(() -&gt; {
      *     throw new RuntimeException();
      * });
      * </code></pre>
