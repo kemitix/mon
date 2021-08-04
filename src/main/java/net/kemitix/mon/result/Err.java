@@ -58,7 +58,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public ResultVoid flatMapV(final Function<T, ResultVoid> f) {
-        return Result.error(error);
+        return new ErrVoid(error);
     }
 
     @Override
