@@ -513,11 +513,7 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      */
     @API(status = EXPERIMENTAL)
     default <R> Result<R> result(final Callable<R> callable) {
-        try {
-            return Result.ok(callable.call());
-        } catch (final Throwable e) {
-            return new Err<>(e);
-        }
+        return Result.of(callable);
     }
 
     /**
