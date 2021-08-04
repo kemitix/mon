@@ -1,11 +1,28 @@
 package net.kemitix.mon.result;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class SuccessVoid implements ResultVoid {
+
+    private static final ResultVoid INSTANCE = new SuccessVoid();
+
+    /**
+     * Get the SuccessVoid instance.
+     *
+     * <p>The SuccessVoid, having no value, represents the state of success.</p>
+     *
+     * @return the SuccessVoid
+     */
+    public static ResultVoid getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public boolean isError() {

@@ -69,7 +69,7 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      */
     @API(status = STABLE)
     static ResultVoid ok() {
-        return new SuccessVoid();
+        return SuccessVoid.getInstance();
     }
 
     /**
