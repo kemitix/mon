@@ -124,7 +124,7 @@ class Err<T> implements Result<T> {
 
     @Override
     public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return new Err<>(error);
+        return (Result<R>) this;
     }
 
     @Override
