@@ -49,7 +49,7 @@ class ResultTest implements WithAssertions {
             assertThat(Result.ok()).as("SuccessVoid: void v void").isEqualTo(Result.ok());
             assertThat(Result.ok().hashCode()).as("SuccessVoid: hash v void").isNotNull();
             assertThat(Result.ok()).as("SuccessVoid: void v integer").isNotEqualTo(Result.ok(1));
-            assertThat(Result.ok()).as("SuccessVoid: v ErrorVoid").isNotEqualTo(Result.error(runtimeException));
+            assertThat(Result.ok()).as("SuccessVoid: v ErrVoid").isNotEqualTo(Result.error(runtimeException));
             // Error
             TypeReference<Integer> integerReference = TypeReference.create();
             assertThat(Result.error(integerReference, runtimeException)).as("error v error").isEqualTo(Result.error(integerReference, runtimeException));
@@ -208,7 +208,7 @@ class ResultTest implements WithAssertions {
             //when
             final String toString = error.toString();
             //then
-            assertThat(toString).contains("Result.ErrorVoid{error=java.lang.RuntimeException: failed}");
+            assertThat(toString).contains("Result.ErrVoid{error=java.lang.RuntimeException: failed}");
         }
 
         @Test

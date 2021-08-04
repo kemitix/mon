@@ -63,7 +63,7 @@ public class ErrVoid implements ResultVoid {
 
     @Override
     public String toString() {
-        return String.format("Result.ErrorVoid{error=%s}", error);
+        return String.format("Result.ErrVoid{error=%s}", error);
     }
 
     @Override
