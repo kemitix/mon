@@ -693,7 +693,7 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      * <p>Similar to the catch block in a try-catch.</p>
      *
      * <pre><code>
-     * void handleError(Throwable e) {...}
+     * void handleError(UnsupportedOperationException e) {...}
      * Result.of(() -&gt; getValue())
      *       .onError(UnsupportedOperationException.class,
      *                e -&gt; handleError(e))

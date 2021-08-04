@@ -70,6 +70,28 @@ public interface ResultVoid extends BaseResult {
     @API(status = STABLE)
     void onSuccess(Runnable runnable);
 
+    /**
+     * A handler for error state, when the error matches the errorClass.
+     *
+     * <p>If the `Result` is an error and that error is an instance of the
+     * errorClass, then supply the error to the `Consumer`. Does nothing if the
+     * error is not an instance of the errorClass, or is a success.</p>
+     *
+     * <p>Similar to the catch block in a try-catch.</p>
+     *
+     * <pre><code>
+     * void handleError(UnsupportedOperationException e) {...}
+     * Result.of(() -&gt; getValue())
+     *       .onError(UnsupportedOperationException.class,
+     *                e -&gt; handleError(e))
+     * </code></pre>
+     *
+     * @param errorClass the class of Throwable to match
+     * @param consumer the consumer to call if it matches
+     * @param <E> the Type of the Throwable to match
+     * @return the original unmodified Result
+     */
+    @API(status = STABLE)
     <E extends Throwable> ResultVoid onError(
             Class<E> errorClass,
             Consumer<E> consumer

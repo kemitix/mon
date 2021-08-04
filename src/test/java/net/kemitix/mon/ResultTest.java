@@ -2020,7 +2020,7 @@ class ResultTest implements WithAssertions {
                 @Test
                 @DisplayName("onErrorClassConsumer")
                 void onErrorClassConsumer() {
-                    AtomicReference<Exception> err = new AtomicReference<>();
+                    AtomicReference<UnsupportedOperationException> err = new AtomicReference<>();
                     Exception exception = new UnsupportedOperationException();
                     //
                     Result.of(() -> {
@@ -2029,7 +2029,7 @@ class ResultTest implements WithAssertions {
                             .onError(UnsupportedOperationException.class,
                                     e -> err.set(e));
                     //
-                    assertThat(err).hasValue(exception);
+                    assertThat(err.get()).isSameAs(exception);
                 }
 
                 @Test
@@ -2198,6 +2198,21 @@ class ResultTest implements WithAssertions {
                         .onSuccess(() -> capture.set(true));
                 //
                 assertThat(capture).isFalse();
+            }
+
+            @Test
+            @DisplayName("onErrorClassConsumer")
+            void onErrorClassConsumer() {
+                AtomicReference<UnsupportedOperationException> err = new AtomicReference<>();
+                Exception exception = new UnsupportedOperationException();
+                //
+                Result.ofVoid(() -> {
+                            throw exception;
+                        })
+                        .onError(UnsupportedOperationException.class,
+                                e -> err.set(e));
+                //
+                assertThat(err.get()).isSameAs(exception);
             }
 
             //TODO andThen
