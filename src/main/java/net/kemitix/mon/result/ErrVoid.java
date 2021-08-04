@@ -1,7 +1,6 @@
 package net.kemitix.mon.result;
 
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -60,15 +59,6 @@ public class ErrVoid implements ResultVoid {
     @Override
     public ResultVoid andThen(final VoidCallable f) {
         return this;
-    }
-
-    @Override
-    public <T> Result<T> inject(final Callable<T> f) {
-        final Result<T> result = Result.of(f);
-        if (result.isError()) {
-            return new Err<>(error);// the original error
-        }
-        return result;
     }
 
     @Override

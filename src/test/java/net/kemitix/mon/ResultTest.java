@@ -942,13 +942,13 @@ class ResultTest implements WithAssertions {
         }
 
         @Test
-        @DisplayName("errorVoid when Inject fails then original error")
-        void errorVoid_whenInjectIsError_isOriginalError() {
+        @DisplayName("errorVoid when Inject fails then new error")
+        void errorVoid_whenInjectIsError_isNewError() {
             //given
+            final ResultVoid error = Result.error(new RuntimeException());
             RuntimeException exception = new RuntimeException();
-            final ResultVoid error = Result.error(exception);
             //when
-            final Result<Integer> result = error.inject(() -> {throw new RuntimeException();});
+            final Result<Integer> result = error.inject(() -> {throw exception;});
             //then
             result.match(
                     x -> fail("not a success"),
@@ -2226,7 +2226,17 @@ class ResultTest implements WithAssertions {
                 assertThat(capture).isFalse();
             }
 
-            //TODO inject
+            @Test
+            @DisplayName("inject")
+            void inject() {
+                Result<Integer> result = Result.ofVoid(() -> doSomethingRisky())
+                        .inject(() -> 1);
+                //
+                result.match(
+                        s -> assertThat(s).isEqualTo(1),
+                        e -> fail("not an err")
+                );
+            }
 
             private void doSomethingSafe() {
 

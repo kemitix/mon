@@ -1,8 +1,8 @@
 package net.kemitix.mon.result;
 
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class SuccessVoid implements ResultVoid {
@@ -69,16 +69,6 @@ public class SuccessVoid implements ResultVoid {
     @Override
     public String toString() {
         return "Result.SuccessVoid{}";
-    }
-
-    @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public <T> Result<T> inject(final Callable<T> f) {
-        try {
-            return Result.ok(f.call());
-        } catch (Exception e) {
-            return new Err<>(e);
-        }
     }
 
 }
