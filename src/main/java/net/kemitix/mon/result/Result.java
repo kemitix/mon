@@ -607,8 +607,8 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      * otherwise returns a new {@code Result} with the existing error.
      *
      * <pre><code>
-     * ResultVoid result = Result.of(() -> getValue())
-     *                           .flatMapV(v -> Result.ok());
+     * ResultVoid result = Result.of(() -&gt; getValue())
+     *                           .flatMapV(v -&gt; Result.ok());
      * </code></pre>
      *
      * @param f   the mapping function the produces a ResultVoid
@@ -648,10 +648,10 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      * Consumer with the value or error.
      *
      * <pre><code>
-     * Result.of(()-> getValue())
+     * Result.of(()-&gt; getValue())
      *       .match(
-     *           success -> doSomething(success),
-     *           error -> handleError(error)
+     *           success -&gt; doSomething(success),
+     *           error -&gt; handleError(error)
      *       );
      * </code></pre>
      *
@@ -683,7 +683,7 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      *
      * <pre><code>
      * Result&lt;Integer&gt; result = Result.of(() -&gt; getValue())
-     *                                .recover(e -> Result.of(() -&gt; getSafeValue(e)));
+     *                                .recover(e -&gt; Result.of(() -&gt; getSafeValue(e)));
      * </code></pre>
      *
      * @param f the function to recover from the error
@@ -699,8 +699,8 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      *
      * <pre><code>
      * void handleSuccess(Integer value) {...}
-     * Result.of(() -> getValue())
-     *       .onSuccess(v -> handleSuccess(v));
+     * Result.of(() -&gt; getValue())
+     *       .onSuccess(v -&gt; handleSuccess(v));
      * </code></pre>
      *
      * <p>When this is a success then tne Consumer will be supplied with the

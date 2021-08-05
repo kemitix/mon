@@ -28,7 +28,7 @@ public interface BaseResult {
      * Checks if the Result is a success.
      *
      * <pre><code>
-     * boolean isOkay = Result.of(() -> getValue())
+     * boolean isOkay = Result.of(() -&gt; getValue())
      *                        .isOkay();
      * </code></pre>
      *
@@ -49,8 +49,8 @@ public interface BaseResult {
      *
      * <pre><code>
      * void handleError(Throwable e) {...}
-     * Result.of(() -> doSomething())
-     *       .onError(e -> handleError(e));
+     * Result.of(() -&gt; doSomething())
+     *       .onError(e -&gt; handleError(e));
      * </code></pre>
      *
      * @param errorConsumer the consumer to handle the error
