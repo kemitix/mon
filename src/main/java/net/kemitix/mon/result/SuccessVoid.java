@@ -7,8 +7,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * The Successful Result, with no value.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class SuccessVoid implements ResultVoid {
 
     private static final ResultVoid INSTANCE = new SuccessVoid();

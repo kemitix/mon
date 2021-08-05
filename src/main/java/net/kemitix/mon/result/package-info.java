@@ -20,7 +20,7 @@
  */
 
 /**
- * <h1>Result</h1>
+ * &lt;h1&gt;Result&lt;/h1&gt;
  *
  * Allows handling error conditions without the need to {@code catch}
  * exceptions.

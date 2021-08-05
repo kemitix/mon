@@ -20,8 +20,8 @@ public interface ResultVoid extends BaseResult {
      * <pre><code>
      * Result.ok()
      *       .match(
-     *           () -> doSomething(),
-     *           error -> handleError(error)
+     *           () -&gt; doSomething(),
+     *           error -&gt; handleError(error)
      *       );
      * </code></pre>
      *
@@ -39,8 +39,8 @@ public interface ResultVoid extends BaseResult {
      *
      * <pre><code>
      * void doSomethingRisky(String s) throws Exception {...}
-     * ResultVoid result = Result.ofVoid(() -> doSomethingRisky("first"))
-     *                           .recover(e -> Result.ofVoid(() -> doSomethingRisky("second")));
+     * ResultVoid result = Result.ofVoid(() -&gt; doSomethingRisky("first"))
+     *                           .recover(e -&gt; Result.ofVoid(() -&gt; doSomethingRisky("second")));
      * </code></pre>
      *
      * @param f the function to recover from the error
@@ -58,8 +58,8 @@ public interface ResultVoid extends BaseResult {
      * <pre><code>
      * void doSomethingRisky() throws Exception {...}
      * void handleSuccess() {...}
-     * Result.ofVoid(() -> doSomethingRisky()) // ResultVoid
-     *       .onSuccess(() -> handleSuccess());
+     * Result.ofVoid(() -&gt; doSomethingRisky()) // ResultVoid
+     *       .onSuccess(() -&gt; handleSuccess());
      * </code></pre>
      *
      * <p>When this is a success then tne Consumer will be supplied with the
