@@ -22,14 +22,12 @@
 package net.kemitix.mon.result;
 
 import lombok.RequiredArgsConstructor;
-import net.kemitix.mon.maybe.Maybe;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * An Error Result.
@@ -37,7 +35,8 @@ import java.util.function.Predicate;
  * @param <T> the type of the value in the Result if it has been a success
  */
 @RequiredArgsConstructor
-@SuppressWarnings({"methodcount", "PMD.CyclomaticComplexity"})
+@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount",
+        "PMD.CyclomaticComplexity"})
 class Err<T> implements Result<T> {
 
     private final Throwable error;
@@ -54,12 +53,17 @@ class Err<T> implements Result<T> {
 
     @Override
     public <R> Result<R> flatMap(final Function<T, Result<R>> f) {
-        return err(error);
+        return new Err<>(error);
     }
 
     @Override
-    public <R> Result<R> map(final Function<T, R> f) {
-        return err(error);
+    public ResultVoid flatMapV(final Function<T, ResultVoid> f) {
+        return new ErrVoid(error);
+    }
+
+    @Override
+    public <R> Result<R> map(final ThrowableFunction<T, R, ?> f) {
+        return new Err<>(error);
     }
 
     @Override
@@ -68,17 +72,12 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
-        return err(error);
-    }
-
-    @Override
     public T orElseThrow() throws CheckedErrorResultException {
         throw CheckedErrorResultException.with(error);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "PMD.AvoidDuplicateLiterals"})
     public <E extends Exception> T orElseThrow(final Class<E> type) throws E {
         if (type.isInstance(error)) {
             throw (E) error;
@@ -102,18 +101,40 @@ class Err<T> implements Result<T> {
     }
 
     @Override
+    public void onSuccess(final Consumer<T> successConsumer) {
+        // do nothing
+    }
+
+    @Override
     public void onError(final Consumer<Throwable> errorConsumer) {
         errorConsumer.accept(error);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <E extends Throwable> Result<T> onError(
+            final Class<E> errorClass,
+            final Consumer<E> consumer
+    ) {
+        if (error.getClass().isAssignableFrom(errorClass)) {
+            consumer.accept((E) error);
+        }
+        return this;
+    }
+
+    @Override
     public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return err(error);
+        return (Result<R>) this;
     }
 
     @Override
     public Result<T> thenWith(final Function<T, WithResultContinuation<T>> f) {
         return this;
+    }
+
+    @Override
+    public ResultVoid thenWithV(final Function<T, WithResultContinuation<T>> f) {
+        return toVoid();
     }
 
     @Override
@@ -123,7 +144,8 @@ class Err<T> implements Result<T> {
 
     @Override
     public boolean equals(final Object other) {
-        return other instanceof Err && Objects.equals(error, ((Err) other).error);
+        return other instanceof Err
+                && Objects.equals(error, ((Err) other).error);
     }
 
     @Override
@@ -134,5 +156,10 @@ class Err<T> implements Result<T> {
     @Override
     public String toString() {
         return String.format("Result.Error{error=%s}", error);
+    }
+
+    @Override
+    public ResultVoid toVoid() {
+        return new ErrVoid(error);
     }
 }

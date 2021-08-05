@@ -22,14 +22,12 @@
 package net.kemitix.mon.result;
 
 import lombok.RequiredArgsConstructor;
-import net.kemitix.mon.maybe.Maybe;
 
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * A Successful Result.
@@ -37,7 +35,8 @@ import java.util.function.Predicate;
  * @param <T> the type of the value in the Result
  */
 @RequiredArgsConstructor
-@SuppressWarnings({"methodcount", "PMD.CyclomaticComplexity"})
+@SuppressWarnings({"methodcount", "PMD.TooManyMethods", "PMD.ExcessivePublicCount",
+        "PMD.CyclomaticComplexity"})
 class Success<T> implements Result<T> {
 
     private final T value;
@@ -54,25 +53,17 @@ class Success<T> implements Result<T> {
 
     @Override
     @SuppressWarnings({"illegalcatch", "PMD.AvoidCatchingThrowable"})
-    public <R> Result<R> map(final Function<T, R> f) {
+    public <R> Result<R> map(final ThrowableFunction<T, R, ?> f) {
         try {
-            return success(f.apply(this.value));
+            return new Success<>(f.apply(value));
         } catch (Throwable e) {
-            return err(e);
+            return new Err<>(e);
         }
     }
 
     @Override
     public void match(final Consumer<T> onSuccess, final Consumer<Throwable> onError) {
         onSuccess.accept(value);
-    }
-
-    @Override
-    public Result<Maybe<T>> maybe(final Predicate<T> predicate) {
-        if (predicate.test(value)) {
-            return success(Maybe.just(value));
-        }
-        return success(Maybe.nothing());
     }
 
     @Override
@@ -102,8 +93,21 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public void onSuccess(final Consumer<T> successConsumer) {
+        successConsumer.accept(value);
+    }
+
+    @Override
     public void onError(final Consumer<Throwable> errorConsumer) {
         // do nothing - this is not an error
+    }
+
+    @Override
+    public <E extends Throwable> Result<T> onError(
+            final Class<E> errorClass,
+            final Consumer<E> consumer
+    ) {
+        return this;
     }
 
     @Override
@@ -117,12 +121,22 @@ class Success<T> implements Result<T> {
     }
 
     @Override
+    public ResultVoid thenWithV(final Function<T, WithResultContinuation<T>> f) {
+        return f.apply(value).call(this).toVoid();
+    }
+
+    @Override
     public Result<T> reduce(final Result<T> identity, final BinaryOperator<T> operator) {
         return flatMap(a -> identity.flatMap(b -> result(() -> operator.apply(a, b))));
     }
 
     @Override
     public <R> Result<R> flatMap(final Function<T, Result<R>> f) {
+        return f.apply(value);
+    }
+
+    @Override
+    public ResultVoid flatMapV(final Function<T, ResultVoid> f) {
         return f.apply(value);
     }
 
@@ -139,5 +153,10 @@ class Success<T> implements Result<T> {
     @Override
     public String toString() {
         return String.format("Result.Success{value=%s}", value);
+    }
+
+    @Override
+    public ResultVoid toVoid() {
+        return SuccessVoid.getInstance();
     }
 }

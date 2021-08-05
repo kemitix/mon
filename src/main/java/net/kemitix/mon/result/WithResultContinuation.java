@@ -21,6 +21,8 @@
 
 package net.kemitix.mon.result;
 
+import net.kemitix.mon.TypeReference;
+
 /**
  * A Callable-like interface for performing an action with a Result that, if there are no errors is returned as-is, but
  * if there is an error then a new error Result is returned.
@@ -50,7 +52,7 @@ public interface WithResultContinuation<T> {
         try {
             run();
         } catch (Throwable e) {
-            return Result.error(e);
+            return Result.error(TypeReference.create(), e);
         }
         return currentResult;
     }

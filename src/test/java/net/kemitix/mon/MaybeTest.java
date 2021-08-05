@@ -114,9 +114,15 @@ class MaybeTest implements WithAssertions {
     }
 
     @Test
-    void fromOptional() {
+    void mapFromOptional() {
         assertThat(Optional.of(1).map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(just(1));
         assertThat(Optional.empty().map(Maybe::just).orElseGet(Maybe::nothing)).isEqualTo(nothing());
+    }
+
+    @Test
+    void fromOptional() {
+        assertThat(Maybe.fromOptional(Optional.of(1))).isEqualTo(just(1));
+        assertThat(Maybe.fromOptional(Optional.empty())).isEqualTo(nothing());
     }
 
     @Test
