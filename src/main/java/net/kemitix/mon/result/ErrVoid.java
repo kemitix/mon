@@ -4,6 +4,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * An Error Result with no value type.
+ */
 public class ErrVoid implements ResultVoid {
 
     private final Throwable error;
