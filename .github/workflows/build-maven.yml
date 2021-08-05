@@ -21,3 +21,5 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: build-jar
         run: mvn -B install
+      - name: verify javadoc
+        run: mvn -P release javadoc:javadoc
