@@ -1,10 +1,7 @@
 package net.kemitix.mon;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,8 +14,6 @@ class WrapperTest {
     interface WrappedInteger extends Wrapper<Integer> {}
 
     interface WrappedIterableString extends Wrapper<Iterable<String>> { }
-
-    interface WrappedListInteger extends Wrapper<List<Integer>> {}
 
     interface AWrapper extends Wrapper<String> {}
 
@@ -65,6 +60,7 @@ class WrapperTest {
         final WrappedString wrappedString = () -> "1";
         final WrappedInteger wrappedInteger = () -> 1;
         //then
+        //noinspection AssertBetweenInconvertibleTypes
         assertThat(wrappedString).isNotEqualTo(wrappedInteger);
     }
 
