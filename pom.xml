@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>mon</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
 
     <name>Mon</name>
     <description>Wrapper, TypeAlias, Maybe, Result, Tree, Lazy, Either and Combinators for Java.
@@ -41,9 +41,9 @@
         <kemitix-maven-tiles.version>3.0.1</kemitix-maven-tiles.version>
         <digraph-dependency.basePackage>net.kemitix.mon</digraph-dependency.basePackage>
         <kemitix-checkstyle.version>5.5.0</kemitix-checkstyle.version>
-        <pitest-maven-plugin.version>1.6.8</pitest-maven-plugin.version>
+        <pitest-maven-plugin.version>1.6.9</pitest-maven-plugin.version>
         <pitest-junit5-plugin.version>0.14</pitest-junit5-plugin.version>
-        <spotbugs.version>4.3.0</spotbugs.version>
+        <spotbugs.version>4.4.0</spotbugs.version>
         <apiguardian-api.version>1.1.2</apiguardian-api.version>
     </properties>
 

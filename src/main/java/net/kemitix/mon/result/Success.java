@@ -93,8 +93,9 @@ class Success<T> implements Result<T> {
     }
 
     @Override
-    public void onSuccess(final Consumer<T> successConsumer) {
+    public Result<T> onSuccess(final Consumer<T> successConsumer) {
         successConsumer.accept(value);
+        return this;
     }
 
     @Override

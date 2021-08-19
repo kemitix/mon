@@ -101,8 +101,8 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    public void onSuccess(final Consumer<T> successConsumer) {
-        // do nothing
+    public Result<T> onSuccess(final Consumer<T> successConsumer) {
+        return this;
     }
 
     @Override
