@@ -1610,6 +1610,64 @@ class ResultTest implements WithAssertions {
 
     }
 
+    @Nested
+    @DisplayName("andThen")
+    class AndThenTests {
+
+        @Test
+        void successVoid_andThen_returnSelf() {
+            //given
+            ResultVoid ok = Result.ok();
+            //when
+            ResultVoid result = ok.andThen(() -> {});
+            //then
+            assertThat(result).isSameAs(ok);
+        }
+
+        @Test
+        void successVoid_andThen_isCalled() {
+            //given
+            ResultVoid ok = Result.ok();
+            AtomicBoolean called = new AtomicBoolean(false);
+            //when
+            ok.andThen(() -> called.set(true));
+            //then
+            assertThat(called).isTrue();
+        }
+
+        @Test
+        void successVoid_andThen_exception_errorVoid() {
+            //given
+            ResultVoid ok = Result.ok();
+            //when
+            ResultVoid result = ok.andThen(() -> {throw new RuntimeException();});
+            //then
+            assertThat(result.isError()).isTrue();
+        }
+
+        @Test
+        void errorVoid_andThen_returnsSelf() {
+            //given
+            ResultVoid error = Result.error(new RuntimeException());
+            //when
+            ResultVoid result = error.andThen(() -> {});
+            //then
+            assertThat(result).isSameAs(error);
+        }
+
+        @Test
+        void errorVoid_andThen_notCalled() {
+            //given
+            ResultVoid error = Result.error(new RuntimeException());
+            final AtomicBoolean called = new AtomicBoolean(false);
+            //when
+            error.andThen(() -> called.set(true));
+            //then
+            assertThat(called).isFalse();
+        }
+
+    }
+
     /**
      * These include snippets from the Javadocs and are meant to prove that the examples are valid.
      */
