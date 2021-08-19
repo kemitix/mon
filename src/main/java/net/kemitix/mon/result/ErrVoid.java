@@ -26,11 +26,12 @@ public class ErrVoid implements ResultVoid {
     }
 
     @Override
-    public void match(
+    public ResultVoid match(
             final Runnable onSuccess,
             final Consumer<Throwable> onError
     ) {
         onError.accept(error);
+        return this;
     }
 
     @Override
