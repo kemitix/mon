@@ -66,9 +66,10 @@ public interface ResultVoid extends BaseResult {
      * success value. When this is an error, then nothing happens.</p>
      *
      * @param runnable the call if the Result is a success
+     * @return the original ResultVoid
      */
     @API(status = STABLE)
-    void onSuccess(Runnable runnable);
+    ResultVoid onSuccess(Runnable runnable);
 
     /**
      * A handler for error state, when the error matches the errorClass.

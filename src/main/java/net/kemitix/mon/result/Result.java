@@ -707,9 +707,10 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      * success value. When this is an error, then nothing happens.</p>
      *
      * @param successConsumer the consumer to handle the success
+     * @return the original Result
      */
     @API(status = STABLE)
-    void onSuccess(Consumer<T> successConsumer);
+    Result<T> onSuccess(Consumer<T> successConsumer);
 
     /**
      * A handler for error state, when the error matches the errorClass.
