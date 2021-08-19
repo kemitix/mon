@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>mon</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
 
     <name>Mon</name>
     <description>Wrapper, TypeAlias, Maybe, Result, Tree, Lazy, Either and Combinators for Java.

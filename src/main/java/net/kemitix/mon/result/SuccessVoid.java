@@ -47,8 +47,9 @@ public class SuccessVoid implements ResultVoid {
     }
 
     @Override
-    public void onSuccess(final Runnable runnable) {
+    public ResultVoid onSuccess(final Runnable runnable) {
         runnable.run();
+        return this;
     }
 
     @Override

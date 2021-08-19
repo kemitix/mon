@@ -832,6 +832,52 @@ class ResultTest implements WithAssertions {
             //then
             assertThat(capture).hasValue(1);
         }
+
+        @Test
+        void error_whenOnSuccess_returnsSelf() {
+            //given
+            final Result<Integer> error = anError(new RuntimeException());
+
+            //when
+            final Result<Integer> result = error.onSuccess(x -> {});
+
+            //then
+            assertThat(result).isSameAs(error);
+        }
+
+        @Test
+        void success_whenOnSuccess_returnsSelf() {
+            //given
+            final Result<Integer> ok = Result.ok(1);
+
+            //when
+            final Result<Integer> result = ok.onSuccess(x -> {});
+
+            //then
+            assertThat(result).isSameAs(ok);
+        }
+
+        @Test void errorVoid_whenOnSuccess_returnsSelf() {
+            //given
+            final ResultVoid error = Result.error(new RuntimeException());
+
+            //when
+            final ResultVoid result = error.onSuccess(() -> {});
+
+            //then
+            assertThat(result).isSameAs(error);
+        }
+
+        @Test void successVoid_whenOnSuccess_returnsSelf() {
+            //given
+            final ResultVoid ok = Result.ok();
+
+            //when
+            final ResultVoid result = ok.onSuccess(() -> {});
+
+            //then
+            assertThat(result).isSameAs(ok);
+        }
     }
 
     @Nested
