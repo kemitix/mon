@@ -107,17 +107,6 @@ class ResultTest implements WithAssertions {
         }
 
         @Test
-        void whenOkayVoid_match_isNull() {
-            //when
-            var result = Result.ok();
-            //then
-            result.match(
-                    () -> assertThat(true).isTrue(),
-                    error -> fail("not an error")
-            );
-        }
-
-        @Test
         void whenOk_isOkay() {
             //when
             final Result<String> result = Result.ok("good");
@@ -134,17 +123,6 @@ class ResultTest implements WithAssertions {
         }
 
         @Test
-        void whenOkay_matchSuccess() {
-            //given
-            final Result<String> result = Result.ok("good");
-            //then
-            result.match(
-                    success -> assertThat(success).isEqualTo("good"),
-                    error -> fail("not an error")
-            );
-        }
-
-        @Test
         void whenError_isError() {
             //when
             final Result<Integer> result = anError(new Exception());
@@ -158,17 +136,6 @@ class ResultTest implements WithAssertions {
             final Result<Integer> result = anError(new Exception());
             //then
             assertThat(result.isError()).isTrue();
-        }
-
-        @Test
-        void whenError_matchError() {
-            //given
-            final Result<Integer> result = anError(new Exception("bad"));
-            //then
-            result.match(
-                    success -> fail("not a success"),
-                    error -> assertThat(error.getMessage()).isEqualTo("bad")
-            );
         }
 
         @Test
@@ -243,6 +210,55 @@ class ResultTest implements WithAssertions {
     private Result<Integer> anError(Exception e) {
         return Result.ok(1)
                 .flatMap(s -> Result.of(() -> {throw e;}));
+    }
+
+    @Nested
+    @DisplayName("match")
+    class MatchTests {
+
+        @Test
+        void whenOkay_matchSuccess() {
+            //given
+            final Result<String> result = Result.ok("good");
+            //then
+            result.match(
+                    success -> assertThat(success).isEqualTo("good"),
+                    error -> fail("not an error")
+            );
+        }
+
+        @Test
+        void whenError_matchError() {
+            //given
+            final Result<Integer> result = anError(new Exception("bad"));
+            //then
+            result.match(
+                    success -> fail("not a success"),
+                    error -> assertThat(error.getMessage()).isEqualTo("bad")
+            );
+        }
+
+        @Test
+        void whenOkayVoid_matchOkay() {
+            //when
+            var result = Result.ok();
+            //then
+            result.match(
+                    () -> assertThat(true).isTrue(),
+                    error -> fail("not an error")
+            );
+        }
+
+        @Test
+        void whenErrorVoid_matchError() {
+            //when
+            var result = Result.error(new RuntimeException());
+            //then
+            result.match(
+                    () -> fail("not a success"),
+                    error -> assertThat(true).isTrue()
+            );
+        }
     }
 
     @Nested
