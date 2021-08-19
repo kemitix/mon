@@ -640,9 +640,10 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
      *
      * @param onSuccess the Consumer to pass the value of a successful Result to
      * @param onError   the Consumer to pass the error from an error Result to
+     * @return the original Result
      */
     @API(status = STABLE)
-    void match(Consumer<T> onSuccess, Consumer<Throwable> onError);
+    Result<T> match(Consumer<T> onSuccess, Consumer<Throwable> onError);
 
     /**
      * Provide the value within the Result, if it is a success, to the Consumer, and returns this Result.
