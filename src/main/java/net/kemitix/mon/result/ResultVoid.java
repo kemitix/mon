@@ -27,9 +27,10 @@ public interface ResultVoid extends BaseResult {
      *
      * @param onSuccess the Consumer to pass the value of a successful Result to
      * @param onError   the Consumer to pass the error from an error Result to
+     * @return the original ResultVoid
      */
     @API(status = STABLE)
-    void match(Runnable onSuccess, Consumer<Throwable> onError);
+    ResultVoid match(Runnable onSuccess, Consumer<Throwable> onError);
 
     /**
      * Attempts to restore an error {@code ResultVoid} to a success.

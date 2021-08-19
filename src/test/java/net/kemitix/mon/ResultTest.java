@@ -219,9 +219,9 @@ class ResultTest implements WithAssertions {
         @Test
         void whenOkay_matchSuccess() {
             //given
-            final Result<String> result = Result.ok("good");
+            Result<String> ok = Result.ok("good");
             //then
-            result.match(
+            ok.match(
                     success -> assertThat(success).isEqualTo("good"),
                     error -> fail("not an error")
             );
@@ -230,20 +230,20 @@ class ResultTest implements WithAssertions {
         @Test
         void whenError_matchError() {
             //given
-            final Result<Integer> result = anError(new Exception("bad"));
+            Result<Integer> error = anError(new Exception("bad"));
             //then
-            result.match(
+            error.match(
                     success -> fail("not a success"),
-                    error -> assertThat(error.getMessage()).isEqualTo("bad")
+                    e -> assertThat(e.getMessage()).isEqualTo("bad")
             );
         }
 
         @Test
         void whenOkayVoid_matchOkay() {
             //when
-            var result = Result.ok();
+            var ok = Result.ok();
             //then
-            result.match(
+            ok.match(
                     () -> assertThat(true).isTrue(),
                     error -> fail("not an error")
             );
@@ -252,12 +252,52 @@ class ResultTest implements WithAssertions {
         @Test
         void whenErrorVoid_matchError() {
             //when
-            var result = Result.error(new RuntimeException());
+            var error = Result.error(new RuntimeException());
             //then
-            result.match(
+            error.match(
                     () -> fail("not a success"),
-                    error -> assertThat(true).isTrue()
+                    e -> assertThat(true).isTrue()
             );
+        }
+
+        @Test
+        void whenOkay_match_returnsSelf() {
+            //given
+            final Result<String> ok = Result.ok("good");
+            //when
+            Result<String> result = ok.match(s -> {}, e -> {});
+            //then
+            assertThat(result).isSameAs(ok);
+        }
+
+        @Test
+        void whenError_match_returnsSelf() {
+            //given
+            final Result<Integer> error = anError(new Exception("bad"));
+            //then
+            Result<Integer> result = error.match(s -> {}, e -> {});
+            //then
+            assertThat(result).isSameAs(error);
+        }
+
+        @Test
+        void whenOkayVoid_match_returnsSelf() {
+            //given
+            ResultVoid ok = Result.ok();
+            //when
+            ResultVoid result = ok.match(() -> {}, e -> {});
+            //then
+            assertThat(result).isSameAs(ok);
+        }
+
+        @Test
+        void whenErrorVoid_match_returnsSelf() {
+            //given
+            ResultVoid error = Result.error(new RuntimeException());
+            //when
+            ResultVoid result = error.match(() -> {}, e -> {});
+            //then
+            assertThat(result).isSameAs(error);
         }
     }
 

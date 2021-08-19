@@ -67,8 +67,9 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    public void match(final Consumer<T> onSuccess, final Consumer<Throwable> onError) {
+    public Result<T> match(final Consumer<T> onSuccess, final Consumer<Throwable> onError) {
         onError.accept(error);
+        return this;
     }
 
     @Override

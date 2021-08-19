@@ -37,8 +37,9 @@ public class SuccessVoid implements ResultVoid {
     }
 
     @Override
-    public void match(final Runnable onSuccess, final Consumer<Throwable> onError) {
+    public ResultVoid match(final Runnable onSuccess, final Consumer<Throwable> onError) {
         onSuccess.run();
+        return this;
     }
 
     @Override
