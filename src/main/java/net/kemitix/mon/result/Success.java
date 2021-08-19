@@ -24,7 +24,6 @@ package net.kemitix.mon.result;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -110,11 +109,6 @@ class Success<T> implements Result<T> {
             final Consumer<E> consumer
     ) {
         return this;
-    }
-
-    @Override
-    public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return result(f.apply(value));
     }
 
     @Override

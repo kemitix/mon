@@ -447,23 +447,6 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
     }
 
     /**
-     * Swaps the inner {@code Result} of a {@link Maybe}, so that a {@code Result} contains a {@code Maybe}.
-     *
-     * @param maybeResult the Maybe the contains a Result
-     * @param <T>         the type of the value that may be in the Result
-     * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
-     * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
-     * error, then the Result will also be an error.
-     * @deprecated
-     */
-    @API(status = DEPRECATED)
-    @Deprecated
-    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
-        return maybeResult.orElseGet(() -> Result.ok(null))
-                .flatMap(value -> Result.ok(Maybe.maybe(value)));
-    }
-
-    /**
      * Creates a {@link Maybe} from the {@code Result}.
      *
      * <p>Where the {@code Result} is a {@link Success}, the {@code Maybe} will be a {@code Just} contain the value of
@@ -739,29 +722,6 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
             Class<E> errorClass,
             Consumer<E> consumer
     );
-
-    /**
-     * Maps a Success Result to another Result using a Callable that is able to throw a checked exception.
-     *
-     * <p>Combination of {@link #flatMap(Function)} and {@link #of(Callable)}.</p>
-     *
-     * <pre><code>
-     * Integer doSomething() {...}
-     * String doSomethingElse(final Integer value) {...}
-     * Result&lt;String&gt; r = Result.of(() -&gt; doSomething())
-     *                          .andThen(value -&gt; () -&gt; doSomethingElse(value));
-     * </code></pre>
-     *
-     * <p>When the Result is an Err, then the original error is carried over and the Callable is never called.</p>
-     *
-     * @param f   the function to map the Success value into the Callable
-     * @param <R> the type of the final Result
-     * @return a new Result
-     * @deprecated Use {@link #map(ThrowableFunction)}
-     */
-    @API(status = DEPRECATED)
-    @Deprecated
-    <R> Result<R> andThen(Function<T, Callable<R>> f);
 
     /**
      * Perform the continuation with the value within the success {@code Result}

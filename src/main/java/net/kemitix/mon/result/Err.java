@@ -24,7 +24,6 @@ package net.kemitix.mon.result;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -121,11 +120,6 @@ class Err<T> implements Result<T> {
             consumer.accept((E) error);
         }
         return this;
-    }
-
-    @Override
-    public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return (Result<R>) this;
     }
 
     @Override

@@ -584,50 +584,6 @@ class ResultTest implements WithAssertions {
     }
 
     @Nested
-    @DisplayName("invert")
-    class InvertTests {
-        @Test
-        void justOkay_whenInvert_thenOkayJust() {
-            //given
-            final Maybe<Result<Integer>> justSuccess = Maybe.just(Result.ok(1));
-            //when
-            final Result<Maybe<Integer>> result = Result.swap(justSuccess);
-            //then
-            result.match(
-                    success -> assertThat(success.toOptional()).contains(1),
-                    error -> fail("Not an error")
-            );
-        }
-
-        @Test
-        void JustError_whenInvert_isError() {
-            //given
-            final RuntimeException exception = new RuntimeException();
-            final Maybe<Result<Integer>> justError = Maybe.just(anError(exception));
-            //when
-            final Result<Maybe<Integer>> result = Result.swap(justError);
-            //then
-            result.match(
-                    success -> fail("Not a success"),
-                    error -> assertThat(error).isSameAs(exception)
-            );
-        }
-
-        @Test
-        void nothing_whenInvert_thenOkayNothing() {
-            //given
-            final Maybe<Result<Integer>> nothing = Maybe.nothing();
-            //when
-            final Result<Maybe<Integer>> result = Result.swap(nothing);
-            //then
-            result.match(
-                    success -> assertThat(success.toOptional()).isEmpty(),
-                    error -> fail("Not an error")
-            );
-        }
-    }
-
-    @Nested
     @DisplayName("use cases")
     class UseCaseTests {
         @Test
@@ -1057,122 +1013,6 @@ class ResultTest implements WithAssertions {
                     e -> assertThat(e).isSameAs(exception));
         }
 
-    }
-
-    @Nested
-    @DisplayName("andThen")
-    class AndThenTests {
-        @Test
-        void okay_whenAndThen_whereSuccess_isUpdatedSuccess() {
-            //given
-            final Result<Integer> ok = Result.ok(1);
-            //when
-            final Result<String> result = ok.andThen(v -> () -> "success");
-            //then
-            result.match(
-                    v -> assertThat(v).isEqualTo("success"),
-                    e -> fail("not an error"));
-        }
-
-        @Test
-        void okay_whenAndThen_whereError_isError() {
-            //given
-            final Result<Integer> ok = Result.ok(1);
-            final RuntimeException exception = new RuntimeException();
-            //when
-            final Result<Object> result = ok.andThen(v -> () -> {
-                throw exception;
-            });
-            //then
-            result.match(
-                    x -> fail("not a success"),
-                    e -> assertThat(e).isSameAs(exception));
-        }
-
-        @Test
-        void error_whereAndThen_whereSuccess_isError() {
-            //given
-            final RuntimeException exception = new RuntimeException();
-            final Result<Integer> error = anError(exception);
-            //when
-            final Result<Object> result = error.andThen(v -> () -> "success");
-            //then
-            result.match(
-                    x -> fail("not a success"),
-                    e -> assertThat(e).isSameAs(exception));
-        }
-
-        @Test
-        void error_whenAndThen_whereError_isOriginalError() {
-            //given
-            final RuntimeException exception1 = new RuntimeException();
-            final Result<Integer> error = anError(exception1);
-            //when
-            final Result<Object> result = error.andThen(v -> () -> {
-                throw new RuntimeException();
-            });
-            //then
-            result.match(
-                    x -> fail("not a success"),
-                    e -> assertThat(e).isSameAs(exception1));
-        }
-
-        @Test
-        void okayVoid_whenAndThen_whereSuccess_isUpdatedSuccess() {
-            //given
-            final ResultVoid ok = Result.ok();
-            //when
-            final ResultVoid result = ok.andThen(() -> {
-                // do nothing
-            });
-            //then
-            assertThat(result.isOkay()).isTrue();
-        }
-
-        @Test
-        void okayVoid_whenAndThen_whereError_isError() {
-            //given
-            final ResultVoid ok = Result.ok();
-            final RuntimeException exception = new RuntimeException();
-            //when
-            final ResultVoid result = ok.andThen(() -> {
-                throw exception;
-            });
-            //then
-            result.match(
-                    () -> fail("not a success"),
-                    e -> assertThat(e).isSameAs(exception));
-        }
-
-        @Test
-        void errorVoid_whereAndThen_whereSuccess_isError() {
-            //given
-            final RuntimeException exception = new RuntimeException();
-            final ResultVoid error = Result.error(exception);
-            //when
-            final ResultVoid result = error.andThen(() -> {
-                // do nothing
-            });
-            //then
-            result.match(
-                    () -> fail("not a success"),
-                    e -> assertThat(e).isSameAs(exception));
-        }
-
-        @Test
-        void errorVoid_whenAndThen_whereError_isOriginalError() {
-            //given
-            final RuntimeException exception1 = new RuntimeException();
-            final ResultVoid error = Result.error(exception1);
-            //when
-            final ResultVoid result = error.andThen(() -> {
-                throw new RuntimeException();
-            });
-            //then
-            result.match(
-                    () -> fail("not a success"),
-                    e -> assertThat(e).isSameAs(exception1));
-        }
     }
 
     @Nested
@@ -1766,6 +1606,64 @@ class ResultTest implements WithAssertions {
                     () -> fail("not a success"),
                     error -> assertThat(error).isSameAs(exception)
             );
+        }
+
+    }
+
+    @Nested
+    @DisplayName("andThen")
+    class AndThenTests {
+
+        @Test
+        void successVoid_andThen_returnSelf() {
+            //given
+            ResultVoid ok = Result.ok();
+            //when
+            ResultVoid result = ok.andThen(() -> {});
+            //then
+            assertThat(result).isSameAs(ok);
+        }
+
+        @Test
+        void successVoid_andThen_isCalled() {
+            //given
+            ResultVoid ok = Result.ok();
+            AtomicBoolean called = new AtomicBoolean(false);
+            //when
+            ok.andThen(() -> called.set(true));
+            //then
+            assertThat(called).isTrue();
+        }
+
+        @Test
+        void successVoid_andThen_exception_errorVoid() {
+            //given
+            ResultVoid ok = Result.ok();
+            //when
+            ResultVoid result = ok.andThen(() -> {throw new RuntimeException();});
+            //then
+            assertThat(result.isError()).isTrue();
+        }
+
+        @Test
+        void errorVoid_andThen_returnsSelf() {
+            //given
+            ResultVoid error = Result.error(new RuntimeException());
+            //when
+            ResultVoid result = error.andThen(() -> {});
+            //then
+            assertThat(result).isSameAs(error);
+        }
+
+        @Test
+        void errorVoid_andThen_notCalled() {
+            //given
+            ResultVoid error = Result.error(new RuntimeException());
+            final AtomicBoolean called = new AtomicBoolean(false);
+            //when
+            error.andThen(() -> called.set(true));
+            //then
+            assertThat(called).isFalse();
         }
 
     }
@@ -2395,7 +2293,7 @@ class ResultTest implements WithAssertions {
 
         Result<Double> businessOperation(final String fileName1, final String fileName2) {
             return readIntFromFile(fileName1)
-                    .andThen(intFromFile1 -> () -> adjustValue(intFromFile1))
+                    .map(this::adjustValue)
                     .flatMap(adjustedIntFromFile1 -> readIntFromFile(fileName2)
                             .flatMap(intFromFile2 -> adjustedIntFromFile1
                                     .flatMap(aif1 -> calculateAverage(aif1, intFromFile2))));
