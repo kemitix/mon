@@ -40,8 +40,8 @@ public class ErrVoid implements ResultVoid {
     }
 
     @Override
-    public void onSuccess(final Runnable runnable) {
-        // do nothing
+    public ResultVoid onSuccess(final Runnable runnable) {
+        return this;
     }
 
     @Override

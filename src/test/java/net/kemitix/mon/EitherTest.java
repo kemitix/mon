@@ -209,7 +209,7 @@ class EitherTest implements WithAssertions {
     }
     @Nested @DisplayName("getLeft") public class GetLeft {
         @Test
-        @DisplayName("")
+        @DisplayName("when is a Left then get the value")
         public void whenLeft_thenGetValue() {
             //given
             Either<String, Integer> either = Either.left("value");
@@ -220,7 +220,7 @@ class EitherTest implements WithAssertions {
         }
 
         @Test
-        @DisplayName("")
+        @DisplayName("when is a Right then is empty")
         public void whenRight_thenGetEmpty() {
             //given
             Either<Integer, String> either = Either.right("value");
@@ -232,7 +232,7 @@ class EitherTest implements WithAssertions {
     }
     @Nested @DisplayName("getRight") public class GetRight {
         @Test
-        @DisplayName("")
+        @DisplayName("when is a Left then is empty")
         public void whenLeft_thenGetEmpty() {
             //given
             Either<String, Integer> either = Either.left("value");
@@ -243,7 +243,7 @@ class EitherTest implements WithAssertions {
         }
 
         @Test
-        @DisplayName("")
+        @DisplayName("when is a Right then get the value")
         public void whenRight_thenGetValue() {
             //given
             Either<Integer, String> either = Either.right("value");
