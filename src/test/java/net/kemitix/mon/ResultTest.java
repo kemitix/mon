@@ -528,50 +528,6 @@ class ResultTest implements WithAssertions {
     }
 
     @Nested
-    @DisplayName("invert")
-    class InvertTests {
-        @Test
-        void justOkay_whenInvert_thenOkayJust() {
-            //given
-            final Maybe<Result<Integer>> justSuccess = Maybe.just(Result.ok(1));
-            //when
-            final Result<Maybe<Integer>> result = Result.swap(justSuccess);
-            //then
-            result.match(
-                    success -> assertThat(success.toOptional()).contains(1),
-                    error -> fail("Not an error")
-            );
-        }
-
-        @Test
-        void JustError_whenInvert_isError() {
-            //given
-            final RuntimeException exception = new RuntimeException();
-            final Maybe<Result<Integer>> justError = Maybe.just(anError(exception));
-            //when
-            final Result<Maybe<Integer>> result = Result.swap(justError);
-            //then
-            result.match(
-                    success -> fail("Not a success"),
-                    error -> assertThat(error).isSameAs(exception)
-            );
-        }
-
-        @Test
-        void nothing_whenInvert_thenOkayNothing() {
-            //given
-            final Maybe<Result<Integer>> nothing = Maybe.nothing();
-            //when
-            final Result<Maybe<Integer>> result = Result.swap(nothing);
-            //then
-            result.match(
-                    success -> assertThat(success.toOptional()).isEmpty(),
-                    error -> fail("Not an error")
-            );
-        }
-    }
-
-    @Nested
     @DisplayName("use cases")
     class UseCaseTests {
         @Test

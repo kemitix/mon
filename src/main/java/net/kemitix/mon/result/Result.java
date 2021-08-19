@@ -447,23 +447,6 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
     }
 
     /**
-     * Swaps the inner {@code Result} of a {@link Maybe}, so that a {@code Result} contains a {@code Maybe}.
-     *
-     * @param maybeResult the Maybe the contains a Result
-     * @param <T>         the type of the value that may be in the Result
-     * @return a Result containing a Maybe, the value in the Maybe was the value in a successful Result within the
-     * original Maybe. If the original Maybe is Nothing, the Result will contain Nothing. If the original Result was an
-     * error, then the Result will also be an error.
-     * @deprecated
-     */
-    @API(status = DEPRECATED)
-    @Deprecated
-    static <T> Result<Maybe<T>> swap(final Maybe<Result<T>> maybeResult) {
-        return maybeResult.orElseGet(() -> Result.ok(null))
-                .flatMap(value -> Result.ok(Maybe.maybe(value)));
-    }
-
-    /**
      * Creates a {@link Maybe} from the {@code Result}.
      *
      * <p>Where the {@code Result} is a {@link Success}, the {@code Maybe} will be a {@code Just} contain the value of
