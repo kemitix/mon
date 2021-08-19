@@ -111,11 +111,6 @@ class Success<T> implements Result<T> {
     }
 
     @Override
-    public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return result(f.apply(value));
-    }
-
-    @Override
     public Result<T> thenWith(final Function<T, WithResultContinuation<T>> f) {
         return f.apply(value).call(this);
     }

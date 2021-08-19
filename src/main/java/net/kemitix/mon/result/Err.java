@@ -123,11 +123,6 @@ class Err<T> implements Result<T> {
     }
 
     @Override
-    public <R> Result<R> andThen(final Function<T, Callable<R>> f) {
-        return (Result<R>) this;
-    }
-
-    @Override
     public Result<T> thenWith(final Function<T, WithResultContinuation<T>> f) {
         return this;
     }

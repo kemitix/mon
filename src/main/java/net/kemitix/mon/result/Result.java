@@ -739,29 +739,6 @@ public interface Result<T> extends BaseResult, ThrowableFunctor<T, ThrowableFunc
     );
 
     /**
-     * Maps a Success Result to another Result using a Callable that is able to throw a checked exception.
-     *
-     * <p>Combination of {@link #flatMap(Function)} and {@link #of(Callable)}.</p>
-     *
-     * <pre><code>
-     * Integer doSomething() {...}
-     * String doSomethingElse(final Integer value) {...}
-     * Result&lt;String&gt; r = Result.of(() -&gt; doSomething())
-     *                          .andThen(value -&gt; () -&gt; doSomethingElse(value));
-     * </code></pre>
-     *
-     * <p>When the Result is an Err, then the original error is carried over and the Callable is never called.</p>
-     *
-     * @param f   the function to map the Success value into the Callable
-     * @param <R> the type of the final Result
-     * @return a new Result
-     * @deprecated Use {@link #map(ThrowableFunction)}
-     */
-    @API(status = DEPRECATED)
-    @Deprecated
-    <R> Result<R> andThen(Function<T, Callable<R>> f);
-
-    /**
      * Perform the continuation with the value within the success {@code Result}
      * and return itself.
      *
