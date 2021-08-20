@@ -14,6 +14,8 @@ https://oss.sonatype.org/content/repositories/releases/net/kemitix/mon/)
 https://img.shields.io/maven-central/v/net.kemitix/mon.svg?style=for-the-badge)](
 https://search.maven.org/artifact/net.kemitix/mon)
 
+The documentation below is being slowly migrated to [Javadoc](https://kemitix.github.io/mon/).
+
 - [Maven Usage](#Maven-Usage)
 - [Wrapper](#Wrapper) - light-weight type-alias-like
 - [TypeAlias](#TypeAlias) - type-alias-like monadic wrapper

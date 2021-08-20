@@ -44,7 +44,21 @@ public interface Reader<E, R> {
      * @return a new Reader to provided the result of the supplied function
      */
     @API(status = API.Status.EXPERIMENTAL)
-    default <V> Reader<E, V> andThen(BiFunction<E, R, V> f) {
+    default <V> Reader<E, V> flatMap(BiFunction<E, R, V> f) {
         return env -> f.apply(env, run(env));
+    }
+
+    /**
+     * Applies the function provided to the reader when run, and executes that
+     * resulting reader.
+     *
+     * @param f the function which takes the previously generated value and
+     *          produces another Reader
+     * @param <V> the type of the value the new Reader returns
+     * @return a new Reader
+     */
+    @API(status = API.Status.EXPERIMENTAL)
+    default <V> Reader<E, V> flatMap(Function<R, Reader<E, V>> f) {
+        return env -> f.apply(run(env)).run(env);
     }
 }
